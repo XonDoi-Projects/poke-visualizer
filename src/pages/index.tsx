@@ -1,4 +1,11 @@
+import { IndexCard, Landing } from "@/components/PageComponents";
+
 const Index = () => {
-  return <div>test</div>;
+  return (
+    <Landing>
+      <IndexCard />
+    </Landing>
+  );
 };
+
 export default Index;

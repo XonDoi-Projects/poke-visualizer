@@ -1,0 +1,34 @@
+import {
+  ComponentProps,
+  FunctionComponent,
+  HTMLAttributes,
+  HTMLProps,
+  ReactNode,
+} from "react";
+import { Column } from "./Column";
+import { useDarkTheme } from "../Providers";
+
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  children?: ReactNode;
+  className?: HTMLProps<"HTMLElement">["className"];
+}
+
+export const Card: FunctionComponent<CardProps> = ({
+  children,
+  className,
+  ...props
+}) => {
+  const { light } = useDarkTheme();
+  return (
+    <Column
+      {...props}
+      className={`flex rounded-md ${
+        light ? "bg-slate-300" : "bg-blue-500"
+      } shadow-border ${
+        light ? "shadow-slate-200" : "shadow-blue-400"
+      } ${className}`}
+    >
+      {children}
+    </Column>
+  );
+};

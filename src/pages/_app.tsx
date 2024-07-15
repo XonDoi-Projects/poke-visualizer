@@ -7,10 +7,11 @@ import {
 } from "@/components/Providers";
 import { useEffect } from "react";
 import { Analytics } from "@vercel/analytics/react";
+import "../../public/output.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
-    document.title = "Nathan M Portfolio";
+    document.title = "Pokemon PokeDex & Fusion";
   });
 
   return (
