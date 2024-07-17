@@ -1,13 +1,15 @@
-import { Container } from "../../LayoutComponents";
-import { pokeBaseUrl, useSize } from "../..";
+import { Button, Column, Container, H3 } from "../../LayoutComponents";
+import { useSize } from "../..";
 import { PokeCard, PokeDetails } from "./PokeCard";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { clsx } from "clsx";
+import { getPokemonList } from "@/utils";
 
 export const Dex = () => {
-  const { mobile, size } = useSize();
+  const { size } = useSize();
 
   const [pokemon, setPokemon] = useState<PokeDetails[]>([]);
+  const [loading, setLoading] = useState<boolean | undefined>();
 
   const numberOfCols = useMemo(
     () => (size?.width ? Math.floor(size?.width / 300) : undefined),
@@ -25,65 +27,32 @@ export const Dex = () => {
     "grid-cols-[repeat(8,minmax(200px,300px))]": numberOfCols === 8,
   });
 
-  const getPokemon = useCallback(async (name: string) => {
-    let pokeDetails: PokeDetails | undefined;
-    const basicData = await fetch(`${pokeBaseUrl}/pokemon/${name}`)
-      .then((data) => data.json())
-      .then((pokemonResult) => {
-        pokeDetails = {
-          name: (pokemonResult.name as string).toUpperCase(),
-          index: pokemonResult.id,
-          imageLink: pokemonResult.sprites.front_default,
-          types: pokemonResult.types.map((type: any) => type.type.name),
-        };
+  const getPokemonListData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getPokemonList();
 
-        return pokeDetails;
-      });
-
-    const extraData = await fetch(`${pokeBaseUrl}/pokemon-species/${name}`)
-      .then((data) => data.json())
-      .then((pokemonResult) => {
-        const flavorText = pokemonResult.flavor_text_entries.filter(
-          (entry: any) => entry.language.name === "en"
-        );
-
-        return {
-          ...basicData,
-          description: `${flavorText[0].flavor_text
-            .replace("\n", " ")
-            .replace("\f", " ")}`,
-        };
-      });
-
-    return extraData;
+      setPokemon(data);
+    } catch (e) {
+      console.log(e);
+    }
+    setLoading(false);
   }, []);
 
-  const getPokemonList = useCallback(async () => {
-    let pokemonList: PokeDetails[] = [];
-    const data = await fetch(`${pokeBaseUrl}/pokemon/?limit=20`)
-      .then((data) => data.json())
-      .then(async (pokemonResult) => {
-        const result = pokemonResult.results;
-
-        for (let i = 0; i < result.length; i++) {
-          const pokemonResult = await getPokemon(result[i].name);
-
-          if (pokemonResult) {
-            pokemonList.push(pokemonResult);
-          }
-        }
-
-        return pokemonList;
-      });
-
-    setPokemon((prev) => [...prev, ...data]);
-  }, [getPokemon]);
-
   useEffect(() => {
-    getPokemonList();
-  }, [getPokemonList]);
+    getPokemonListData();
+  }, [getPokemonListData]);
 
-  return (
+  return loading ? (
+    <Column className={`items-center justify-center h-full gap-5`}>
+      <H3>Loading . . .</H3>
+    </Column>
+  ) : loading === false && !pokemon.length ? (
+    <Column className={`items-center justify-center h-full gap-5`}>
+      <H3>Failed to load Pokemon</H3>
+      <Button onClick={getPokemonListData}>Retry</Button>
+    </Column>
+  ) : (
     <Container className={`grid ${gridCols} gap-10 p-10`}>
       {pokemon?.map((poke) => (
         <Container
