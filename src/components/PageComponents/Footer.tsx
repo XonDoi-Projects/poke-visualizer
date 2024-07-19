@@ -1,12 +1,21 @@
 import { useDarkTheme } from "..";
-import { Row } from "../LayoutComponents";
+import { Column, Row, Small } from "../LayoutComponents";
 
 export const Footer = () => {
   const { light } = useDarkTheme();
 
   return (
-    <Row
-      className={`min-h-[100px] ${light ? "bg-slate-400" : "bg-gray-700"}`}
-    ></Row>
+    <Row className={`flex-1 ${light ? "bg-slate-400" : "bg-gray-700"} p-3`}>
+      <Column>
+        <Small>
+          Pokémon and Pokémon character names are trademarks of Nintendo.
+        </Small>
+        <Small>Pokémon designs are © 1995–2024 of The Pokémon Company.</Small>
+        <Small>
+          This website is not affiliated with The Pokémon Company, Nintendo,
+          Game Freak Inc., or Creatures Inc.
+        </Small>
+      </Column>
+    </Row>
   );
 };
