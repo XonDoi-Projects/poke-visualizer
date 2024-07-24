@@ -5,7 +5,7 @@ export const Footer = () => {
   const { light } = useDarkTheme();
 
   return (
-    <Row className={`flex-1 ${light ? "bg-slate-400" : "bg-gray-700"} p-3`}>
+    <Row className={`h-fit ${light ? "bg-slate-400" : "bg-gray-700"} p-3`}>
       <Column>
         <Small>
           Pokémon and Pokémon character names are trademarks of Nintendo.
