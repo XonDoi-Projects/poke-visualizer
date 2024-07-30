@@ -1,80 +1,231 @@
-import { pokeBaseUrl } from "./components";
-import { PokeDetails } from "./components/PageComponents/Dex/PokeCard";
+import { pokeBaseUrl, total } from "./components";
 
-export type PokeRegion = { name: string; start: number; end: number };
-export type PokeRegions = {
-  [key: string]: PokeRegion;
-};
+export interface PokeDetails {
+  name: string;
+  index: string;
+  imageLink: string;
+  imageLinkShiny?: string;
+  animated?: string;
+  animatedShiny?: string;
+  imageLinkHighRes?: string;
+  imageLinkHighResShiny?: string;
+  description?: string;
+  types?: string[];
+  preEvolution?: string;
+  postEvolution?: string;
+  stats?: any;
+  region: PokeRegion;
+}
 
-export const pokeRegions: PokeRegions = {
-  All: { name: "All", start: 1, end: 1025 },
-  Kanto: { name: "Kanto", start: 1, end: 151 },
-  Johto: { name: "Johto", start: 152, end: 251 },
-  Hoenn: { name: "Hoenn", start: 252, end: 386 },
-  Sinnoh: { name: "Sinnoh", start: 387, end: 493 },
-  Unovoa: { name: "Unovoa", start: 494, end: 649 },
-  Kalos: { name: "Kalos", start: 650, end: 721 },
-  Alola: { name: "Alola", start: 722, end: 809 },
-  Hisui: { name: "Hisui", start: 810, end: 905 },
-  Paldea: { name: "Paldea", start: 906, end: 1025 },
-};
+export type PokeRegion =
+  | "All"
+  | "Kanto"
+  | "Johto"
+  | "Hoenn"
+  | "Sinnoh"
+  | "Unova"
+  | "Kalos"
+  | "Alola"
+  | "Hisui"
+  | "Paldea";
 
-export const getPokemon = async (name: string) => {
+export const pokeRegions = [
+  "All",
+  "Kanto",
+  "Johto",
+  "Hoenn",
+  "Sinnoh",
+  "Unova",
+  "Kalos",
+  "Alola",
+  "Hisui",
+  "Paldea",
+];
+
+export type PokeType =
+  | "Any"
+  | "Grass"
+  | "Fire"
+  | "Water"
+  | "Flying"
+  | "Normal"
+  | "Fighting"
+  | "Poison"
+  | "Steel"
+  | "Dragon"
+  | "Ghost"
+  | "Dark"
+  | "Psychic"
+  | "Fairy"
+  | "Rock"
+  | "Ground"
+  | "Electric"
+  | "Bug"
+  | "Ice";
+
+export const pokeTypes = [
+  "Any",
+  "Grass",
+  "Fire",
+  "Water",
+  "Flying",
+  "Normal",
+  "Fighting",
+  "Poison",
+  "Steel",
+  "Dragon",
+  "Ghost",
+  "Dark",
+  "Psychic",
+  "Fairy",
+  "Rock",
+  "Ground",
+  "Electric",
+  "Bug",
+  "Ice",
+];
+
+export const getPokemon = async (index: number) => {
   let pokeDetails: PokeDetails | undefined;
-  const basicData = await fetch(`${pokeBaseUrl}/pokemon/${name}`)
-    .then((data) => data.json())
-    .then((pokemonResult) => {
-      pokeDetails = {
-        name: (pokemonResult.species.name as string).toUpperCase(),
-        index: pokemonResult.id,
-        imageLink: pokemonResult.sprites.front_default,
-        imageLinkShiny: pokemonResult.sprites.front_shiny,
-        types: pokemonResult.types.map((type: any) => type.type.name),
-      };
+  const basicData = await fetch(`${pokeBaseUrl}/pokemon/${index}`);
 
-      return pokeDetails;
-    });
+  const firstData = await basicData.json();
+
+  pokeDetails = {
+    name: (firstData.species.name as string).toUpperCase(),
+    index: firstData.id,
+    imageLink: firstData.sprites.front_default,
+    imageLinkShiny: firstData.sprites.front_shiny,
+    animated:
+      firstData.sprites.versions["generation-v"]["black-white"].animated
+        .front_default,
+    animatedShiny:
+      firstData.sprites.versions["generation-v"]["black-white"].animated
+        .front_shiny,
+    imageLinkHighRes: firstData.sprites.other["official-artwork"].front_default,
+    imageLinkHighResShiny:
+      firstData.sprites.other["official-artwork"].front_shiny,
+    types: firstData.types.map((type: any) => type.type.name),
+    region:
+      index > 0 && index <= 151
+        ? "Kanto"
+        : index > 151 && index <= 251
+        ? "Johto"
+        : index > 251 && index <= 386
+        ? "Hoenn"
+        : index > 386 && index <= 493
+        ? "Sinnoh"
+        : index > 493 && index <= 649
+        ? "Unova"
+        : index > 649 && index <= 721
+        ? "Kalos"
+        : index > 721 && index <= 809
+        ? "Alola"
+        : index > 810 && index <= 905
+        ? "Hisui"
+        : "Paldea",
+  };
 
   const extraData = await fetch(
-    `${pokeBaseUrl}/pokemon-species/${basicData.name.toLowerCase()}`
-  )
-    .then((data) => data.json())
-    .then((pokemonResult) => {
-      const flavorText = pokemonResult.flavor_text_entries.filter(
-        (entry: any) => entry.language.name === "en"
-      );
+    `${pokeBaseUrl}/pokemon-species/${pokeDetails.name.toLowerCase()}`
+  );
+  const secondData = await extraData.json();
 
-      return {
-        ...basicData,
-        description: `${flavorText[0].flavor_text
-          .replace("\n", " ")
-          .replace("\f", " ")}`,
-      };
-    });
+  const flavorText = secondData.flavor_text_entries.filter(
+    (entry: any) => entry.language.name === "en"
+  );
 
-  return extraData;
+  return {
+    ...pokeDetails,
+    description: `${flavorText[0].flavor_text
+      .replace("\n", " ")
+      .replace("\f", " ")}`,
+  };
 };
 
 export const getPokemonList = async (limit?: number, offset?: number) => {
   let pokemonList: PokeDetails[] = [];
 
-  const data = await fetch(
+  const result = await fetch(
     `${pokeBaseUrl}/pokemon/?offset=${offset}&limit=${limit || 20}`
-  )
-    .then((data) => data.json())
-    .then(async (pokemonResult) => {
-      const result = pokemonResult.results;
+  );
+  const data = await result.json();
 
-      for (let i = 0; i < result.length; i++) {
-        const pokemonResult = await getPokemon(result[i].name);
+  for (let i = 0; i < data.results.length; i++) {
+    const pokemonResult = await getPokemon(i + 1);
 
-        if (pokemonResult) {
-          pokemonList.push(pokemonResult);
-        }
-      }
+    if (pokemonResult) {
+      pokemonList.push(pokemonResult);
+    }
+  }
 
-      return { data: pokemonList, count: pokemonResult.count };
-    });
+  return { data: pokemonList, count: data.count };
+};
 
-  return data;
+export const setPokemonData = (pokeData: PokeDetails[]) => {
+  localStorage.setItem("pokemon", JSON.stringify(pokeData));
+};
+
+export const checkPokemonData = () => {
+  return localStorage.getItem("pokemon")?.length ? true : false;
+};
+
+export type PokeArgsMany = {
+  limit: number;
+  range?: { start: number; end: number };
+  name?: string;
+  index?: string;
+  types?: PokeType[];
+  region?: PokeRegion;
+};
+export type PokeArgsOne = {
+  name?: string;
+  index?: string;
+};
+
+export const getPokemonDataList = (
+  args?: PokeArgsMany
+): { data: PokeDetails[]; count: number } => {
+  if (!args) {
+    return JSON.parse(localStorage.getItem("pokemon") || "");
+  }
+
+  let data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
+
+  if (args.types && !args.types?.includes("Any")) {
+    data = data.filter((d) =>
+      args.types?.map((t) => d.types?.includes(t.toLowerCase())).some((b) => b)
+    );
+  }
+
+  if (args.region && args.region !== "All") {
+    data = data.filter((d) => args.region?.includes(d.region));
+  }
+
+  const count = data.length;
+
+  if (args.range) {
+    data = data.slice(
+      args.range.start,
+      data.length - args.range.start > args.limit ? args.range.end : data.length
+    );
+  }
+
+  return { data, count };
+};
+
+export const getPokemonDataID = (
+  args?: PokeArgsOne
+): PokeDetails | undefined => {
+  const data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
+
+  if (args?.index) {
+    return data.find((d) => d.index === args.index);
+  }
+
+  if (args?.name) {
+    return data.find((d) => d.name === args.name);
+  }
+
+  return;
 };
