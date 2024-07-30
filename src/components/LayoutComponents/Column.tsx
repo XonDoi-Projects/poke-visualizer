@@ -1,7 +1,13 @@
-import { FunctionComponent, HTMLAttributes, HTMLProps, ReactNode } from "react";
+import {
+  ComponentPropsWithRef,
+  FunctionComponent,
+  HTMLAttributes,
+  HTMLProps,
+  ReactNode,
+} from "react";
 import { Container } from "./Container";
 
-export interface ColumnProps extends HTMLAttributes<HTMLDivElement> {
+export interface ColumnProps extends ComponentPropsWithRef<"div"> {
   children?: ReactNode;
   className?: HTMLProps<"HTMLElement">["className"];
 }

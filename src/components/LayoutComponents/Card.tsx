@@ -22,10 +22,10 @@ export const Card: FunctionComponent<CardProps> = ({
   return (
     <Column
       {...props}
-      className={`flex rounded-md ${
+      className={`flex ${
         light ? "bg-slate-300" : "bg-blue-500"
       } shadow-border ${
-        light ? "shadow-slate-200" : "shadow-blue-400"
+        light ? "shadow-black-200" : "shadow-blue-400"
       } ${className}`}
     >
       {children}

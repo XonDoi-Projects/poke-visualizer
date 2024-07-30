@@ -8,22 +8,10 @@ import {
 } from "@/components/LayoutComponents";
 import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
+import { PokeDetails, PokeRegion } from "@/utils";
 import Image from "next/image";
-import router from "next/router";
 import { FunctionComponent, useState } from "react";
 import { HiOutlineSparkles, HiSparkles } from "react-icons/hi";
-
-export interface PokeDetails {
-  name: string;
-  index: string;
-  imageLink: string;
-  imageLinkShiny?: string;
-  description?: string;
-  types?: string[];
-  preEvolution?: string;
-  postEvolution?: string;
-  stats?: any;
-}
 
 export interface PokeCardProps {
   data: PokeDetails;
@@ -31,12 +19,19 @@ export interface PokeCardProps {
 
 export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
   const [showShiny, setShowShiny] = useState(false);
+  const [hover, setHover] = useState(false);
 
   const { light } = useDarkTheme();
 
   return (
-    <Card className={`w-[250px] h-[400px]`}>
-      <Row className="flex justify-between items-start p-5 gap-10">
+    <Card
+      className={`w-[250px] h-[400px] hover:scale-105 transition-all`}
+      onPointerEnter={() => setHover(true)}
+      onPointerLeave={() => setHover(false)}
+      onTouchStart={() => setHover(true)}
+      onTouchEnd={() => setHover(false)}
+    >
+      <Row className="flex justify-between items-start p-3 ">
         <H5>#{props.data.index.toString().padStart(4, "0")}</H5>
         <H5>{props.data.name}</H5>
       </Row>
@@ -68,7 +63,14 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
         </Container>
         <Image
           src={
-            showShiny && props.data.imageLinkShiny
+            showShiny &&
+            props.data.imageLinkShiny &&
+            hover &&
+            props.data.animatedShiny
+              ? props.data.animatedShiny
+              : hover && props.data.animated
+              ? props.data.animated
+              : showShiny && props.data.imageLinkShiny
               ? props.data.imageLinkShiny
               : props.data.imageLink
           }
@@ -76,7 +78,7 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
           sizes="100vw"
           width="0"
           height="0"
-          className="w-auto h-full"
+          className={`w-auto h-[${hover ? "100px" : "150px"}]`}
         />
       </Container>
       <Column className="flex flex-1 justify-start items-start p-5 gap-5">

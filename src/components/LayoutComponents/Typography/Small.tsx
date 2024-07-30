@@ -16,9 +16,7 @@ export const Small: FunctionComponent<SmallProps> = ({
   return (
     <span
       {...props}
-      className={`flex font-sans font-semibold text-base ${
-        light ? "text-blue-900" : "text-slate-300"
-      } ${className}`}
+      className={`flex font-sans font-semibold text-base leading-3 ${className}`}
     >
       <small>{children}</small>
     </span>
