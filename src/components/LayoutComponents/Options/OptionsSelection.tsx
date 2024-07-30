@@ -3,14 +3,17 @@ import { Container } from "../Container";
 import { Span } from "../Typography";
 import { useDarkTheme } from "@/components/Providers";
 
-export interface OptionsSelectionProps {
-  value: string;
-  setSelection: () => void;
+export interface OptionsSelectionProps<T> {
+  value: T;
+  setSelection: (value: T) => void;
 }
 
-export const OptionsSelection: FunctionComponent<OptionsSelectionProps> = (
-  props
-) => {
+export const OptionsSelection: FunctionComponent<OptionsSelectionProps<any>> = <
+  T,
+>({
+  value,
+  setSelection,
+}: OptionsSelectionProps<T>) => {
   const { light } = useDarkTheme();
 
   return (
@@ -20,9 +23,11 @@ export const OptionsSelection: FunctionComponent<OptionsSelectionProps> = (
           ? "bg-slate-300 hover:bg-slate-400"
           : "bg-blue-500 hover:bg-blue-600"
       } cursor-pointer p-2`}
-      onClick={props.setSelection}
+      onClick={() => setSelection(value)}
     >
-      <Span className={`flex-1`}>{props.value}</Span>
+      <Span className={`flex-1`}>
+        {value !== undefined ? value?.toString() : ""}
+      </Span>
     </Container>
   );
 };

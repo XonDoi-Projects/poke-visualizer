@@ -6,13 +6,17 @@ import { Column } from "../Column";
 import { useDarkTheme } from "@/components/Providers";
 import { OptionsSelection } from "./OptionsSelection";
 
-export interface OptionsProps {
+export interface OptionsProps<T> {
   list: string[];
-  selection?: string;
-  setSelection: (value: string) => void;
+  selection?: T;
+  setSelection: (value: T) => void;
 }
 
-export const Options: FunctionComponent<OptionsProps> = (props) => {
+export const Options: FunctionComponent<OptionsProps<any>> = <T,>({
+  list,
+  selection,
+  setSelection,
+}: OptionsProps<T>) => {
   const { light } = useDarkTheme();
 
   const [showOptions, setShowOptions] = useState(false);
@@ -29,7 +33,9 @@ export const Options: FunctionComponent<OptionsProps> = (props) => {
         } cursor-pointer p-2`}
         onClick={() => setShowOptions(!showOptions)}
       >
-        <Span className={`flex-1`}>{props.selection}</Span>
+        <Span className={`flex-1`}>
+          {selection !== undefined ? selection?.toString() : "Select Region"}
+        </Span>
         <BiChevronDown
           className={`w-[20px] ${
             !light
@@ -42,18 +48,18 @@ export const Options: FunctionComponent<OptionsProps> = (props) => {
         />
       </Container>
 
-      {showOptions && props.list.length ? (
+      {showOptions && list.length ? (
         <Column
-          className={`absolute z-[2] top-[42px] right-0 border-[1px] overflow-hidden rounded-md border-solid ${
+          className={`absolute z-[2] top-[42px] right-0 border-[1px] w-[150px] h-[150px] overflow-y-auto rounded-md border-solid ${
             light ? "border-blue-900" : "border-slate-300"
-          }`}
+          } shadow-border ${light ? "shadow-black-200" : "shadow-blue-400"}`}
         >
-          {props.list.map((item, index) => (
+          {list.map((item, index) => (
             <OptionsSelection
               key={index}
               value={item}
-              setSelection={() => {
-                props.setSelection(item);
+              setSelection={(value) => {
+                setSelection(value);
                 setShowOptions(false);
               }}
             />
