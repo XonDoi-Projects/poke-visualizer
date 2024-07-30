@@ -8,6 +8,7 @@ import {
 import { useEffect } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import "../../public/output.css";
+import { DataProvider } from "@/components/Providers/DataProvider";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
@@ -21,7 +22,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <DarkThemeProvider>
         <SizeProvider>
           <UserProvider>
-            <Component {...pageProps} />
+            <DataProvider>
+              <Component {...pageProps} />
+            </DataProvider>
             <Analytics />
           </UserProvider>
         </SizeProvider>
