@@ -118,7 +118,11 @@ export const PokeBallBackground: FunctionComponent<PokeBallBackgroundProps> = (
   }, [newPos]);
 
   return (
-    <Container className={`flex-1 w-full h-full opacity-5 overflow-hidden`}>
+    <Container
+      className={`flex-1 w-full h-full overflow-hidden ${
+        newPos ? "animate-show-ball" : ""
+      }`}
+    >
       {showBall && isAnimate ? (
         <Column
           className={`relative  justify-center items-center overflow-hidden 

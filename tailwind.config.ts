@@ -31,9 +31,18 @@ const config: Config = {
             transform: "rotate(360deg)",
           },
         },
+        show: {
+          "0%": {
+            opacity: "0",
+          },
+          "100%": {
+            opacity: "0.05",
+          },
+        },
       },
       animation: {
         "move-ball": "move 2s ease-in-out 1",
+        "show-ball": "show 1s forwards ease-in-out",
       },
     },
   },

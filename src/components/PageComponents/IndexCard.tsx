@@ -20,14 +20,14 @@ export const IndexCard: FunctionComponent<IndexCardProps> = (props) => {
   return (
     <Container className="flex-col z-[2] w-full h-full gap-5 justify-center items-center">
       {!mobile ? (
-        <Card className={`w-[60%] h-[60%]`}>
+        <Card className={`w-[60%] h-[60%] rounded-md`}>
           <Row className={`flex flex-wrap flex-1 gap-[10px] `}>
             <Column className="flex flex-1 justify-center items-end p-5">
               <H2 className="whitespace-pre-line">Welcome,</H2>
               <H3>Trainer!</H3>
             </Column>
             <Column className="flex flex-1 justify-center items-start p-5 gap-5">
-              <H5>
+              <H5 className={`mr-10`}>
                 This is a Pokemon playground where you can you look up your
                 favorite pokemon to view stats or find fun pokemon fusions!
               </H5>
