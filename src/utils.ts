@@ -1,8 +1,10 @@
-import { pokeBaseUrl, total } from "./components";
+import { mergedBasesUrl, pokeBaseUrl, total } from "./components";
 
 export interface PokeDetails {
   name: string;
   index: string;
+  weight: number;
+  height: number;
   imageLink: string;
   imageLinkShiny?: string;
   animated?: string;
@@ -13,9 +15,16 @@ export interface PokeDetails {
   types?: string[];
   preEvolution?: string;
   postEvolution?: string;
-  stats?: any;
+  stats?: PokeStat[];
+  abilities?: PokeAbility[];
+  forms?: PokeForm[];
   region: PokeRegion;
+  cry?: string;
 }
+
+export type PokeAbility = string;
+export type PokeForm = string;
+export type PokeStat = { name: string; value: number };
 
 export type PokeRegion =
   | "All"
@@ -87,9 +96,14 @@ export const pokeTypes = [
 
 export const getPokemon = async (index: number) => {
   let pokeDetails: PokeDetails | undefined;
-  const basicData = await fetch(`${pokeBaseUrl}/pokemon/${index}`);
+
+  const [basicData, extraData] = await Promise.all([
+    fetch(`${pokeBaseUrl}/pokemon/${index}`),
+    fetch(`${pokeBaseUrl}/pokemon-species/${index}`),
+  ]);
 
   const firstData = await basicData.json();
+  const secondData = await extraData.json();
 
   pokeDetails = {
     name: (firstData.species.name as string).toUpperCase(),
@@ -106,30 +120,33 @@ export const getPokemon = async (index: number) => {
     imageLinkHighResShiny:
       firstData.sprites.other["official-artwork"].front_shiny,
     types: firstData.types.map((type: any) => type.type.name),
+    abilities: firstData.abilities.map((ability: any) => ability.ability.name),
+    forms: firstData.forms.map((form: any) => form.name),
+    stats: firstData.stats.map((stat: any) => {
+      return { value: stat.base_stat, name: stat.stat.name };
+    }),
+    cry: firstData.cries.latest,
+    weight: firstData.weight,
+    height: firstData.height,
     region:
-      index > 0 && index <= 151
+      index <= 151
         ? "Kanto"
-        : index > 151 && index <= 251
+        : index <= 251
         ? "Johto"
-        : index > 251 && index <= 386
+        : index <= 386
         ? "Hoenn"
-        : index > 386 && index <= 493
+        : index <= 493
         ? "Sinnoh"
-        : index > 493 && index <= 649
+        : index <= 649
         ? "Unova"
-        : index > 649 && index <= 721
+        : index <= 721
         ? "Kalos"
-        : index > 721 && index <= 809
+        : index <= 809
         ? "Alola"
-        : index > 810 && index <= 905
+        : index <= 905
         ? "Hisui"
         : "Paldea",
   };
-
-  const extraData = await fetch(
-    `${pokeBaseUrl}/pokemon-species/${pokeDetails.name.toLowerCase()}`
-  );
-  const secondData = await extraData.json();
 
   const flavorText = secondData.flavor_text_entries.filter(
     (entry: any) => entry.language.name === "en"
@@ -137,9 +154,7 @@ export const getPokemon = async (index: number) => {
 
   return {
     ...pokeDetails,
-    description: `${flavorText[0].flavor_text
-      .replace("\n", " ")
-      .replace("\f", " ")}`,
+    description: `${flavorText[0].flavor_text.replace(/[\n\f]/g, " ")}`,
   };
 };
 
@@ -179,8 +194,7 @@ export type PokeArgsMany = {
   region?: PokeRegion;
 };
 export type PokeArgsOne = {
-  name?: string;
-  index?: string;
+  index: number;
 };
 
 export const getPokemonDataList = (
@@ -214,18 +228,37 @@ export const getPokemonDataList = (
   return { data, count };
 };
 
-export const getPokemonDataID = (
-  args?: PokeArgsOne
-): PokeDetails | undefined => {
+export const getPokemonDataID = (args: PokeArgsOne): PokeDetails => {
   const data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
 
-  if (args?.index) {
-    return data.find((d) => d.index === args.index);
-  }
+  return data[args.index - 1];
+};
 
-  if (args?.name) {
-    return data.find((d) => d.name === args.name);
-  }
+//----------- Merged Pokemon Data ------------
 
-  return;
+export const getMergedPokemon = async (
+  firstIndex: number,
+  secondIndex: number
+) => {
+  const resultByProjectId = await fetch(
+    `${mergedBasesUrl}/projects?search=${encodeURIComponent("customSprites")}`
+  );
+  const dataByProjectId = await resultByProjectId.json();
+
+  const id = dataByProjectId.find((d: any) =>
+    d.web_url.includes("pokemoninfinitefusion")
+  ).id;
+
+  console.log(id);
+
+  const result = await fetch(
+    `${mergedBasesUrl}/projects/${id}/repository/files/${encodeURIComponent(
+      "CustomBattlers/1.1.png"
+    )}/raw?ref=master`
+  );
+  const blob = await result.blob();
+
+  const image = URL.createObjectURL(blob);
+
+  return image;
 };

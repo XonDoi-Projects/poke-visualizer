@@ -8,6 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      dropShadow: {
+        "no-offset-light": "0px 0px 35px rgba(0, 0, 0, 0.25)",
+        "no-offset-dark": "0px 0px 35px rgba(255, 255, 255, 0.25)",
+      },
+
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

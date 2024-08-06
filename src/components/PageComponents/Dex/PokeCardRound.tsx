@@ -8,12 +8,14 @@ import { FunctionComponent, useState } from "react";
 import { HiOutlineSparkles, HiSparkles } from "react-icons/hi";
 import { TypeChip } from "./TypeChip";
 import clsx from "clsx";
+import { useRouter } from "next/router";
 
 export interface PokeCardRoundProps {
   data: PokeDetails;
 }
 
 export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
+  const router = useRouter();
   const [showShiny, setShowShiny] = useState(false);
   const [hover, setHover] = useState(false);
 
@@ -33,11 +35,12 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
       </Row>
 
       <Card
-        className={`w-[200px] h-[200px] hover:scale-105 rounded-full transition-all`}
+        className={`w-[200px] h-[200px] hover:scale-105 rounded-full transition-all cursor-pointer`}
         onPointerEnter={() => setHover(true)}
         onPointerLeave={() => setHover(false)}
         onTouchStart={() => setHover(true)}
         onTouchEnd={() => setHover(false)}
+        onClick={() => router.push(`/dex/${props.data.index}`)}
       >
         <Container
           className={"relative flex-1 w-full items-center justify-center"}
@@ -45,7 +48,10 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
           <Container className={`absolute top-0 right-0 cursor-pointer`}>
             {showShiny && props.data.imageLinkShiny ? (
               <HiSparkles
-                onClick={() => setShowShiny(!showShiny)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowShiny(!showShiny);
+                }}
                 className={
                   light
                     ? "text-blue-950 group-hover:text-blue-800"
@@ -55,7 +61,10 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
               />
             ) : (
               <HiOutlineSparkles
-                onClick={() => setShowShiny(!showShiny)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowShiny(!showShiny);
+                }}
                 className={
                   light
                     ? "text-blue-950 group-hover:text-blue-800"

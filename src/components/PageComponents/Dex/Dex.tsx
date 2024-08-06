@@ -1,7 +1,6 @@
-import { Button, Column, Container, H3, H5, Row } from "../../LayoutComponents";
+import { Button, Column, Container, H2, H5, Row } from "../../LayoutComponents";
 import { total, useDarkTheme, useSize } from "../..";
-import { PokeCard } from "./PokeCard";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { clsx } from "clsx";
 import {
   PokeRegion,
@@ -11,7 +10,7 @@ import {
   pokeTypes,
 } from "@/utils";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { Options } from "@/components/LayoutComponents/Options";
+import { Selector } from "@/components/LayoutComponents/Selector";
 import { PokeCardRound } from "./PokeCardRound";
 
 export const Dex = () => {
@@ -55,9 +54,9 @@ export const Dex = () => {
     []
   );
 
-  console.log(currentOffset);
   return (
     <Column className={`gap-2`}>
+      <H2>Welcome to PokeVis</H2>
       <H5>{`You are currently viewing Pokemon #${pokemon.data[0]?.index
         .toString()
         .padStart(4, "0")} to #${pokemon.data[pokemon.data.length - 1]?.index
@@ -65,10 +64,11 @@ export const Dex = () => {
         .padStart(4, "0")}`}</H5>
       <Container className={`w-full justify-end gap-5`}>
         <Container className={`w-[150px]`}>
-          <Options
+          <Selector
+            label="Type"
             list={pokeTypes}
-            selection={types}
-            setSelection={(value) => {
+            option={types}
+            setOption={(value) => {
               setTypes([value]);
               setCurrentOffset(0);
               setLimit(20);
@@ -76,10 +76,11 @@ export const Dex = () => {
           />
         </Container>
         <Container className={`w-[150px]`}>
-          <Options
+          <Selector
+            label="Region"
             list={pokeRegions}
-            selection={region}
-            setSelection={(value) => {
+            option={region}
+            setOption={(value) => {
               setRegion(value);
               setCurrentOffset(0);
               setLimit(20);
