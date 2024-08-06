@@ -3,17 +3,15 @@ import { Container } from "../Container";
 import { Span } from "../Typography";
 import { useDarkTheme } from "@/components/Providers";
 
-export interface OptionsSelectionProps<T> {
+export interface AutocompleteOptionProps<T> {
   value: T;
-  setSelection: (value: T) => void;
+  setOption: (value: T) => void;
+  getDisplayValue: (value: T) => string;
 }
 
-export const OptionsSelection: FunctionComponent<OptionsSelectionProps<any>> = <
-  T,
->({
-  value,
-  setSelection,
-}: OptionsSelectionProps<T>) => {
+export const AutocompleteOption: FunctionComponent<
+  AutocompleteOptionProps<any>
+> = <T,>({ value, setOption, getDisplayValue }: AutocompleteOptionProps<T>) => {
   const { light } = useDarkTheme();
 
   return (
@@ -23,11 +21,9 @@ export const OptionsSelection: FunctionComponent<OptionsSelectionProps<any>> = <
           ? "bg-slate-300 hover:bg-slate-400"
           : "bg-blue-500 hover:bg-blue-600"
       } cursor-pointer p-2`}
-      onClick={() => setSelection(value)}
+      onClick={() => setOption(value)}
     >
-      <Span className={`flex-1`}>
-        {value !== undefined ? value?.toString() : ""}
-      </Span>
+      <Span className={`flex-1`}>{getDisplayValue(value)}</Span>
     </Container>
   );
 };
