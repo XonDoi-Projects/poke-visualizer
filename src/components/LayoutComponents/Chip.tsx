@@ -10,6 +10,7 @@ export interface ChipProps {
 }
 
 export const Chip: FunctionComponent<ChipProps> = (props) => {
+  const { light } = useDarkTheme();
   return (
     <Row
       className={`flex-row items-center rounded-md w-fit ${props.className} pl-2 pr-2 h-[20px] `}

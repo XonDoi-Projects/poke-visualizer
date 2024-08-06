@@ -1,15 +1,23 @@
-import { FunctionComponent, HTMLProps, ReactNode } from "react";
-import { Container } from "./Container";
+import {
+  ForwardedRef,
+  FunctionComponent,
+  HTMLProps,
+  ReactNode,
+  RefAttributes,
+  forwardRef,
+} from "react";
+import { Container, ContainerProps } from "./Container";
 
-export interface RowProps {
-  children?: ReactNode;
-  className?: HTMLProps<"HTMLElement">["className"];
-}
+export interface RowProps
+  extends RefAttributes<HTMLDivElement>,
+    ContainerProps {}
 
-export const Row: FunctionComponent<RowProps> = (props) => {
-  return (
-    <Container className={`flex-row ${props.className}`}>
-      {props.children}
-    </Container>
-  );
-};
+export const Row: FunctionComponent<RowProps> = forwardRef(
+  ({ className, children, ...props }, ref: ForwardedRef<HTMLDivElement>) => {
+    return (
+      <Container ref={ref} {...props} className={`flex-row ${className}`}>
+        {children}
+      </Container>
+    );
+  }
+);

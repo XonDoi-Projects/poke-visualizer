@@ -27,7 +27,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
           onClick && onClick(e);
         }
       }}
-      className={`flex flex-row max-w-[100px] h-[40px] px-[10px] py-[5px] rounded justify-center items-center ${
+      className={`flex flex-row max-w-[100px] px-[10px] py-[5px] rounded justify-center items-center ${
         !disable ? "cursor-pointer" : "cursor-auto"
       } transition-all group ${
         type === "contained"
@@ -41,7 +41,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
           : `bg-transparent border-2 border-solid border-yellow-500 ${
               !disable ? "hover:border-yellow-400" : ""
             }`
-      } ${disable ? "opacity-20" : ""} ${className}`}
+      } ${disable ? "opacity-20" : ""} ${className} `}
     >
       {typeof children === "string" ? (
         <Span

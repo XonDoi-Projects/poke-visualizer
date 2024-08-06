@@ -1,24 +1,28 @@
 import {
-  ComponentPropsWithRef,
+  ForwardRefExoticComponent,
+  ForwardedRef,
   FunctionComponent,
   HTMLAttributes,
   HTMLProps,
+  PropsWithoutRef,
   ReactNode,
+  RefAttributes,
+  forwardRef,
 } from "react";
 
-export interface ContainerProps extends ComponentPropsWithRef<"div"> {
+export interface ContainerProps
+  extends RefAttributes<HTMLDivElement>,
+    HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   className?: HTMLProps<"HTMLElement">["className"];
 }
 
-export const Container: FunctionComponent<ContainerProps> = ({
-  children,
-  className,
-  ...props
-}) => {
-  return (
-    <div {...props} className={`flex ${className}`}>
-      {children}
-    </div>
-  );
-};
+export const Container: FunctionComponent<ContainerProps> = forwardRef(
+  ({ children, className, ...props }, ref: ForwardedRef<HTMLDivElement>) => {
+    return (
+      <div ref={ref} {...props} className={`flex ${className}`}>
+        {children}
+      </div>
+    );
+  }
+);
