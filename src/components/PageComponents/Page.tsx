@@ -32,7 +32,7 @@ export const Page: FunctionComponent<PageProps> = (props) => {
 
       <Column
         id="main-content"
-        className={`h-fit flex-1 ${
+        className={`h-fit w-screen flex-1 ${
           light ? "bg-slate-200" : " bg-gray-900"
         } overflow-auto gap-5`}
       >
@@ -52,9 +52,10 @@ export const Page: FunctionComponent<PageProps> = (props) => {
             </Container>
           </Column>
         ) : (
-          <Column className={"flex-1 p-5"}>
-            <H2>Welcome to PokeVis</H2>
-            {props.children}
+          <Column className={`flex-1 items-center`}>
+            <Column className={"flex-1 p-5 max-w-[1440px]"}>
+              {props.children}
+            </Column>
           </Column>
         )}
 

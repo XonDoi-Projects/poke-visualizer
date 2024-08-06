@@ -30,7 +30,7 @@ export const Header = () => {
           className="w-auto h-full"
         />
       </Container>
-      <Container className="flex w-full absolute flex-row-reverse z-[3]">
+      <Container className="flex w-full absolute flex-row-reverse z-[3] pr-5">
         <Button
           onClick={() => setLight(!light)}
           className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 !bg-transparent "
