@@ -13,6 +13,7 @@ import {
   PokeDetails,
   setPokemonData,
 } from "@/utils";
+import { useRouter } from "next/router";
 
 export const total = 1025;
 
@@ -31,6 +32,8 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
   const [loadingState, setLoadingState] = useState(0);
   const [isCached, setIsCached] = useState(false);
 
+  const router = useRouter();
+
   const getAllPokemon = useCallback(async () => {
     let pokemonList: PokeDetails[] = [];
 
@@ -47,7 +50,25 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
   }, []);
 
   useEffect(() => {
+    const doMagic = () => {
+      if (!checkPokemonData()) {
+        setIsCached(false);
+        getAllPokemon();
+      } else {
+        setIsCached(true);
+      }
+    };
+
+    router.events.on("routeChangeStart", doMagic); // add listener
+
+    return () => {
+      router.events.off("routeChangeStart", doMagic); // remove listener
+    };
+  }, [getAllPokemon]);
+
+  useEffect(() => {
     if (!checkPokemonData()) {
+      setIsCached(false);
       getAllPokemon();
     } else {
       setIsCached(true);
