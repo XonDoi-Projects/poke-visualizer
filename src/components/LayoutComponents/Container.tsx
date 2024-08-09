@@ -26,3 +26,5 @@ export const Container: FunctionComponent<ContainerProps> = forwardRef(
     );
   }
 );
+
+Container.displayName = "Container";

@@ -21,3 +21,5 @@ export const Row: FunctionComponent<RowProps> = forwardRef(
     );
   }
 );
+
+Row.displayName = "Row";

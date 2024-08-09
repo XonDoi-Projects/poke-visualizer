@@ -44,13 +44,14 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
         {...props}
         value={value}
         onChange={onChange}
-        className={`flex justify-center outline-0 items-center px-1  ${
+        className={`flex-1 justify-center outline-0 items-center px-1  ${
           !disable ? "cursor-text" : "cursor-auto"
-        } transition-all bg-transparent ${
-          light
-            ? `text-blue-950 ${!disable ? "hover:text-blue-800" : ""}`
-            : `text-yellow-500 ${!disable ? "hover:text-yellow-400" : ""}`
-        } ${disable ? "opacity-20" : ""} ${className} `}
+        } transition-all bg-transparent
+         ${
+           light
+             ? `text-blue-950 ${!disable ? "hover:text-blue-800" : ""}`
+             : `text-slate-200 ${!disable ? "hover:text-slate-100" : ""}`
+         } ${disable ? "opacity-20" : ""} ${className} `}
       />
     </Field>
   );

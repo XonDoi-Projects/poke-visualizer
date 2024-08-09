@@ -31,15 +31,16 @@ export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
   const [showOptions, setShowOptions] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  const updatedRef = ref.current;
   const bottom = useMemo(() => {
-    if (ref.current) {
+    if (updatedRef) {
       return (
-        ref.current?.getBoundingClientRect().bottom -
-        ref.current?.getBoundingClientRect().top
+        updatedRef.getBoundingClientRect().bottom -
+        updatedRef.getBoundingClientRect().top
       );
     }
     return;
-  }, [ref.current]);
+  }, [updatedRef]);
 
   useClickOutside(ref, () => {
     setShowOptions(false);

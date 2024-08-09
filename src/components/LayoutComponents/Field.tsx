@@ -1,4 +1,9 @@
-import { FunctionComponent, PropsWithChildren, ReactNode } from "react";
+import {
+  FunctionComponent,
+  HTMLProps,
+  PropsWithChildren,
+  ReactNode,
+} from "react";
 import { Column } from "./Column";
 import { Small, Span } from "./Typography";
 import { Row } from "./Row";
@@ -10,6 +15,7 @@ export interface FieldProps {
   helperText?: string;
   suffix?: ReactNode;
   disable?: boolean;
+  className?: HTMLProps<"HTMLElement">["className"];
 }
 export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
   label,
@@ -17,11 +23,12 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
   helperText,
   disable,
   suffix,
+  className,
   ...props
 }) => {
   const { light } = useDarkTheme();
   return (
-    <Column className={`gap-1`}>
+    <Column className={`gap-1 w-full ${className}`}>
       <Span>{label}</Span>
       <Row
         className={`items-center gap-2 rounded border-solid border-2 rounded-md border-solid ${

@@ -21,3 +21,5 @@ export const Column: FunctionComponent<ColumnProps> = forwardRef(
     );
   }
 );
+
+Column.displayName = "Column";

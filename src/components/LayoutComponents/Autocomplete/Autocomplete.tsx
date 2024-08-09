@@ -34,6 +34,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   search,
   setSearch,
   getDisplayName,
+  className,
   ...props
 }: AutocompleteProps<T>) => {
   const { light } = useDarkTheme();
@@ -45,15 +46,16 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   const [isFocus, setIsFocus] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  const updatedRef = ref.current;
   const bottom = useMemo(() => {
-    if (ref.current) {
+    if (updatedRef) {
       return (
-        ref.current?.getBoundingClientRect().bottom -
-        ref.current?.getBoundingClientRect().top
+        updatedRef.getBoundingClientRect().bottom -
+        updatedRef.getBoundingClientRect().top
       );
     }
     return;
-  }, [ref.current]);
+  }, [updatedRef]);
 
   useEffect(() => {
     let timeout = debounceRef.current;
@@ -62,10 +64,12 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
       clearTimeout(timeout);
     }
 
-    setTimeout(() => setSearch(query), 300);
+    if (query) {
+      setTimeout(() => setSearch(query), 300);
+    }
 
     return () => clearTimeout(timeout);
-  }, [query]);
+  }, [query, setSearch]);
 
   useClickOutside(ref, () => {
     setIsFocus(false);
@@ -73,7 +77,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   });
 
   return (
-    <Column className={`relative w-full`} ref={ref}>
+    <Column className={`relative w-full ${className}`} ref={ref}>
       <InputField
         label=""
         onValueChange={setQuery}
@@ -95,7 +99,10 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
           setShowOptions(true);
           setIsFocus(true);
         }}
-        onBlur={() => setIsFocus(false)}
+        onBlur={() => {
+          setIsFocus(false);
+          setQuery("");
+        }}
       />
 
       {showOptions && list.length ? (
