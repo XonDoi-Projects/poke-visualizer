@@ -53,7 +53,7 @@ export const Page: FunctionComponent<PageProps> = (props) => {
           </Column>
         ) : (
           <Column className={`flex-1 items-center`}>
-            <Column className={"flex-1 p-5 max-w-[1440px]"}>
+            <Column className={"flex-1 p-5 max-w-[1440px] w-full"}>
               {props.children}
             </Column>
           </Column>

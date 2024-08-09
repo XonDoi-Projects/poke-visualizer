@@ -21,14 +21,18 @@ export const Header = () => {
       <Container
         className={`relative w-[100px] items-center justify-center pl-5`}
       >
-        <Image
-          src={light ? "/PokeVis_Logo_Light.png" : "/PokeVis_Logo_Dark.png"}
-          alt="Logo"
-          sizes="100vw"
-          width="0"
-          height="0"
-          className="w-auto h-full"
-        />
+        <picture>
+          <Image
+            src={light ? "/PokeVis_Logo_Light.png" : "/PokeVis_Logo_Dark.png"}
+            alt="Logo"
+            sizes="100vw"
+            width="0"
+            height="0"
+            className="w-auto h-full"
+            loading="lazy"
+            fetchPriority="low"
+          />
+        </picture>
       </Container>
       <Container className="flex w-full absolute flex-row-reverse z-[3] pr-5">
         <Button

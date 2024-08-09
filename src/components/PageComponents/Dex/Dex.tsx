@@ -47,7 +47,7 @@ export const Dex = () => {
       limit,
       region,
     });
-  }, [currentOffset, limit, types, total, region]);
+  }, [currentOffset, limit, types, region]);
 
   const scrollElement = useMemo(
     () => document.getElementById("main-content"),

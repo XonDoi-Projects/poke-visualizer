@@ -5,16 +5,11 @@ import {
   SizeProvider,
   UserProvider,
 } from "@/components/Providers";
-import { useEffect } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import "../../public/output.css";
 import { DataProvider } from "@/components/Providers/DataProvider";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  useEffect(() => {
-    document.title = "Pokemon PokeDex & Fusion";
-  });
-
   return (
     <>
       <DefaultFonts />
