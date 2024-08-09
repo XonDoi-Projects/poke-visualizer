@@ -74,25 +74,29 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
               />
             )}
           </Container>
-          <Image
-            src={
-              showShiny &&
-              props.data.imageLinkShiny &&
-              hover &&
-              props.data.animatedShiny
-                ? props.data.animatedShiny
-                : hover && props.data.animated
-                ? props.data.animated
-                : showShiny && props.data.imageLinkShiny
-                ? props.data.imageLinkShiny
-                : props.data.imageLink
-            }
-            alt="Pokemon Image"
-            sizes="100vw"
-            width="0"
-            height="0"
-            className={`w-auto ${hovering}`}
-          />
+          <picture>
+            <Image
+              src={
+                showShiny &&
+                props.data.imageLinkShiny &&
+                hover &&
+                props.data.animatedShiny
+                  ? props.data.animatedShiny
+                  : hover && props.data.animated
+                  ? props.data.animated
+                  : showShiny && props.data.imageLinkShiny
+                  ? props.data.imageLinkShiny
+                  : props.data.imageLink
+              }
+              alt="Pokemon Image"
+              sizes="100vw"
+              width="0"
+              height="0"
+              loading="lazy"
+              fetchPriority="low"
+              className={`w-auto ${hovering}`}
+            />
+          </picture>
         </Container>
       </Card>
       <H5>{props.data.name}</H5>

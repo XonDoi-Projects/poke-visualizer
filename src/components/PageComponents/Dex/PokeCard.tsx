@@ -61,25 +61,29 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
             />
           )}
         </Container>
-        <Image
-          src={
-            showShiny &&
-            props.data.imageLinkShiny &&
-            hover &&
-            props.data.animatedShiny
-              ? props.data.animatedShiny
-              : hover && props.data.animated
-              ? props.data.animated
-              : showShiny && props.data.imageLinkShiny
-              ? props.data.imageLinkShiny
-              : props.data.imageLink
-          }
-          alt="Pokemon Image"
-          sizes="100vw"
-          width="0"
-          height="0"
-          className={`w-auto h-[${hover ? "100px" : "150px"}]`}
-        />
+        <picture>
+          <Image
+            src={
+              showShiny &&
+              props.data.imageLinkShiny &&
+              hover &&
+              props.data.animatedShiny
+                ? props.data.animatedShiny
+                : hover && props.data.animated
+                ? props.data.animated
+                : showShiny && props.data.imageLinkShiny
+                ? props.data.imageLinkShiny
+                : props.data.imageLink
+            }
+            alt="Pokemon Image"
+            sizes="100vw"
+            width="0"
+            height="0"
+            loading="lazy"
+            fetchPriority="low"
+            className={`w-auto h-[${hover ? "100px" : "150px"}]`}
+          />
+        </picture>
       </Container>
       <Column className="flex flex-1 justify-start items-start p-5 gap-5">
         <Span>{props.data.description}</Span>

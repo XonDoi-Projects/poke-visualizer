@@ -10,7 +10,7 @@ import { InputField } from "@/components/LayoutComponents/Inputs";
 import { total, useDarkTheme } from "@/components/Providers";
 import { PokeDetails, getPokemonDataList } from "@/utils";
 import { data } from "autoprefixer";
-import { FunctionComponent, useMemo, useState } from "react";
+import { FunctionComponent, useMemo, useRef, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -21,6 +21,7 @@ import {
   PolarRadiusAxis,
   Radar,
   RadarChart,
+  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -42,7 +43,7 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
     return getPokemonDataList({
       limit: total,
     });
-  }, [total]);
+  }, []);
 
   const filteredPokemon = useMemo(
     () =>
@@ -114,8 +115,41 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
               fullMarks: 200,
             },
           ]
-        : [],
-    [pokemonTwo]
+        : [
+            {
+              subject: "HP",
+              [pokemon.name]: pokemon.stats?.find((s) => s.name === "hp")
+                ?.value,
+            },
+            {
+              subject: "Attack",
+              [pokemon.name]: pokemon.stats?.find((s) => s.name === "attack")
+                ?.value,
+            },
+            {
+              subject: "Defense",
+              [pokemon.name]: pokemon.stats?.find((s) => s.name === "defense")
+                ?.value,
+            },
+            {
+              subject: "Spc. Att",
+              [pokemon.name]: pokemon.stats?.find(
+                (s) => s.name === "special-attack"
+              )?.value,
+            },
+            {
+              subject: "Spc. Def",
+              [pokemon.name]: pokemon.stats?.find(
+                (s) => s.name === "special-defense"
+              )?.value,
+            },
+            {
+              subject: "Speed",
+              [pokemon.name]: pokemon.stats?.find((s) => s.name === "speed")
+                ?.value,
+            },
+          ],
+    [pokemon, pokemonTwo]
   );
 
   const barData = useMemo(
@@ -133,31 +167,44 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
               [pokemonTwo.name]: pokemonTwo.height / 10,
             },
           ]
-        : [],
-    [pokemonTwo]
+        : [
+            {
+              subject: "Weight (Kg)",
+              [pokemon.name]: pokemon.weight / 10,
+            },
+            {
+              subject: "Height (m)",
+              [pokemon.name]: pokemon.height / 10,
+            },
+          ],
+    [pokemon, pokemonTwo]
   );
 
   return (
-    <Container className={`flex-1 flex-wrap gap-5`}>
-      <Column className={`flex-1 gap-5 items-start`}>
-        <H5>Stat Comparison Tool</H5>
-        <Span>{`Select a pokemon to compare with ${pokemon.name.toLocaleUpperCase()}`}</Span>
-        <Container>
-          <Autocomplete
-            label=""
-            list={filteredPokemon}
-            search={search}
-            setSearch={setSearch}
-            option={pokemonTwo}
-            setOption={(value: PokeDetails) => {
-              setPokemonTwo(value);
-              setSearch(value.name);
-            }}
-            getDisplayName={(value: PokeDetails) => value.name}
-          />
-        </Container>
-        {pokemonTwo && (
-          <Row className={`flex-wrap gap-5`}>
+    <Column className={`flex-1 gap-5 items-start`}>
+      <H5>Stat Comparison Tool</H5>
+      <Row className={`w-full gap-5 flex-wrap`}>
+        <Span
+          className={`max-w-[300px]`}
+        >{`Select a pokemon to compare with ${pokemon.name.toLocaleUpperCase()}`}</Span>
+        <Autocomplete
+          label=""
+          list={filteredPokemon}
+          search={search}
+          setSearch={setSearch}
+          option={pokemonTwo}
+          setOption={(value: PokeDetails) => {
+            setPokemonTwo(value);
+            setSearch(value.name);
+          }}
+          getDisplayName={(value: PokeDetails) => value.name}
+          className={`max-w-[300px]`}
+        />
+      </Row>
+
+      <Row className={`w-full flex-wrap gap-5`}>
+        <Column className={`flex-1 min-w-[200px]`}>
+          <ResponsiveContainer height={250}>
             <RadarChart
               outerRadius={50}
               width={250}
@@ -165,8 +212,9 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
               data={radarData}
             >
               <PolarGrid
-                strokeDasharray="5 5"
+                strokeDasharray="1 1"
                 stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                opacity={0.2}
               />
               <PolarAngleAxis
                 tickLine={false}
@@ -174,6 +222,7 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
                 stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
                 baselineShift={-5}
               />
+              <PolarRadiusAxis angle={30} domain={[0, 200]} opacity={0} />
               <Tooltip />
               <Radar
                 name={pokemon.name}
@@ -181,85 +230,129 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
                 stroke={light ? "#aa4274" : "#8884d8"}
                 fill={light ? "#aa4274" : "#8884d8"}
                 fillOpacity={0.4}
+                isAnimationActive={false}
               />
-              <Radar
-                name={pokemonTwo.name}
-                dataKey={pokemonTwo.name}
-                stroke={light ? "#228822" : "#82ca9d"}
-                fill={light ? "#228822" : "#82ca9d"}
-                fillOpacity={0.4}
-              />
+              {pokemonTwo && (
+                <Radar
+                  name={pokemonTwo.name}
+                  dataKey={pokemonTwo.name}
+                  stroke={light ? "#228822" : "#82ca9d"}
+                  fill={light ? "#228822" : "#82ca9d"}
+                  fillOpacity={0.4}
+                  isAnimationActive={false}
+                />
+              )}
               <Legend />
             </RadarChart>
-            <Column>
-              <BarChart
-                width={200}
-                height={150}
-                data={[barData[0]]}
-                layout="vertical"
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
-                />
-                <YAxis
-                  dataKey="subject"
-                  type="category"
-                  stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
-                />
-                <XAxis
-                  type="number"
-                  stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
-                />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey={pokemon.name}
-                  fill={light ? "#aa4274" : "#8884d8"}
-                  barSize={20}
-                />
-                <Bar
-                  dataKey={pokemonTwo.name}
-                  fill={light ? "#228822" : "#82ca9d"}
-                  barSize={20}
-                />
-              </BarChart>
-              <BarChart
-                width={200}
-                height={150}
-                data={[barData[1]]}
-                layout="vertical"
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
-                />
-                <YAxis
-                  dataKey="subject"
-                  type="category"
-                  stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
-                />
-                <XAxis
-                  type="number"
-                  stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
-                />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey={pokemon.name}
-                  fill={light ? "#aa4274" : "#8884d8"}
-                  barSize={20}
-                />
+          </ResponsiveContainer>
+        </Column>
+
+        <Column className={`flex-1 min-w-[200px]`}>
+          <ResponsiveContainer height={150}>
+            <BarChart data={[barData[0]]} layout="vertical">
+              <CartesianGrid
+                strokeDasharray="1 1"
+                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                opacity={0.2}
+              />
+              <YAxis
+                dataKey="subject"
+                type="category"
+                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+              />
+              <XAxis
+                type="number"
+                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                domain={[
+                  0,
+                  pokemonTwo
+                    ? barData[0][pokemon.name] < barData[0][pokemonTwo.name]
+                      ? Math.ceil(
+                          (barData[0][pokemonTwo.name] as number) +
+                            (barData[0][pokemonTwo.name] as number) * 0.3
+                        )
+                      : Math.ceil(
+                          (barData[0][pokemon.name] as number) +
+                            (barData[0][pokemon.name] as number) * 0.3
+                        )
+                    : Math.ceil(
+                        (barData[0][pokemon.name] as number) +
+                          (barData[0][pokemon.name] as number) * 0.3
+                      ),
+                ]}
+              />
+              <Tooltip />
+              <Legend />
+              <Bar
+                dataKey={pokemon.name}
+                fill={light ? "#aa4274" : "#8884d8"}
+                barSize={20}
+                isAnimationActive={false}
+              />
+              {pokemonTwo && (
                 <Bar
                   dataKey={pokemonTwo.name}
                   fill={light ? "#228822" : "#82ca9d"}
                   barSize={20}
+                  isAnimationActive={false}
                 />
-              </BarChart>
-            </Column>
-          </Row>
-        )}
-      </Column>
-    </Container>
+              )}
+            </BarChart>
+          </ResponsiveContainer>
+
+          <ResponsiveContainer height={150}>
+            <BarChart data={[barData[1]]} layout="vertical">
+              <CartesianGrid
+                strokeDasharray="1 1"
+                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                opacity={0.2}
+              />
+              <YAxis
+                dataKey="subject"
+                type="category"
+                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+              />
+              <XAxis
+                type="number"
+                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                domain={[
+                  0,
+                  pokemonTwo
+                    ? barData[1][pokemon.name] < barData[1][pokemonTwo.name]
+                      ? Math.ceil(
+                          (barData[1][pokemonTwo.name] as number) +
+                            (barData[1][pokemonTwo.name] as number) * 0.3
+                        )
+                      : Math.ceil(
+                          (barData[1][pokemon.name] as number) +
+                            (barData[1][pokemon.name] as number) * 0.3
+                        )
+                    : Math.ceil(
+                        (barData[1][pokemon.name] as number) +
+                          (barData[1][pokemon.name] as number) * 0.3
+                      ),
+                ]}
+              />
+              <Tooltip />
+              <Legend />
+              <Bar
+                dataKey={pokemon.name}
+                fill={light ? "#aa4274" : "#8884d8"}
+                barSize={20}
+                isAnimationActive={false}
+              />
+              {pokemonTwo && (
+                <Bar
+                  dataKey={pokemonTwo.name}
+                  fill={light ? "#228822" : "#82ca9d"}
+                  barSize={20}
+                  isAnimationActive={false}
+                />
+              )}
+            </BarChart>
+          </ResponsiveContainer>
+        </Column>
+      </Row>
+    </Column>
   );
 };
