@@ -24,6 +24,7 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
   value,
   onValueChange,
   disable,
+  placeHolder,
   className,
   ...props
 }) => {
@@ -44,14 +45,25 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
         {...props}
         value={value}
         onChange={onChange}
-        className={`flex-1 justify-center outline-0 items-center px-1  ${
+        placeholder={placeHolder}
+        className={`w-full h-[20px] justify-center outline-0 items-center px-[10px]  ${
           !disable ? "cursor-text" : "cursor-auto"
         } transition-all bg-transparent
          ${
            light
              ? `text-blue-950 ${!disable ? "hover:text-blue-800" : ""}`
-             : `text-slate-200 ${!disable ? "hover:text-slate-100" : ""}`
-         } ${disable ? "opacity-20" : ""} ${className} `}
+             : `text-slate-300 ${!disable ? "hover:text-slate-200" : ""}`
+         }
+         ${
+           light
+             ? `placeholder-blue-900 ${
+                 !disable ? "hover:placeholder-blue-750" : ""
+               }`
+             : `placeholder-slate-200 ${
+                 !disable ? "hover:placeholder-slate-100" : ""
+               }`
+         }
+         ${disable ? "opacity-20" : ""} ${className} `}
       />
     </Field>
   );

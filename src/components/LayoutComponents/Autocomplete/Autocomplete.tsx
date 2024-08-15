@@ -8,7 +8,7 @@ import {
 } from "react";
 import { Container } from "../Container";
 import { Span } from "../Typography";
-import { BiChevronDown } from "react-icons/bi";
+import { BiChevronDown, BiX } from "react-icons/bi";
 import { Column } from "../Column";
 import { useDarkTheme } from "@/components/Providers";
 import { Field, FieldProps } from "../Field";
@@ -21,10 +21,11 @@ import { useClickOutside } from "@/components/Hooks";
 export interface AutocompleteProps<T> extends FieldProps {
   list: T[];
   option?: T;
-  setOption: (value: T) => void;
+  setOption: (value: T | undefined) => void;
   search: string;
   setSearch: (value: string) => void;
   getDisplayName: (value: T) => string;
+  noDropDownOnClick?: boolean;
 }
 
 export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
@@ -35,6 +36,8 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   setSearch,
   getDisplayName,
   className,
+  noDropDownOnClick,
+  placeHolder,
   ...props
 }: AutocompleteProps<T>) => {
   const { light } = useDarkTheme();
@@ -74,41 +77,58 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   useClickOutside(ref, () => {
     setIsFocus(false);
     setShowOptions(false);
+    setSearch("");
+    setQuery("");
   });
 
   return (
     <Column className={`relative w-full ${className}`} ref={ref}>
       <InputField
         label=""
+        placeHolder={placeHolder}
         onValueChange={setQuery}
-        value={isFocus ? query : !search ? query : search}
+        value={isFocus ? query : option ? getDisplayName(option) : ""}
         suffix={
-          <BiChevronDown
-            className={`w-[20px] ${
-              !light
-                ? "text-slate-200 group-hover:text-slate-100"
-                : "text-blue-950 group-hover:text-blue-800"
-            } ${showOptions ? "rotate-180" : ""}`}
-            style={{
-              fontSize: "20px",
-            }}
-            onClick={() => setShowOptions(!showOptions)}
-          />
+          !noDropDownOnClick && (
+            <Row>
+              <BiX
+                className={`w-[20px] ${
+                  !light
+                    ? "text-slate-200 group-hover:text-slate-100"
+                    : "text-blue-950 group-hover:text-blue-800"
+                } ${showOptions ? "rotate-180" : ""}`}
+                style={{
+                  fontSize: "20px",
+                }}
+                onClick={() => {
+                  setOption(undefined);
+                }}
+              />
+              <BiChevronDown
+                className={`w-[20px] ${
+                  !light
+                    ? "text-slate-200 group-hover:text-slate-100"
+                    : "text-blue-950 group-hover:text-blue-800"
+                } ${showOptions ? "rotate-180" : ""}`}
+                style={{
+                  fontSize: "20px",
+                }}
+                onClick={() => setShowOptions(!showOptions)}
+              />
+            </Row>
+          )
         }
         onFocus={() => {
           setShowOptions(true);
           setIsFocus(true);
         }}
-        onBlur={() => {
-          setIsFocus(false);
-          setQuery("");
-        }}
       />
 
-      {showOptions && list.length ? (
+      {(showOptions && !noDropDownOnClick && list.length) ||
+      (query && list.length) ? (
         <Column
           style={{ "--bot-pos": bottom + "px" } as CSSProperties}
-          className={`absolute z-[2] top-[var(--bot-pos)] right-0 border-[1px] w-[150px] max-h-[150px] overflow-y-auto rounded-md border-solid ${
+          className={`absolute z-[2] top-[var(--bot-pos)] right-0 border-[1px] w-full max-h-[150px] overflow-y-auto rounded-md border-solid ${
             light ? "border-blue-900" : "border-slate-300"
           } shadow-border ${light ? "shadow-black-200" : "shadow-blue-400"}`}
         >
@@ -117,8 +137,10 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
               key={index}
               value={item}
               setOption={(value) => {
-                setOption(value);
+                setIsFocus(false);
                 setShowOptions(false);
+                setQuery("");
+                setOption(value);
               }}
               getDisplayValue={(item: T) => getDisplayName(item)}
             />

@@ -15,6 +15,7 @@ export interface FieldProps {
   helperText?: string;
   suffix?: ReactNode;
   disable?: boolean;
+  placeHolder?: string;
   className?: HTMLProps<"HTMLElement">["className"];
 }
 export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
@@ -28,16 +29,16 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
 }) => {
   const { light } = useDarkTheme();
   return (
-    <Column className={`gap-1 w-full ${className}`}>
+    <Column className={`gap-1 w-full h-full ${className}`}>
       <Span>{label}</Span>
       <Row
-        className={`items-center gap-2 rounded border-solid border-2 rounded-md border-solid ${
+        className={`h-full items-center gap-2 rounded border-solid border-2 rounded-md border-solid ${
           light ? "border-blue-900" : "border-slate-300"
         } ${
           light
             ? "bg-slate-300 hover:bg-slate-200"
             : "bg-blue-500 hover:bg-blue-400"
-        } p-2 group`}
+        } px-1 group`}
       >
         {props.children}
         {suffix}

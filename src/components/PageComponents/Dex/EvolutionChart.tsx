@@ -4,6 +4,7 @@ import { EvolutionType, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import { FunctionComponent } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export interface EvolutionChartProps {
   evolvesFrom?: PokeDetails;
@@ -17,6 +18,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
   evolvesFrom,
 }) => {
   const { light } = useDarkTheme();
+  const router = useRouter();
 
   const dropShadow = clsx({
     "drop-shadow-no-offset-light": light,
@@ -33,7 +35,10 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
           >
             <H5>Evolves From</H5>
             <Column
-              className={"relative flex-1 w-full items-center justify-center"}
+              className={
+                "relative flex-1 w-full items-center justify-center cursor-pointer"
+              }
+              onClick={() => router.push(`/dex/${evolvesFrom.index}`)}
             >
               <picture>
                 <Image
@@ -68,8 +73,9 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
               <Column
                 key={evolve.index}
                 className={
-                  "relative flex-1 w-full items-center justify-center gap-2"
+                  "relative flex-1 w-full items-center justify-center gap-2 cursor-pointer"
                 }
+                onClick={() => router.push(`/dex/${evolve.index}`)}
               >
                 <picture>
                   <Image
@@ -95,7 +101,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
                       light ? "text-blue-900" : "text-slate-300"
                     } `}
                   >
-                    {`Requires: ${Object.keys(evolve.evolutionDetails)
+                    {`Requirement: ${Object.keys(evolve.evolutionDetails)
                       .filter(
                         (objectKey) =>
                           evolve.evolutionDetails[
