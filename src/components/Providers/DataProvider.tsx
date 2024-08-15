@@ -14,12 +14,13 @@ import {
   setPokemonData,
 } from "@/utils";
 import { useRouter } from "next/router";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 
 export const total = 1025;
 
 export interface IDataContext {
   loadingState: number;
-  isCached: boolean;
+  isCached?: boolean;
 }
 
 export const DataContext = createContext<IDataContext | undefined>(undefined);
@@ -30,7 +31,7 @@ export interface IDataProviderProps {
 
 export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
   const [loadingState, setLoadingState] = useState(0);
-  const [isCached, setIsCached] = useState(false);
+  const [isCached, setIsCached] = useState<boolean>();
 
   const router = useRouter();
 
@@ -49,14 +50,26 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
     setPokemonData(pokemonList);
   }, []);
 
+  const query = useQuery({
+    queryKey: ["getPokemon"],
+    queryFn: getAllPokemon,
+    enabled: isCached === false && loadingState === 0,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
+
+  const checkCache = useCallback(() => {
+    if (!checkPokemonData()) {
+      setIsCached(false);
+    } else {
+      setIsCached(true);
+    }
+  }, []);
+
   useEffect(() => {
     const doMagic = () => {
-      if (!checkPokemonData()) {
-        setIsCached(false);
-        getAllPokemon();
-      } else {
-        setIsCached(true);
-      }
+      checkCache();
     };
 
     router.events.on("routeChangeStart", doMagic); // add listener
@@ -64,17 +77,9 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
     return () => {
       router.events.off("routeChangeStart", doMagic); // remove listener
     };
-  }, [getAllPokemon]);
+  }, [checkCache, router.events]);
 
-  useEffect(() => {
-    if (!checkPokemonData()) {
-      setIsCached(false);
-      getAllPokemon();
-    } else {
-      setIsCached(true);
-    }
-  }, [getAllPokemon]);
-
+  useEffect(() => checkCache(), [checkCache]);
   return (
     <DataContext.Provider
       value={{

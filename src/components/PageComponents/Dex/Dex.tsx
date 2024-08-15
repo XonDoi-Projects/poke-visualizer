@@ -57,9 +57,9 @@ export const Dex = () => {
   return (
     <Column className={`gap-2`}>
       <H2>Welcome to PokeVis</H2>
-      <H5>{`You are currently viewing Pokemon #${pokemon.data[0]?.index
+      <H5>{`You are currently viewing Pokemon #${pokemon?.data[0]?.index
         .toString()
-        .padStart(4, "0")} to #${pokemon.data[pokemon.data.length - 1]?.index
+        .padStart(4, "0")} to #${pokemon?.data[pokemon.data.length - 1]?.index
         .toString()
         .padStart(4, "0")}`}</H5>
       <Container className={`w-full justify-end gap-5`}>
@@ -122,7 +122,7 @@ export const Dex = () => {
             setCurrentOffset(currentOffset + 20);
             scrollElement?.scrollTo({ top: 0 });
           }}
-          disable={currentOffset + 20 >= pokemon.count}
+          disable={currentOffset + 20 >= (pokemon?.count || total)}
         >
           <BiChevronRight
             className={

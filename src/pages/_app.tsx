@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import { DefaultFonts, GlobalStyle } from "..";
 import {
   DarkThemeProvider,
+  QueryProvider,
   SizeProvider,
   UserProvider,
 } from "@/components/Providers";
@@ -17,9 +18,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <DarkThemeProvider>
         <SizeProvider>
           <UserProvider>
-            <DataProvider>
+            <QueryProvider>
               <Component {...pageProps} />
-            </DataProvider>
+            </QueryProvider>
             <Analytics />
           </UserProvider>
         </SizeProvider>
