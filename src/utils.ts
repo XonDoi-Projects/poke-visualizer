@@ -163,7 +163,7 @@ const getNextEvolution = (
         name: { value: s.species.name.toUpperCase(), flavorText: "" },
         item: {
           value: s.evolution_details[0]?.item?.name || null,
-          flavorText: "By Using Item",
+          flavorText: "Using Item",
         },
         trigger: {
           value: s.evolution_details[0]?.trigger?.name || null,
@@ -171,39 +171,39 @@ const getNextEvolution = (
         },
         gender: {
           value: s.evolution_details[0]?.gender || null,
-          flavorText: "By Being",
+          flavorText: "Being",
         },
         heldItem: {
           value: s.evolution_details[0]?.held_item?.name || null,
-          flavorText: "By Holding",
+          flavorText: "Holding",
         },
         knownMove: {
           value: s.evolution_details[0]?.known_move?.name || null,
-          flavorText: "By Knowing",
+          flavorText: "Knowing",
         },
         knownMoveType: {
           value: s.evolution_details[0]?.known_move_type?.name || null,
-          flavorText: "By Knowing a Move of Type",
+          flavorText: "Knowing a Move of Type",
         },
         location: {
           value: s.evolution_details[0]?.location?.name || null,
-          flavorText: "By Being At",
+          flavorText: "Being At",
         },
         minLevel: {
           value: s.evolution_details[0]?.min_level || null,
-          flavorText: "By Reaching Level",
+          flavorText: "Reaching Level",
         },
         minHappiness: {
           value: s.evolution_details[0]?.min_happiness || null,
-          flavorText: "By Reaching Happiness",
+          flavorText: "Reaching Happiness",
         },
         minBeauty: {
           value: s.evolution_details[0]?.min_beauty || null,
-          flavorText: "By Reaching Beauty",
+          flavorText: "Reaching Beauty",
         },
         minAffection: {
           value: s.evolution_details[0]?.min_affection || null,
-          flavorText: "By Reaching Affection",
+          flavorText: "Reaching Affection",
         },
         needsOverworldRain: {
           value: s.evolution_details[0]?.needs_overworld_rain,
@@ -219,19 +219,23 @@ const getNextEvolution = (
         },
         relativePhysicalStats: {
           value: s.evolution_details[0]?.relative_physical_stats || null,
-          flavorText: "By having Physical Stats",
+          flavorText: "having Physical Stats",
         },
         timeOfDay: {
           value: s.evolution_details[0]?.time_of_day,
           flavorText: "At Time of Day",
         },
         tradeSpecies: {
-          value: s.evolution_details[0]?.trade_species?.name || null,
-          flavorText: "By Trading",
+          value: s.evolution_details[0]?.trade_species?.name
+            ? s.evolution_details[0]?.trade_species?.name.toUpperCase()
+            : s.evolution_details[0]?.trigger?.name === "trade"
+            ? "For Other Pokemon"
+            : null,
+          flavorText: "Trading",
         },
         turnUpsideDown: {
           value: s.evolution_details[0]?.turn_upside_down,
-          flavorText: "By Turning Upside Down",
+          flavorText: "Turning Upside Down",
         },
       };
     });
@@ -388,33 +392,40 @@ export type PokeArgsOneByName = {
 
 export const getPokemonDataList = (
   args?: PokeArgsMany
-): { data: PokeDetails[]; count: number } => {
-  if (!args) {
-    return JSON.parse(localStorage.getItem("pokemon") || "");
+): { data: PokeDetails[]; count: number } | undefined => {
+  if (typeof window !== "undefined") {
+    if (!args) {
+      return JSON.parse(localStorage.getItem("pokemon") || "");
+    }
+
+    let data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
+
+    if (args.types && !args.types?.includes("Any")) {
+      data = data.filter((d) =>
+        args.types
+          ?.map((t) => d.types?.includes(t.toLowerCase()))
+          .some((b) => b)
+      );
+    }
+
+    if (args.region && args.region !== "All") {
+      data = data.filter((d) => args.region?.includes(d.region));
+    }
+
+    const count = data.length;
+
+    if (args.range) {
+      data = data.slice(
+        args.range.start,
+        data.length - args.range.start > args.limit
+          ? args.range.end
+          : data.length
+      );
+    }
+
+    return { data, count };
   }
-
-  let data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
-
-  if (args.types && !args.types?.includes("Any")) {
-    data = data.filter((d) =>
-      args.types?.map((t) => d.types?.includes(t.toLowerCase())).some((b) => b)
-    );
-  }
-
-  if (args.region && args.region !== "All") {
-    data = data.filter((d) => args.region?.includes(d.region));
-  }
-
-  const count = data.length;
-
-  if (args.range) {
-    data = data.slice(
-      args.range.start,
-      data.length - args.range.start > args.limit ? args.range.end : data.length
-    );
-  }
-
-  return { data, count };
+  return;
 };
 
 export const getPokemonDataID = (args: PokeArgsOneById): PokeDetails => {

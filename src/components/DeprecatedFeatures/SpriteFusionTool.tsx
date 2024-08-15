@@ -44,10 +44,10 @@ export const SpriteFusionTool: FunctionComponent<SpriteFusionToolProps> = ({
   const filteredPokemon = useMemo(
     () =>
       search
-        ? comparePokemon.data.filter((c) =>
+        ? comparePokemon?.data.filter((c) =>
             c.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
           )
-        : comparePokemon.data,
+        : comparePokemon?.data,
     [comparePokemon, search]
   );
 
@@ -79,7 +79,7 @@ export const SpriteFusionTool: FunctionComponent<SpriteFusionToolProps> = ({
         >{`Select a pokemon to fuse with ${pokemon.name.toLocaleUpperCase()}`}</Span>
         <Autocomplete
           label=""
-          list={filteredPokemon}
+          list={filteredPokemon || []}
           search={search}
           setSearch={setSearch}
           option={pokemonTwo}

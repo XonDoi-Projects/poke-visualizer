@@ -1,15 +1,6 @@
-import {
-  Column,
-  Container,
-  H5,
-  Row,
-  Span,
-} from "@/components/LayoutComponents";
-import { Autocomplete } from "@/components/LayoutComponents/Autocomplete/Autocomplete";
-import { InputField } from "@/components/LayoutComponents/Inputs";
-import { total, useDarkTheme } from "@/components/Providers";
+import { Column, H5, Row, Span } from "@/components/LayoutComponents";
+import { useDarkTheme } from "@/components/Providers";
 import { PokeDetails, getPokemonDataList } from "@/utils";
-import { data } from "autoprefixer";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import {
   Bar,
@@ -26,6 +17,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { PokemonAutocomplete } from "./PokemonAutocomplete/PokemonAutocomplete";
 
 export interface StatCompareToolProps {
   pokemon: PokeDetails;
@@ -36,24 +28,7 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
 }) => {
   const { light } = useDarkTheme();
 
-  const [search, setSearch] = useState("");
   const [pokemonTwo, setPokemonTwo] = useState<PokeDetails>();
-
-  const comparePokemon = useMemo(() => {
-    return getPokemonDataList({
-      limit: total,
-    });
-  }, []);
-
-  const filteredPokemon = useMemo(
-    () =>
-      search
-        ? comparePokemon.data.filter((c) =>
-            c.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-          )
-        : comparePokemon.data,
-    [comparePokemon, search]
-  );
 
   const radarData = useMemo(
     () =>
@@ -187,18 +162,10 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
         <Span
           className={`max-w-[300px]`}
         >{`Select a pokemon to compare with ${pokemon.name.toLocaleUpperCase()}`}</Span>
-        <Autocomplete
-          label=""
-          list={filteredPokemon}
-          search={search}
-          setSearch={setSearch}
-          option={pokemonTwo}
-          setOption={(value: PokeDetails) => {
-            setPokemonTwo(value);
-            setSearch(value.name);
-          }}
-          getDisplayName={(value: PokeDetails) => value.name}
-          className={`max-w-[300px]`}
+        <PokemonAutocomplete
+          pokemon={pokemonTwo}
+          setPokemon={setPokemonTwo}
+          className={`h-[50px]`}
         />
       </Row>
 
