@@ -16,6 +16,7 @@ export interface FieldProps {
   suffix?: ReactNode;
   disable?: boolean;
   placeHolder?: string;
+  type?: "normal" | "transparent";
   className?: HTMLProps<"HTMLElement">["className"];
 }
 export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
@@ -24,20 +25,23 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
   helperText,
   disable,
   suffix,
+  type,
   className,
   ...props
 }) => {
   const { light } = useDarkTheme();
   return (
     <Column className={`gap-1 w-full h-full ${className}`}>
-      <Span>{label}</Span>
+      {label && <Span>{label}</Span>}
       <Row
-        className={`h-full items-center gap-2 rounded border-solid border-2 rounded-md border-solid ${
+        className={`h-full items-center gap-2 rounded border-solid border-[1px] rounded-md border-solid ${
           light ? "border-blue-900" : "border-slate-300"
         } ${
-          light
-            ? "bg-slate-300 hover:bg-slate-200"
-            : "bg-blue-500 hover:bg-blue-400"
+          type !== "transparent"
+            ? light
+              ? "bg-slate-300 hover:bg-slate-200"
+              : "bg-blue-500 hover:bg-blue-400"
+            : ""
         } px-1 group`}
       >
         {props.children}

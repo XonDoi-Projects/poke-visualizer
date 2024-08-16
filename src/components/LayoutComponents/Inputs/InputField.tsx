@@ -25,6 +25,7 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
   onValueChange,
   disable,
   placeHolder,
+  type,
   className,
   ...props
 }) => {
@@ -40,6 +41,7 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
       errorText={errorText}
       helperText={helperText}
       suffix={suffix}
+      type={type}
     >
       <input
         {...props}

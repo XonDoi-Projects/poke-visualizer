@@ -37,6 +37,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   getDisplayName,
   className,
   noDropDownOnClick,
+  type,
   placeHolder,
   ...props
 }: AutocompleteProps<T>) => {
@@ -122,6 +123,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
           setShowOptions(true);
           setIsFocus(true);
         }}
+        type={type}
       />
 
       {(showOptions && !noDropDownOnClick && list.length) ||

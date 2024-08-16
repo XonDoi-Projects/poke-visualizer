@@ -9,11 +9,12 @@ export interface PokemonAutocompleteProps {
   className?: HTMLProps<"HTMLElement">["className"];
   noDropDownOnClick?: boolean;
   placeHolder?: string;
+  type?: 'normal' | 'transparent'
 }
 
 export const PokemonAutocomplete: FunctionComponent<
   PokemonAutocompleteProps
-> = ({ pokemon, setPokemon, className, noDropDownOnClick, placeHolder }) => {
+> = ({ pokemon, setPokemon, className, noDropDownOnClick, placeHolder, type }) => {
   const [search, setSearch] = useState("");
 
   const pokemonList = useMemo(() => {
@@ -47,6 +48,7 @@ export const PokemonAutocomplete: FunctionComponent<
       className={`max-w-[300px] w-full ${className}`}
       noDropDownOnClick={noDropDownOnClick}
       placeHolder={placeHolder}
+      type={type}
     />
   );
 };
