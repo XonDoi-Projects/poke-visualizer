@@ -17,7 +17,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { PokemonAutocomplete } from "./PokemonAutocomplete/PokemonAutocomplete";
+import { PokemonAutocomplete } from "../PokemonAutocomplete/PokemonAutocomplete";
+import { CustomTooltip } from "./CustomTooltip";
 
 export interface StatCompareToolProps {
   pokemon: PokeDetails;
@@ -152,7 +153,7 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
               [pokemon.name]: pokemon.height / 10,
             },
           ],
-    [pokemon, pokemonTwo]
+    [pokemon.height, pokemon.name, pokemon.weight, pokemonTwo]
   );
 
   return (
@@ -190,7 +191,10 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
                 baselineShift={-5}
               />
               <PolarRadiusAxis angle={30} domain={[0, 200]} opacity={0} />
-              <Tooltip />
+              <Tooltip
+                cursor={{ fill: "transparent" }}
+                content={<CustomTooltip />}
+              />
               <Radar
                 name={pokemon.name}
                 dataKey={pokemon.name}
@@ -248,7 +252,10 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
                       ),
                 ]}
               />
-              <Tooltip />
+              <Tooltip
+                cursor={{ fill: "transparent" }}
+                content={<CustomTooltip />}
+              />
               <Legend />
               <Bar
                 dataKey={pokemon.name}
@@ -300,7 +307,10 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
                       ),
                 ]}
               />
-              <Tooltip />
+              <Tooltip
+                cursor={{ fill: "transparent" }}
+                content={<CustomTooltip />}
+              />
               <Legend />
               <Bar
                 dataKey={pokemon.name}

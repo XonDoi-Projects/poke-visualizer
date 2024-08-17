@@ -40,7 +40,6 @@ export const Header = () => {
             setPokemon={(value) => router.push(`/dex/${value?.index}`)}
             noDropDownOnClick
             placeHolder="Search . . ."
-            type="transparent"
           />
         </Container>
       </Row>

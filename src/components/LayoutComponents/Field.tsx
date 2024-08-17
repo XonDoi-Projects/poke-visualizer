@@ -40,7 +40,7 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
           type !== "transparent"
             ? light
               ? "bg-slate-300 hover:bg-slate-200"
-              : "bg-blue-500 hover:bg-blue-400"
+              : "bg-gray-800 hover:bg-gray-700"
             : ""
         } px-1 group`}
       >

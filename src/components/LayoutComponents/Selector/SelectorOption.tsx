@@ -21,7 +21,7 @@ export const SelectorOption: FunctionComponent<SelectorOptionProps<any>> = <
       className={`flex direction-row flex-1 items-center w-full h-[30px] ${
         light
           ? "bg-slate-300 hover:bg-slate-400"
-          : "bg-blue-500 hover:bg-blue-600"
+          : "bg-gray-800 hover:bg-gray-700"
       } cursor-pointer p-2`}
       onClick={() => setOption(value)}
     >

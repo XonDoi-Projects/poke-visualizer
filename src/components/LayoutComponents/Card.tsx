@@ -23,7 +23,7 @@ export const Card: FunctionComponent<CardProps> = ({
     <Column
       {...props}
       className={`flex ${
-        light ? "bg-slate-300" : "bg-blue-500"
+        light ? "bg-slate-300" : "bg-gray-800"
       } shadow-border ${
         light ? "shadow-black-200" : "shadow-blue-400"
       } ${className}`}

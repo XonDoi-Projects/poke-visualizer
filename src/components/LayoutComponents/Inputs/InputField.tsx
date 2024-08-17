@@ -56,15 +56,15 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
              ? `text-blue-950 ${!disable ? "hover:text-blue-800" : ""}`
              : `text-slate-300 ${!disable ? "hover:text-slate-200" : ""}`
          }
-         ${
-           light
-             ? `placeholder-blue-900 ${
-                 !disable ? "hover:placeholder-blue-750" : ""
-               }`
-             : `placeholder-slate-200 ${
-                 !disable ? "hover:placeholder-slate-100" : ""
-               }`
-         }
+        ${
+          light
+            ? `placeholder-blue-950 ${
+                !disable ? "hover:placeholder-blue-800" : ""
+              }`
+            : `placeholder-slate-300 ${
+                !disable ? "hover:placeholder-slate-200" : ""
+              }`
+        }
          ${disable ? "opacity-20" : ""} ${className} `}
       />
     </Field>

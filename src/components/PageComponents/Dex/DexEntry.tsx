@@ -26,7 +26,7 @@ import {
   BiVolumeFull,
 } from "react-icons/bi";
 import { Chip } from "@/components/LayoutComponents/Chip";
-import { StatCompareTool } from "./StatCompareTool";
+import { StatCompareTool } from "./StatCompareTool/StatCompareTool";
 import { EvolutionChart } from "./EvolutionChart";
 
 export const DexEntry = () => {
