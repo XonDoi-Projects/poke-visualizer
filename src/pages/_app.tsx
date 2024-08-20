@@ -8,7 +8,6 @@ import {
 } from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/react";
 import "../../public/output.css";
-import { DataProvider } from "@/components/Providers/DataProvider";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (

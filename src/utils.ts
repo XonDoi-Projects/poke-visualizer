@@ -1,4 +1,6 @@
 import { mergedBasesUrl, pokeBaseUrl } from "./components";
+import { JSDOM } from "jsdom";
+import { complexionData, TypeWeakness } from "./pokemonTypes";
 
 export interface EvolutionType {
   name: { value: string; flavorText: string };
@@ -59,71 +61,71 @@ export type PokeForm = string;
 export type PokeStat = { name: string; value: number };
 
 export type PokeRegion =
-  | "All"
-  | "Kanto"
-  | "Johto"
-  | "Hoenn"
-  | "Sinnoh"
-  | "Unova"
-  | "Kalos"
-  | "Alola"
-  | "Hisui"
-  | "Paldea";
+  | "all"
+  | "kanto"
+  | "johto"
+  | "hoenn"
+  | "sinnoh"
+  | "unova"
+  | "kalos"
+  | "alola"
+  | "hisui"
+  | "paldea";
 
 export const pokeRegions = [
-  "All",
-  "Kanto",
-  "Johto",
-  "Hoenn",
-  "Sinnoh",
-  "Unova",
-  "Kalos",
-  "Alola",
-  "Hisui",
-  "Paldea",
+  "all",
+  "kanto",
+  "johto",
+  "hoenn",
+  "sinnoh",
+  "unova",
+  "kalos",
+  "alola",
+  "hisui",
+  "paldea",
 ];
 
 export type PokeType =
-  | "Any"
-  | "Grass"
-  | "Fire"
-  | "Water"
-  | "Flying"
-  | "Normal"
-  | "Fighting"
-  | "Poison"
-  | "Steel"
-  | "Dragon"
-  | "Ghost"
-  | "Dark"
-  | "Psychic"
-  | "Fairy"
-  | "Rock"
-  | "Ground"
-  | "Electric"
-  | "Bug"
-  | "Ice";
+  | "any"
+  | "grass"
+  | "fire"
+  | "water"
+  | "flying"
+  | "normal"
+  | "fighting"
+  | "poison"
+  | "steel"
+  | "dragon"
+  | "ghost"
+  | "dark"
+  | "psychic"
+  | "fairy"
+  | "rock"
+  | "ground"
+  | "electric"
+  | "bug"
+  | "ice";
 
 export const pokeTypes = [
-  "Any",
-  "Grass",
-  "Fire",
-  "Water",
-  "Flying",
-  "Normal",
-  "Fighting",
-  "Poison",
-  "Steel",
-  "Dragon",
-  "Ghost",
-  "Dark",
-  "Psychic",
-  "Fairy",
-  "Rock",
-  "Ground",
-  "Electric",
-  "Bug",
-  "Ice",
+  "any",
+  "grass",
+  "fire",
+  "water",
+  "flying",
+  "normal",
+  "fighting",
+  "poison",
+  "steel",
+  "dragon",
+  "ghost",
+  "dark",
+  "psychic",
+  "fairy",
+  "rock",
+  "ground",
+  "electric",
+  "bug",
+  "ice",
 ];
 
 interface EvolveTriggerPokeAPI {
@@ -282,22 +284,22 @@ export const getPokemon = async (index: number) => {
     height: firstData.height,
     region:
       index <= 151
-        ? "Kanto"
+        ? "kanto"
         : index <= 251
-        ? "Johto"
+        ? "johto"
         : index <= 386
-        ? "Hoenn"
+        ? "hoenn"
         : index <= 493
-        ? "Sinnoh"
+        ? "sinnoh"
         : index <= 649
-        ? "Unova"
+        ? "unova"
         : index <= 721
-        ? "Kalos"
+        ? "kalos"
         : index <= 809
-        ? "Alola"
+        ? "alola"
         : index <= 905
-        ? "Hisui"
-        : "Paldea",
+        ? "hisui"
+        : "paldea",
   };
 
   const flavorText = secondData.flavor_text_entries.filter(
@@ -400,7 +402,7 @@ export const getPokemonDataList = (
 
     let data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
 
-    if (args.types && !args.types?.includes("Any")) {
+    if (args.types && !args.types?.includes("any")) {
       data = data.filter((d) =>
         args.types
           ?.map((t) => d.types?.includes(t.toLowerCase()))
@@ -408,7 +410,7 @@ export const getPokemonDataList = (
       );
     }
 
-    if (args.region && args.region !== "All") {
+    if (args.region && args.region !== "all") {
       data = data.filter((d) => args.region?.includes(d.region));
     }
 
@@ -465,4 +467,14 @@ export const getMergedPokemon = async (
   const image = URL.createObjectURL(blob);
 
   return image;
+};
+
+//----------- Team Builder Setup -------------
+
+export const determineWeaknesses = (typeOne: string) => {
+  return complexionData[typeOne].complexion.weakAgainst;
+};
+
+export const determinePartyWeaknesses = (typeOne: string, typeTwo: string) => {
+  complexionData[typeOne].secondary[typeTwo].complexion.weakAgainst;
 };

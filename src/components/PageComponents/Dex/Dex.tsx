@@ -17,8 +17,8 @@ export const Dex = () => {
   const { size } = useSize();
   const { light } = useDarkTheme();
 
-  const [region, setRegion] = useState<PokeRegion>("All");
-  const [types, setTypes] = useState<PokeType[]>(["Any"]);
+  const [region, setRegion] = useState<PokeRegion>("all");
+  const [types, setTypes] = useState<PokeType[]>(["any"]);
 
   const [currentOffset, setCurrentOffset] = useState(0);
 
@@ -66,8 +66,8 @@ export const Dex = () => {
         <Container className={`w-[150px]`}>
           <Selector
             label="Type"
-            list={pokeTypes}
-            option={types}
+            list={pokeTypes.map((p) => p[0].toUpperCase() + p.slice(1))}
+            option={types.map((t) => t[0].toUpperCase() + t.slice(1))}
             setOption={(value) => {
               setTypes([value]);
               setCurrentOffset(0);
@@ -78,8 +78,8 @@ export const Dex = () => {
         <Container className={`w-[150px]`}>
           <Selector
             label="Region"
-            list={pokeRegions}
-            option={region}
+            list={pokeRegions.map((p) => p[0].toUpperCase() + p.slice(1))}
+            option={region[0].toUpperCase() + region.slice(1)}
             setOption={(value) => {
               setRegion(value);
               setCurrentOffset(0);
