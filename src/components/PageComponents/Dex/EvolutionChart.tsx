@@ -27,8 +27,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
 
   return (
     <Column className={`flex-1 gap-5 items-start`}>
-      <H5>Evolution Chart</H5>
-      <Row className={`flex-1 w-full flex-wrap gap-5 items-center`}>
+      <Row className={`flex-1 w-full flex-wrap gap-5 items-start`}>
         {evolvesFrom && (
           <Column
             className={`flex-1 w-full items-center justify-center gap-5 min-w-[200px]`}
@@ -36,7 +35,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
             <H5>Evolves From</H5>
             <Column
               className={
-                "relative flex-1 w-full items-center justify-center cursor-pointer"
+                "relative flex-1 w-full items-center justify-center gap-2 cursor-pointer"
               }
               onClick={() => router.push(`/dex/${evolvesFrom.index}`)}
             >

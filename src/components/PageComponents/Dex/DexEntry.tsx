@@ -2,12 +2,16 @@ import {
   Button,
   Column,
   Container,
+  Cover,
+  Drawer,
   H3,
   H5,
+  LabelWithValue,
   Row,
+  Small,
   Span,
 } from "@/components/LayoutComponents";
-import { total, useDarkTheme } from "@/components/Providers";
+import { total, useDarkTheme, useSize } from "@/components/Providers";
 import {
   EvolutionType,
   PokeDetails,
@@ -28,11 +32,15 @@ import {
 import { Chip } from "@/components/LayoutComponents/Chip";
 import { StatCompareTool } from "./StatCompareTool/StatCompareTool";
 import { EvolutionChart } from "./EvolutionChart";
+import { complexionData } from "@/pokemonTypes";
 
 export const DexEntry = () => {
   const router = useRouter();
 
   const { light } = useDarkTheme();
+  const { mobile } = useSize();
+
+  const [showStats, setShowStats] = useState(false);
 
   const [evolvesFrom, setEvolvesFrom] = useState<PokeDetails>();
   const [evolvesTo, setEvolvesTo] =
@@ -64,10 +72,14 @@ export const DexEntry = () => {
     "cursor-pointer": currentIndex > 1 && currentIndex < total,
   });
 
-  const audio = useMemo(
-    () => (pokemon?.cry ? new Audio(pokemon.cry) : undefined),
-    [pokemon]
-  );
+  const audio = useMemo(() => {
+    let audio = pokemon?.cry ? new Audio(pokemon.cry) : undefined;
+
+    if (audio) {
+      audio.volume = 0.05;
+    }
+    return audio;
+  }, [pokemon]);
 
   const loadEvolutionChain = useCallback(() => {
     if (pokemon.evolvesFrom) {
@@ -104,6 +116,27 @@ export const DexEntry = () => {
       loadEvolutionChain();
     }
   }, [pokemon, loadEvolutionChain]);
+
+  console.log(pokemon.types);
+  const strongAgainst = useMemo(() => {
+    if (pokemon?.types && pokemon.types.length > 1) {
+      return complexionData[pokemon.types[0]].secondary[pokemon.types[1]]
+        .complexion.strongAgainst;
+    } else if (pokemon?.types) {
+      return complexionData[pokemon.types[0]].complexion.strongAgainst;
+    }
+    return [];
+  }, [pokemon?.types]);
+
+  const weakAgainst = useMemo(() => {
+    if (pokemon?.types && pokemon.types.length > 1) {
+      return complexionData[pokemon.types[0]].secondary[pokemon.types[1]]
+        .complexion.weakAgainst;
+    } else if (pokemon?.types) {
+      return complexionData[pokemon.types[0]].complexion.weakAgainst;
+    }
+    return [];
+  }, [pokemon?.types]);
 
   return (
     pokemon && (
@@ -152,179 +185,233 @@ export const DexEntry = () => {
           </Row>
         </Row>
 
-        <Row className={`gap-10 w-full flex-wrap`}>
-          <Column className={`flex-[2] items-center justify-center gap-2`}>
-            <H3 className={`mb-[7px]`}>{pokemon.name}</H3>
-            <Container
-              className={"relative flex-1 w-full items-center justify-center"}
-            >
-              <Container className={`absolute top-0 right-0 cursor-pointer`}>
-                <Button
-                  onClick={() => audio?.play()}
-                  className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+        <Row className={`gap-10 w-full flex-wrap gap-10`}>
+          <Column className={`flex-1 gap-10`}>
+            <Column className={`flex-1 items-center justify-center gap-2`}>
+              <H3 className={`mb-[7px]`}>{pokemon.name}</H3>
+              <Container
+                className={"relative flex-1 w-full items-center justify-center"}
+              >
+                <Row
+                  className={`gap-2 absolute top-0 right-0 cursor-pointer z-10`}
                 >
-                  <BiVolumeFull
-                    className={light ? "text-slate-200" : "text-gray-900"}
-                    style={{
-                      fontSize: "24px",
-                    }}
-                  />
-                </Button>
-              </Container>
-
-              <picture>
-                <Image
-                  src={pokemon.imageLinkHighRes || pokemon.imageLink}
-                  alt="Pokemon Image"
-                  sizes="100vw"
-                  width="0"
-                  height="0"
-                  loading="lazy"
-                  fetchPriority="low"
-                  className={`w-auto h-[250px] ${dropShadow}`}
-                />
-              </picture>
-            </Container>
-          </Column>
-
-          <Column className={`flex-1 gap-5 min-w-[200px]`}>
-            <Row className={`justify-between`}>
-              <Column className={`w-full gap-2`}>
-                <H5>Type</H5>
-                <Row className={`gap-2`}>
-                  {pokemon.types?.map((t) => (
-                    <TypeChip key={t} value={t} />
-                  ))}
+                  <Container>
+                    <Button
+                      onClick={() => setShowStats(true)}
+                      className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+                    >
+                      <Small
+                        className={light ? "text-slate-200" : "text-gray-900"}
+                      >
+                        VS
+                      </Small>
+                    </Button>
+                  </Container>
+                  <Container>
+                    <Button
+                      onClick={() => audio?.play()}
+                      className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+                    >
+                      <BiVolumeFull
+                        className={light ? "text-slate-200" : "text-gray-900"}
+                        style={{
+                          fontSize: "24px",
+                        }}
+                      />
+                    </Button>
+                  </Container>
                 </Row>
+
+                <picture>
+                  <Image
+                    src={pokemon.imageLinkHighRes || pokemon.imageLink}
+                    alt="Pokemon Image"
+                    sizes="100vw"
+                    width="0"
+                    height="0"
+                    loading="lazy"
+                    fetchPriority="low"
+                    className={`w-auto h-[250px] ${dropShadow}`}
+                  />
+                </picture>
+              </Container>
+            </Column>
+            {(evolvesFrom || evolvesTo?.length) && (
+              <Column className={`flex-1`}>
+                <EvolutionChart
+                  evolvesFrom={evolvesFrom}
+                  evolvesTo={evolvesTo}
+                />
+              </Column>
+            )}
+          </Column>
+          <Column className={`flex-[2] gap-10 h-fit`}>
+            <Row
+              className={`flex-1 gap-10 w-full flex-wrap ${
+                mobile ? "" : "min-h-[300px]"
+              } `}
+            >
+              <Column className={`flex-1 gap-5 min-w-[200px]`}>
+                <Column className={`w-full gap-2`}>
+                  <H5>Type</H5>
+                  <Row className={`gap-2`}>
+                    {pokemon.types?.map((t) => (
+                      <TypeChip key={t} value={t} />
+                    ))}
+                  </Row>
+                </Column>
+
+                <Column className={`w-full gap-2`}>
+                  <H5>Description</H5>
+                  <Span>{pokemon.description}</Span>
+                </Column>
+                <Column className={`w-full gap-2`}>
+                  <H5>Forms</H5>
+                  <Row className={`gap-2 flex-wrap`}>
+                    {pokemon.forms && pokemon.forms?.length > 1 ? (
+                      pokemon.forms
+                        .slice(1, pokemon.forms.length)
+                        .map((f) => (
+                          <Chip
+                            key={f}
+                            value={f}
+                            className={`${
+                              light ? "bg-blue-950" : "bg-yellow-500"
+                            } `}
+                            contrast={!light}
+                          />
+                        ))
+                    ) : (
+                      <Span>No other forms.</Span>
+                    )}
+                  </Row>
+                </Column>
+              </Column>
+              <Column className={`flex-1 gap-5 min-w-[200px]`}>
+                <Column className={`w-full gap-2`}>
+                  <H5>Strong Against</H5>
+                  <Row className={`gap-2 flex-wrap`}>
+                    {strongAgainst.length ? (
+                      strongAgainst.map((t) => (
+                        <TypeChip key={t.toString()} value={t.toString()} />
+                      ))
+                    ) : (
+                      <Span>This pokemon has no direct strengths</Span>
+                    )}
+                  </Row>
+                </Column>
+                <Column className={`w-full gap-2`}>
+                  <H5>Weak Against</H5>
+                  <Row className={`gap-2 flex-wrap`}>
+                    {weakAgainst.length ? (
+                      weakAgainst.map((t) => (
+                        <TypeChip key={t.toString()} value={t.toString()} />
+                      ))
+                    ) : (
+                      <Span>This pokemon has no direct weaknesses</Span>
+                    )}
+                  </Row>
+                </Column>
               </Column>
             </Row>
-
-            <Column className={`w-full gap-2`}>
-              <H5>Description</H5>
-              <Span>{pokemon.description}</Span>
-            </Column>
-            <Column className={`w-full gap-2`}>
-              <H5>Forms</H5>
-              <Row className={`gap-2 flex-wrap`}>
-                {pokemon.forms && pokemon.forms?.length > 1 ? (
-                  pokemon.forms
-                    .slice(1, pokemon.forms.length)
-                    .map((f) => (
+            <Row
+              className={`flex-1 gap-10 w-full flex-wrap ${
+                mobile ? "" : "min-h-[300px]"
+              }`}
+            >
+              <Column className={`flex-1 gap-5 min-w-[200px]`}>
+                <Column className={`w-full gap-2`}>
+                  <H5>Abilities</H5>
+                  <Row className={`gap-2 flex-wrap`}>
+                    {pokemon.abilities?.map((a) => (
                       <Chip
-                        key={f}
-                        value={f}
+                        key={a}
+                        value={a}
                         className={`${
                           light ? "bg-blue-950" : "bg-yellow-500"
                         } `}
                         contrast={!light}
                       />
-                    ))
-                ) : (
-                  <Span>No other forms.</Span>
-                )}
-              </Row>
-            </Column>
-          </Column>
-
-          <Column className={`flex-1 gap-5 min-w-[200px]`}>
-            <Column className={`w-full gap-2`}>
-              <H5>Abilities</H5>
-              <Row className={`gap-2 flex-wrap`}>
-                {pokemon.abilities?.map((a) => (
-                  <Chip
-                    key={a}
-                    value={a}
-                    className={`${light ? "bg-blue-950" : "bg-yellow-500"} `}
-                    contrast={!light}
-                  />
-                ))}
-              </Row>
-            </Column>
-            <Column className={`w-full gap-2`}>
-              <H5>Stats</H5>
-              <Column className={`gap-1`}>
-                {pokemon.stats?.map((s) => (
-                  <Row key={s.name}>
-                    <Container className={`flex-1`}>
-                      <Span>{s.name.toLocaleUpperCase()}</Span>
-                    </Container>
-                    <Container className={`flex-shrink-1`}>
-                      <Span>{s.value.toString()}</Span>
-                    </Container>
+                    ))}
                   </Row>
-                ))}
+                </Column>
+                <Column className={`w-full gap-2`}>
+                  <H5>Stats</H5>
+                  <Column className={`gap-1`}>
+                    {pokemon.stats?.map((s) => (
+                      <LabelWithValue
+                        key={s.name}
+                        label={s.name}
+                        value={s.value.toString()}
+                      />
+                    ))}
+                  </Column>
+                </Column>
               </Column>
-            </Column>
-          </Column>
-
-          <Column className={`flex-1 gap-5 min-w-[200px]`}>
-            <Column className={`w-full gap-2`}>
-              <H5>Other Details</H5>
-              <Row className={`gap-2 flex-wrap`}>
-                <Chip
-                  value={"Baby"}
-                  className={`${light ? "bg-blue-950" : "bg-yellow-500"} ${
-                    !pokemon.isBaby ? "opacity-[0.3]" : "opacity-1"
-                  }`}
-                  contrast={!light}
-                />
-                <Chip
-                  value={"Legendary"}
-                  className={`${light ? "bg-blue-950" : "bg-yellow-500"}  ${
-                    !pokemon.isLegendary ? "opacity-[0.3]" : "opacity-1"
-                  }`}
-                  contrast={!light}
-                />
-                <Chip
-                  value={"Mythical"}
-                  className={`${light ? "bg-blue-950" : "bg-yellow-500"}  ${
-                    !pokemon.isMythical ? "opacity-[0.3]" : "opacity-1"
-                  }`}
-                  contrast={!light}
-                />
-              </Row>
-              <Row className={`gap-5`}>
-                <Span>Height: </Span>
-                <Span>{pokemon.height / 10}m</Span>
-              </Row>
-              <Row className={`gap-5`}>
-                <Span>Weight: </Span>
-                <Span>{pokemon.weight / 10}kg</Span>
-              </Row>
-              <Row className={`gap-5`}>
-                <Span>Capture Rate: </Span>
-                <Span>{pokemon.captureRate}%</Span>
-              </Row>
-              <Row className={`gap-5`}>
-                <Span>Gender Rate: </Span>
-                <Span>{pokemon.genderRate || "No Gender"}</Span>
-              </Row>
-              <Row className={`gap-5`}>
-                <Span>Growth Rate: </Span>
-                <Span>{pokemon.growthRate}</Span>
-              </Row>
-              <Row className={`gap-5`}>
-                <Span>Base Happiness: </Span>
-                <Span>{pokemon.baseHappiness}</Span>
-              </Row>
-              <Row className={`gap-5`}>
-                <Span>Shape: </Span>
-                <Span>{pokemon.shape}</Span>
-              </Row>
-            </Column>
+              <Column className={`flex-1 gap-5 min-w-[200px]`}>
+                <Column className={`w-full gap-2`}>
+                  <H5>Special Trait</H5>
+                  <Row className={`gap-2 flex-wrap`}>
+                    <Chip
+                      value={"Baby"}
+                      className={`${light ? "bg-blue-950" : "bg-yellow-500"} ${
+                        !pokemon.isBaby ? "opacity-[0.3]" : "opacity-1"
+                      }`}
+                      contrast={!light}
+                    />
+                    <Chip
+                      value={"Legendary"}
+                      className={`${light ? "bg-blue-950" : "bg-yellow-500"}  ${
+                        !pokemon.isLegendary ? "opacity-[0.3]" : "opacity-1"
+                      }`}
+                      contrast={!light}
+                    />
+                    <Chip
+                      value={"Mythical"}
+                      className={`${light ? "bg-blue-950" : "bg-yellow-500"}  ${
+                        !pokemon.isMythical ? "opacity-[0.3]" : "opacity-1"
+                      }`}
+                      contrast={!light}
+                    />
+                  </Row>
+                </Column>
+                <Column className={`w-full gap-2`}>
+                  <H5>Other Details</H5>
+                  <Column className={`gap-1`}>
+                    <LabelWithValue
+                      label={"Height"}
+                      value={(pokemon.height / 10).toString() + "m"}
+                    />
+                    <LabelWithValue
+                      label={"Weight"}
+                      value={(pokemon.weight / 10).toString() + "kg"}
+                    />
+                    <LabelWithValue
+                      label={"Capture Rate"}
+                      value={pokemon.captureRate + "%"}
+                    />
+                    <LabelWithValue
+                      label={"Gender Rate"}
+                      value={pokemon.genderRate || "No Gender"}
+                    />
+                    <LabelWithValue
+                      label={"Growth Rate"}
+                      value={pokemon.growthRate}
+                    />
+                    <LabelWithValue
+                      label={"Base Happiness"}
+                      value={pokemon.baseHappiness}
+                    />
+                    <LabelWithValue label={"Shape"} value={pokemon.shape} />
+                  </Column>
+                </Column>
+              </Column>
+            </Row>
           </Column>
         </Row>
-        <Row className={`flex-1 w-full gap-5 flex-wrap`}>
-          <Column className={`flex-1`}>
-            <StatCompareTool pokemon={pokemon} />
-          </Column>
-
-          {(evolvesFrom || evolvesTo?.length) && (
-            <Column className={`flex-1`}>
-              <EvolutionChart evolvesFrom={evolvesFrom} evolvesTo={evolvesTo} />
-            </Column>
-          )}
-        </Row>
+        <Drawer show={showStats} onClose={() => setShowStats(false)}>
+          <StatCompareTool pokemon={pokemon} />
+        </Drawer>
       </Column>
     )
   );

@@ -1,5 +1,4 @@
-import { DexEntry } from "@/components/PageComponents/Dex/DexEntry";
-import { Page } from "../../../components/PageComponents";
+import { DexEntry, Page } from "../../../components/PageComponents";
 
 const DexPageId = () => {
   return (

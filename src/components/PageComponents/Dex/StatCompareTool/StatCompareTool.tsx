@@ -157,22 +157,21 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
   );
 
   return (
-    <Column className={`flex-1 gap-5 items-start`}>
+    <Column className={`flex-1 w-full gap-5 items-start`}>
       <H5>Stat Comparison Tool</H5>
-      <Row className={`w-full gap-5 flex-wrap`}>
-        <Span
-          className={`max-w-[300px]`}
-        >{`Select a pokemon to compare with ${pokemon.name.toLocaleUpperCase()}`}</Span>
+      <Column className={`w-full gap-5 flex-wrap`}>
+        <Span>{`Compare ${pokemon.name.toLocaleUpperCase()} with`}</Span>
         <PokemonAutocomplete
           pokemon={pokemonTwo}
           setPokemon={setPokemonTwo}
           className={`h-[50px]`}
+          label=""
         />
-      </Row>
+      </Column>
 
       <Row className={`w-full flex-wrap gap-5`}>
         <Column className={`flex-1 min-w-[200px]`}>
-          <ResponsiveContainer height={250}>
+          <ResponsiveContainer height={200}>
             <RadarChart
               outerRadius={50}
               width={250}

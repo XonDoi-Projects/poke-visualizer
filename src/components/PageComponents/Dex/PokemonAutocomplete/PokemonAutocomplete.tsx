@@ -1,20 +1,26 @@
+import { FieldProps } from "@/components/LayoutComponents";
 import { Autocomplete } from "@/components/LayoutComponents/Autocomplete/Autocomplete";
 import { total } from "@/components/Providers";
 import { getPokemonDataList, PokeDetails } from "@/utils";
 import { FunctionComponent, HTMLProps, useMemo, useState } from "react";
 
-export interface PokemonAutocompleteProps {
+export interface PokemonAutocompleteProps extends FieldProps {
   pokemon?: PokeDetails;
   setPokemon?: (value: PokeDetails | undefined) => void;
-  className?: HTMLProps<"HTMLElement">["className"];
   noDropDownOnClick?: boolean;
-  placeHolder?: string;
-  type?: 'normal' | 'transparent'
 }
 
 export const PokemonAutocomplete: FunctionComponent<
   PokemonAutocompleteProps
-> = ({ pokemon, setPokemon, className, noDropDownOnClick, placeHolder, type }) => {
+> = ({
+  pokemon,
+  setPokemon,
+  className,
+  noDropDownOnClick,
+  placeHolder,
+  type,
+  label,
+}) => {
   const [search, setSearch] = useState("");
 
   const pokemonList = useMemo(() => {
@@ -35,7 +41,7 @@ export const PokemonAutocomplete: FunctionComponent<
 
   return (
     <Autocomplete
-      label=""
+      label={label || ""}
       list={filteredPokemon || []}
       search={search}
       setSearch={setSearch}
@@ -45,7 +51,7 @@ export const PokemonAutocomplete: FunctionComponent<
         setSearch("");
       }}
       getDisplayName={(value: PokeDetails) => value.name}
-      className={`max-w-[300px] w-full ${className}`}
+      className={`w-full ${className}`}
       noDropDownOnClick={noDropDownOnClick}
       placeHolder={placeHolder}
       type={type}

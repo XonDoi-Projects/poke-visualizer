@@ -39,7 +39,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   noDropDownOnClick,
   type,
   placeHolder,
-  ...props
+  label,
 }: AutocompleteProps<T>) => {
   const { light } = useDarkTheme();
 
@@ -85,7 +85,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   return (
     <Column className={`relative w-full ${className}`} ref={ref}>
       <InputField
-        label=""
+        label={label || ""}
         placeHolder={placeHolder}
         onValueChange={setQuery}
         value={isFocus ? query : option ? getDisplayName(option) : ""}
