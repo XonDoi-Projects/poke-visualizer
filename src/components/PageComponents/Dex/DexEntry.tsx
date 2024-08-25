@@ -117,7 +117,6 @@ export const DexEntry = () => {
     }
   }, [pokemon, loadEvolutionChain]);
 
-  console.log(pokemon.types);
   const strongAgainst = useMemo(() => {
     if (pokemon?.types && pokemon.types.length > 1) {
       return complexionData[pokemon.types[0]].secondary[pokemon.types[1]]

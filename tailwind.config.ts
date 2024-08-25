@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { PluginAPI } from "tailwindcss/types/config";
 
 const config: Config = {
   content: [
@@ -44,10 +45,15 @@ const config: Config = {
             opacity: "0.05",
           },
         },
+        moveGradient: {
+          "0%": { transform: "translateX(-100%) translateY(-100%)" },
+          "100%": { transform: "translateX(100%) translateY(100%)" },
+        },
       },
       animation: {
         "move-ball": "move 2s ease-in-out 1",
         "show-ball": "show 1s forwards ease-in-out",
+        "move-gradient": "moveGradient forwards 1s linear 1",
       },
     },
   },

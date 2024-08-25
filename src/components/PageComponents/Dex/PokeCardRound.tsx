@@ -24,18 +24,47 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
   const hovering = clsx({ "h-[100px]": hover, "h-[150px]": !hover });
 
   return (
-    <Column className={`w-[250px] h-[300px] items-center gap-2`}>
+    <Column className={`relative w-[250px] h-[300px] items-center gap-2`}>
       <Row className={`w-full justify-between`}>
         <H5>#{props.data.index.toString().padStart(4, "0")}</H5>
-        <Row className={`gap-1`}>
+        <Row className={`gap-1 items-center`}>
           {props.data.types?.map((t, index) => (
             <TypeChip key={index} value={t} />
           ))}
         </Row>
       </Row>
 
+      <Container className={`absolute top-[10%] right-0 cursor-pointer z-10`}>
+        {showShiny && props.data.imageLinkShiny ? (
+          <HiSparkles
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowShiny(!showShiny);
+            }}
+            className={
+              light
+                ? "text-blue-950 group-hover:text-blue-800"
+                : "text-yellow-500 group-hover:text-yellow-400"
+            }
+            style={{ fontSize: "20px" }}
+          />
+        ) : (
+          <HiOutlineSparkles
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowShiny(!showShiny);
+            }}
+            className={
+              light
+                ? "text-blue-950 group-hover:text-blue-800"
+                : "text-yellow-500 group-hover:text-yellow-400"
+            }
+            style={{ fontSize: "20px" }}
+          />
+        )}
+      </Container>
       <Card
-        className={`w-[200px] h-[200px] hover:scale-105 rounded-full transition-all cursor-pointer`}
+        className={`w-[200px] h-[200px] hover:scale-105 rounded-full transition-all cursor-pointer overflow-hidden`}
         onPointerEnter={() => setHover(true)}
         onPointerLeave={() => setHover(false)}
         onTouchStart={() => setHover(true)}
@@ -43,38 +72,26 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
         onClick={() => router.push(`/dex/${props.data.index}`)}
       >
         <Container
-          className={"relative flex-1 w-full items-center justify-center"}
+          className={`relative flex-1 w-full items-center justify-center`}
         >
-          <Container className={`absolute top-0 right-0 cursor-pointer`}>
-            {showShiny && props.data.imageLinkShiny ? (
-              <HiSparkles
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowShiny(!showShiny);
-                }}
-                className={
-                  light
-                    ? "text-blue-950 group-hover:text-blue-800"
-                    : "text-yellow-500 group-hover:text-yellow-400"
-                }
-                style={{ fontSize: "20px" }}
-              />
-            ) : (
-              <HiOutlineSparkles
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowShiny(!showShiny);
-                }}
-                className={
-                  light
-                    ? "text-blue-950 group-hover:text-blue-800"
-                    : "text-yellow-500 group-hover:text-yellow-400"
-                }
-                style={{ fontSize: "20px" }}
-              />
-            )}
-          </Container>
-          <picture>
+          <div
+            className={`relative inline-block flex items-center justify-center overflow-hidden`}
+            style={{
+              maskImage: `url(${
+                showShiny &&
+                props.data.imageLinkShiny &&
+                hover &&
+                props.data.animatedShiny
+                  ? props.data.animatedShiny
+                  : hover && props.data.animated
+                  ? props.data.animated
+                  : showShiny && props.data.imageLinkShiny
+                  ? props.data.imageLinkShiny
+                  : props.data.imageLink
+              })`,
+              maskSize: "contain",
+            }}
+          >
             <Image
               src={
                 showShiny &&
@@ -94,9 +111,12 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
               height="0"
               loading="lazy"
               fetchPriority="low"
-              className={`w-auto ${hovering}`}
+              className={`block w-auto ${hovering}`}
             />
-          </picture>
+            {showShiny && (
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent from-[45%] via-white via-[50%] to-transparent to-[55%] pointer-events-none animate-move-gradient" />
+            )}
+          </div>
         </Container>
       </Card>
       <H5>{props.data.name}</H5>
