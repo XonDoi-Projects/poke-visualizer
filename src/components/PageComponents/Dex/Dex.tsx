@@ -55,7 +55,7 @@ export const Dex = () => {
   );
 
   return (
-    <Column className={`gap-2`}>
+    <Column className={`gap-5`}>
       <H2>Welcome to PokeVis</H2>
       <H5>{`You are currently viewing Pokemon #${pokemon?.data[0]?.index
         .toString()

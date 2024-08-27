@@ -5,7 +5,7 @@ import { useDarkTheme } from "@/components";
 export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
   className?: HTMLProps<"HTMLElement">["className"];
-  type?: "contained" | "outlined";
+  type?: "contained" | "outlined" | "text";
   disable?: boolean;
 }
 
@@ -34,13 +34,17 @@ export const Button: FunctionComponent<ButtonProps> = ({
           ? light
             ? `bg-blue-950 ${!disable ? "hover:bg-blue-800" : ""}`
             : `bg-yellow-500 ${!disable ? "hover:bg-yellow-400" : ""}`
+          : type === "outlined"
+          ? light
+            ? `bg-transparent border-2 border-solid border-blue-950 ${
+                !disable ? "hover:border-blue-800" : ""
+              }`
+            : `bg-transparent border-2 border-solid border-yellow-500 ${
+                !disable ? "hover:border-yellow-400" : ""
+              }`
           : light
-          ? `bg-transparent border-2 border-solid border-blue-950 ${
-              !disable ? "hover:border-blue-800" : ""
-            }`
-          : `bg-transparent border-2 border-solid border-yellow-500 ${
-              !disable ? "hover:border-yellow-400" : ""
-            }`
+          ? `bg-transparent ${!disable ? "hover:bg-blue-800/20" : ""}`
+          : `bg-transparent ${!disable ? "hover:bg-yellow-400/20" : ""}`
       } ${disable ? "opacity-20" : ""} ${className} `}
     >
       {typeof children === "string" ? (

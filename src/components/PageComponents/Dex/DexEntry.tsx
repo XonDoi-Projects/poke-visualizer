@@ -2,10 +2,10 @@ import {
   Button,
   Column,
   Container,
-  Cover,
   Drawer,
   H3,
   H5,
+  InfoButton,
   LabelWithValue,
   Row,
   Small,
@@ -29,6 +29,12 @@ import {
   BiGridAlt,
   BiVolumeFull,
 } from "react-icons/bi";
+import {
+  FaAngleDoubleDown,
+  FaAngleDoubleUp,
+  FaAngleUp,
+  FaAngleDown,
+} from "react-icons/fa";
 import { Chip } from "@/components/LayoutComponents/Chip";
 import { StatCompareTool } from "./StatCompareTool/StatCompareTool";
 import { EvolutionChart } from "./EvolutionChart";
@@ -117,22 +123,42 @@ export const DexEntry = () => {
     }
   }, [pokemon, loadEvolutionChain]);
 
-  const strongAgainst = useMemo(() => {
+  const receivesDouble = useMemo(() => {
     if (pokemon?.types && pokemon.types.length > 1) {
       return complexionData[pokemon.types[0]].secondary[pokemon.types[1]]
-        .complexion.strongAgainst;
+        .complexion.double;
     } else if (pokemon?.types) {
-      return complexionData[pokemon.types[0]].complexion.strongAgainst;
+      return complexionData[pokemon.types[0]].complexion.double;
     }
     return [];
   }, [pokemon?.types]);
 
-  const weakAgainst = useMemo(() => {
+  const receivesQuadruple = useMemo(() => {
     if (pokemon?.types && pokemon.types.length > 1) {
       return complexionData[pokemon.types[0]].secondary[pokemon.types[1]]
-        .complexion.weakAgainst;
+        .complexion.quadruple;
     } else if (pokemon?.types) {
-      return complexionData[pokemon.types[0]].complexion.weakAgainst;
+      return complexionData[pokemon.types[0]].complexion.quadruple;
+    }
+    return [];
+  }, [pokemon?.types]);
+
+  const receivesHalf = useMemo(() => {
+    if (pokemon?.types && pokemon.types.length > 1) {
+      return complexionData[pokemon.types[0]].secondary[pokemon.types[1]]
+        .complexion.half;
+    } else if (pokemon?.types) {
+      return complexionData[pokemon.types[0]].complexion.half;
+    }
+    return [];
+  }, [pokemon?.types]);
+
+  const receivesQuarter = useMemo(() => {
+    if (pokemon?.types && pokemon.types.length > 1) {
+      return complexionData[pokemon.types[0]].secondary[pokemon.types[1]]
+        .complexion.quarter;
+    } else if (pokemon?.types) {
+      return complexionData[pokemon.types[0]].complexion.quarter;
     }
     return [];
   }, [pokemon?.types]);
@@ -288,24 +314,125 @@ export const DexEntry = () => {
               </Column>
               <Column className={`flex-1 gap-5 min-w-[200px]`}>
                 <Column className={`w-full gap-2`}>
-                  <H5>Strong Against</H5>
+                  <Row className={`gap-2`}>
+                    <H5>Strong Against</H5>
+                    <InfoButton
+                      details={
+                        <Column className={`w-[150px] gap-2`}>
+                          <Row className={`flex-1 gap-2`}>
+                            <FaAngleUp
+                              className={` ${
+                                light ? "text-blue-900" : "text-slate-300"
+                              } `}
+                            />
+                            <Small
+                              className={` ${
+                                light ? "text-blue-900" : "text-slate-300"
+                              } `}
+                            >
+                              Receives half damage from this type
+                            </Small>
+                          </Row>
+                          <Row className={`flex-1 gap-2`}>
+                            <FaAngleDoubleUp
+                              className={` ${
+                                light ? "text-blue-900" : "text-slate-300"
+                              } `}
+                            />
+                            <Small
+                              className={` ${
+                                light ? "text-blue-900" : "text-slate-300"
+                              } `}
+                            >
+                              Receives quarter damage from this type
+                            </Small>
+                          </Row>
+                        </Column>
+                      }
+                    />
+                  </Row>
+
                   <Row className={`gap-2 flex-wrap`}>
-                    {strongAgainst.length ? (
-                      strongAgainst.map((t) => (
-                        <TypeChip key={t.toString()} value={t.toString()} />
-                      ))
+                    {receivesHalf.length || receivesQuarter.length ? (
+                      receivesHalf
+                        .map((t) => (
+                          <TypeChip
+                            key={t.toString()}
+                            value={t.toString()}
+                            type="half"
+                          />
+                        ))
+                        .concat(
+                          receivesQuarter.map((t) => (
+                            <TypeChip
+                              key={t.toString()}
+                              value={t.toString()}
+                              type="quarter"
+                            />
+                          ))
+                        )
                     ) : (
                       <Span>This pokemon has no direct strengths</Span>
                     )}
                   </Row>
                 </Column>
                 <Column className={`w-full gap-2`}>
-                  <H5>Weak Against</H5>
+                  <Row className={`gap-2`}>
+                    <H5>Weak Against</H5>
+                    <InfoButton
+                      details={
+                        <Column className={`w-[150px] gap-2`}>
+                          <Row className={`flex-1 gap-2`}>
+                            <FaAngleDown
+                              className={` ${
+                                light ? "text-blue-900" : "text-slate-300"
+                              } `}
+                            />
+                            <Small
+                              className={` ${
+                                light ? "text-blue-900" : "text-slate-300"
+                              } `}
+                            >
+                              Receives double damage from this type
+                            </Small>
+                          </Row>
+                          <Row className={`flex-1 gap-2`}>
+                            <FaAngleDoubleDown
+                              className={` ${
+                                light ? "text-blue-900" : "text-slate-300"
+                              } `}
+                            />
+                            <Small
+                              className={` ${
+                                light ? "text-blue-900" : "text-slate-300"
+                              } `}
+                            >
+                              Receives quadruple damage from this type
+                            </Small>
+                          </Row>
+                        </Column>
+                      }
+                    />
+                  </Row>
                   <Row className={`gap-2 flex-wrap`}>
-                    {weakAgainst.length ? (
-                      weakAgainst.map((t) => (
-                        <TypeChip key={t.toString()} value={t.toString()} />
-                      ))
+                    {receivesDouble.length || receivesQuadruple.length ? (
+                      receivesDouble
+                        .map((t) => (
+                          <TypeChip
+                            key={t.toString()}
+                            value={t.toString()}
+                            type="double"
+                          />
+                        ))
+                        .concat(
+                          receivesQuadruple.map((t) => (
+                            <TypeChip
+                              key={t.toString()}
+                              value={t.toString()}
+                              type="quadruple"
+                            />
+                          ))
+                        )
                     ) : (
                       <Span>This pokemon has no direct weaknesses</Span>
                     )}

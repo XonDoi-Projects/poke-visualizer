@@ -34,7 +34,7 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
         </Row>
       </Row>
 
-      <Container className={`absolute top-[10%] right-0 cursor-pointer z-10`}>
+      <Container className={`absolute top-[10%] right-0 cursor-pointer z-[1]`}>
         {showShiny && props.data.imageLinkShiny ? (
           <HiSparkles
             onClick={(e) => {

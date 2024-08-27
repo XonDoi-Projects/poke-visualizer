@@ -1,4 +1,4 @@
-import { Button, Container, Row } from "../LayoutComponents";
+import { Button, Container, Row } from "@/components/LayoutComponents";
 import { useDarkTheme } from "..";
 import { BiAdjust } from "react-icons/bi";
 import Image from "next/image";
@@ -40,6 +40,7 @@ export const Header = () => {
             setPokemon={(value) => router.push(`/dex/${value?.index}`)}
             noDropDownOnClick
             placeHolder="Search . . ."
+            label=""
           />
         </Container>
       </Row>
@@ -47,7 +48,8 @@ export const Header = () => {
       <Container className="flex flex-1 flex-row-reverse z-[3] pr-5">
         <Button
           onClick={() => setLight(!light)}
-          className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 !bg-transparent "
+          className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
+          type="text"
         >
           <BiAdjust
             className={
