@@ -7,14 +7,10 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import {
-  checkPokemonData,
-  getPokemon,
-  PokeDetails,
-  setPokemonData,
-} from "@/utils";
+import { getPokemon, PokeDetails } from "@/utils";
 import { useRouter } from "next/router";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { checkPokemonData, setPokemonData } from "../Storage/pokemonStorage";
 
 export const total = 1025;
 
@@ -59,8 +55,8 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
     refetchOnReconnect: true,
   });
 
-  const checkCache = useCallback(() => {
-    if (!checkPokemonData()) {
+  const checkCache = useCallback(async () => {
+    if (!(await checkPokemonData())) {
       setIsCached(false);
     } else {
       setIsCached(true);
@@ -72,14 +68,17 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
       checkCache();
     };
 
-    router.events.on("routeChangeStart", doMagic); // add listener
+    router.events.on("routeChangeStart", doMagic);
 
     return () => {
-      router.events.off("routeChangeStart", doMagic); // remove listener
+      router.events.off("routeChangeStart", doMagic);
     };
   }, [checkCache, router.events]);
 
-  useEffect(() => checkCache(), [checkCache]);
+  useEffect(() => {
+    checkCache();
+  }, [checkCache]);
+
   return (
     <DataContext.Provider
       value={{

@@ -1,8 +1,58 @@
 import { mergedBasesUrl, pokeBaseUrl } from "./components";
 import { JSDOM } from "jsdom";
 import { complexionData, TypeWeakness } from "./pokemonTypes";
+import { getPokemonData } from "./components/Storage/pokemonStorage";
 
-export interface EvolutionType {
+export type PokeAbility = string;
+export type PokeForm = string;
+export type PokeStat = { name: string; value: number };
+export type PokeRegion =
+  | "all"
+  | "kanto"
+  | "johto"
+  | "hoenn"
+  | "sinnoh"
+  | "unova"
+  | "kalos"
+  | "alola"
+  | "hisui"
+  | "paldea";
+export type PokeType =
+  | "any"
+  | "grass"
+  | "fire"
+  | "water"
+  | "flying"
+  | "normal"
+  | "fighting"
+  | "poison"
+  | "steel"
+  | "dragon"
+  | "ghost"
+  | "dark"
+  | "psychic"
+  | "fairy"
+  | "rock"
+  | "ground"
+  | "electric"
+  | "bug"
+  | "ice";
+
+export type MoveDetailsType = {
+  name: string;
+  accuracy: number | null;
+  power: number | null;
+  effectChance: number | null;
+  damageClass: string | null;
+  type: string | null;
+  versions: {
+    levelLearned: number;
+    learnMethod: string;
+    version: string;
+  }[];
+};
+
+export type EvolutionType = {
   name: { value: string; flavorText: string };
   item: { value: string | null; flavorText: string };
   trigger: { value: string | null; flavorText: string };
@@ -22,7 +72,7 @@ export interface EvolutionType {
   timeOfDay: { value: string | null; flavorText: string };
   tradeSpecies: { value: string | null; flavorText: string };
   turnUpsideDown: { value: boolean | null; flavorText: string };
-}
+};
 
 export interface PokeDetails {
   name: string;
@@ -54,23 +104,8 @@ export interface PokeDetails {
   shape?: string;
   evolvesFrom?: string;
   evolvesTo?: EvolutionType[];
+  moves?: MoveDetailsType[];
 }
-
-export type PokeAbility = string;
-export type PokeForm = string;
-export type PokeStat = { name: string; value: number };
-
-export type PokeRegion =
-  | "all"
-  | "kanto"
-  | "johto"
-  | "hoenn"
-  | "sinnoh"
-  | "unova"
-  | "kalos"
-  | "alola"
-  | "hisui"
-  | "paldea";
 
 export const pokeRegions = [
   "all",
@@ -84,27 +119,6 @@ export const pokeRegions = [
   "hisui",
   "paldea",
 ];
-
-export type PokeType =
-  | "any"
-  | "grass"
-  | "fire"
-  | "water"
-  | "flying"
-  | "normal"
-  | "fighting"
-  | "poison"
-  | "steel"
-  | "dragon"
-  | "ghost"
-  | "dark"
-  | "psychic"
-  | "fairy"
-  | "rock"
-  | "ground"
-  | "electric"
-  | "bug"
-  | "ice";
 
 export const pokeTypes = [
   "any",
@@ -154,6 +168,8 @@ interface EvolveChainPokeAPI {
   evolution_details: EvolveTriggerPokeAPI[];
   evolves_to: EvolveChainPokeAPI[];
 }
+
+let movesCache: { url: string; data: any }[] = [];
 
 const getNextEvolution = (
   currentPokemon: string,
@@ -341,11 +357,73 @@ export const getPokemon = async (index: number) => {
       thirdData.chain
     );
 
-    return {
+    pokeDetails = {
       ...pokeDetails,
       evolvesTo,
     };
   }
+
+  console.log(firstData.moves);
+
+  if (firstData.moves.length) {
+    for (let i = 0; i < firstData.moves.length; i++) {
+      const thisMove = firstData.moves[i];
+      const moveUrl = thisMove.move.url;
+
+      const moveExists = movesCache.find((move) => move.url === moveUrl);
+
+      let fourthData;
+      if (!moveExists) {
+        const moveData = await fetch(moveUrl);
+
+        fourthData = await moveData.json();
+        movesCache.push({ url: moveUrl, data: fourthData });
+      } else {
+        fourthData = moveExists.data;
+      }
+      pokeDetails = {
+        ...pokeDetails,
+        moves: pokeDetails?.moves
+          ? [
+              ...pokeDetails.moves,
+              {
+                name: thisMove.move.name,
+                versions: thisMove.version_group_details.map((v: any) => {
+                  return {
+                    version: v.version_group.name,
+                    levelLearned: v.level_learned_at,
+                    learnMethod: v.move_learn_method,
+                  };
+                }),
+                accuracy: fourthData.accuracy,
+                damageClass: fourthData.damage_class.name,
+                effectChance: fourthData.effect_chance,
+                power: fourthData.power,
+                type: fourthData.type.name,
+              },
+            ]
+          : [
+              {
+                name: thisMove.move.name,
+                versions: thisMove.version_group_details.map((v: any) => {
+                  return {
+                    version: v.version_group.name,
+                    levelLearned: v.level_learned_at,
+                    learnMethod: v.move_learn_method,
+                  };
+                }),
+                accuracy: fourthData.accuracy,
+                damageClass: fourthData.damage_class.name,
+                effectChance: fourthData.effect_chance,
+                power: fourthData.power,
+                type: fourthData.type.name,
+              },
+            ],
+      };
+    }
+  }
+
+  console.log(pokeDetails);
 
   return pokeDetails;
 };
@@ -369,14 +447,6 @@ export const getPokemonList = async (limit?: number, offset?: number) => {
   return { data: pokemonList, count: data.count };
 };
 
-export const setPokemonData = (pokeData: PokeDetails[]) => {
-  localStorage.setItem("pokemon", JSON.stringify(pokeData));
-};
-
-export const checkPokemonData = () => {
-  return localStorage.getItem("pokemon")?.length ? true : false;
-};
-
 export type PokeArgsMany = {
   limit: number;
   range?: { start: number; end: number };
@@ -392,18 +462,17 @@ export type PokeArgsOneByName = {
   name: string;
 };
 
-export const getPokemonDataList = (
-  args?: PokeArgsMany
-): { data: PokeDetails[]; count: number } | undefined => {
+export const getPokemonDataList = async (args?: PokeArgsMany) => {
   if (typeof window !== "undefined") {
     if (!args) {
-      return JSON.parse(localStorage.getItem("pokemon") || "");
+      const pokeData = await getPokemonData();
+      return { data: pokeData || [], count: pokeData?.length || 0 };
     }
 
-    let data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
+    let data = await getPokemonData();
 
     if (args.types && !args.types?.includes("any")) {
-      data = data.filter((d) =>
+      data = data?.filter((d) =>
         args.types
           ?.map((t) => d.types?.includes(t.toLowerCase()))
           .some((b) => b)
@@ -411,13 +480,13 @@ export const getPokemonDataList = (
     }
 
     if (args.region && args.region !== "all") {
-      data = data.filter((d) => args.region?.includes(d.region));
+      data = data?.filter((d) => args.region?.includes(d.region));
     }
 
-    const count = data.length;
+    const count = data?.length;
 
     if (args.range) {
-      data = data.slice(
+      data = data?.slice(
         args.range.start,
         data.length - args.range.start > args.limit
           ? args.range.end
@@ -430,16 +499,22 @@ export const getPokemonDataList = (
   return;
 };
 
-export const getPokemonDataID = (args: PokeArgsOneById): PokeDetails => {
-  const data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
+export const getPokemonDataID = async (args: PokeArgsOneById) => {
+  const pokeData = await getPokemonData();
 
-  return data[args.index - 1];
+  if (pokeData) {
+    return pokeData[args.index - 1];
+  }
+  return;
 };
 
-export const getPokemonDataName = (args: PokeArgsOneByName) => {
-  const data: PokeDetails[] = JSON.parse(localStorage.getItem("pokemon") || "");
+export const getPokemonDataName = async (args: PokeArgsOneByName) => {
+  const pokeData = await getPokemonData();
 
-  return data.find((d) => d.name === args.name);
+  if (pokeData) {
+    return pokeData.find((d) => d.name === args.name);
+  }
+  return;
 };
 
 //----------- Merged Pokemon Data ------------

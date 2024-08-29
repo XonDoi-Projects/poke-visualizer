@@ -48,21 +48,28 @@ export const DexEntry = () => {
 
   const [showStats, setShowStats] = useState(false);
 
+  const [pokemon, setPokemon] = useState<PokeDetails | undefined>();
   const [evolvesFrom, setEvolvesFrom] = useState<PokeDetails>();
   const [evolvesTo, setEvolvesTo] =
     useState<
       (PokeDetails & { evolutionDetails: Omit<EvolutionType, "name"> })[]
     >();
 
+  const [loading, setLoading] = useState(false);
+
   const currentIndex = useMemo(
     () => parseInt(router.query.id as string),
     [router.query]
   );
 
-  const pokemon = useMemo(
-    () => getPokemonDataID({ index: currentIndex }),
-    [currentIndex]
-  );
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getPokemonDataID({ index: currentIndex });
+
+      setPokemon(data);
+    };
+    getData();
+  }, [currentIndex]);
 
   useEffect(() => {
     document.title = `Pokemon PokeDex - ${pokemon?.name}`;
@@ -87,9 +94,10 @@ export const DexEntry = () => {
     return audio;
   }, [pokemon]);
 
-  const loadEvolutionChain = useCallback(() => {
-    if (pokemon.evolvesFrom) {
-      const fromResult = getPokemonDataName({
+  const loadEvolutionChain = useCallback(async () => {
+    setLoading(true);
+    if (pokemon?.evolvesFrom) {
+      const fromResult = await getPokemonDataName({
         name: pokemon.evolvesFrom,
       });
       setEvolvesFrom(fromResult);
@@ -97,13 +105,13 @@ export const DexEntry = () => {
       setEvolvesFrom(undefined);
     }
 
-    if (pokemon.evolvesTo?.length) {
+    if (pokemon?.evolvesTo?.length) {
       let toResult: (PokeDetails & {
         evolutionDetails: Omit<EvolutionType, "name">;
       })[] = [];
       for (let i = 0; i < pokemon.evolvesTo.length; i++) {
         const { name, ...restOfDetails } = pokemon.evolvesTo[i];
-        const fromResult = getPokemonDataName({
+        const fromResult = await getPokemonDataName({
           name: name.value,
         });
 
@@ -115,6 +123,7 @@ export const DexEntry = () => {
     } else {
       setEvolvesTo(undefined);
     }
+    setLoading(false);
   }, [pokemon]);
 
   useEffect(() => {
@@ -261,12 +270,16 @@ export const DexEntry = () => {
                 </picture>
               </Container>
             </Column>
-            {(evolvesFrom || evolvesTo?.length) && (
+            {evolvesFrom || evolvesTo?.length ? (
               <Column className={`flex-1`}>
                 <EvolutionChart
                   evolvesFrom={evolvesFrom}
                   evolvesTo={evolvesTo}
                 />
+              </Column>
+            ) : (
+              <Column className={`flex-1 items-center`}>
+                <Span>{`${pokemon.name} does not have an Evolution Chain`}</Span>
               </Column>
             )}
           </Column>

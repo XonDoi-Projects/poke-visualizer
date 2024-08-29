@@ -34,17 +34,27 @@ export const SpriteFusionTool: FunctionComponent<SpriteFusionToolProps> = ({
   const [pokemonTwo, setPokemonTwo] = useState<PokeDetails>();
 
   const [imageUrl, setImageUrl] = useState("");
+  const [comparePokemon, setComparePokemon] = useState<{
+    data: PokeDetails[] | undefined;
+    count: number | undefined;
+  }>();
 
-  const comparePokemon = useMemo(() => {
-    return getPokemonDataList({
-      limit: total,
-    });
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getPokemonDataList({
+        limit: total,
+      });
+
+      setComparePokemon(data);
+    };
+
+    getData();
   }, []);
 
   const filteredPokemon = useMemo(
     () =>
       search
-        ? comparePokemon?.data.filter((c) =>
+        ? comparePokemon?.data?.filter((c) =>
             c.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
           )
         : comparePokemon?.data,

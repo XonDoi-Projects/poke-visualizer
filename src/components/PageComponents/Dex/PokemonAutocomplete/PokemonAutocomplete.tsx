@@ -2,7 +2,13 @@ import { FieldProps } from "@/components/LayoutComponents";
 import { Autocomplete } from "@/components/LayoutComponents/Autocomplete/Autocomplete";
 import { total } from "@/components/Providers";
 import { getPokemonDataList, PokeDetails } from "@/utils";
-import { FunctionComponent, HTMLProps, useMemo, useState } from "react";
+import {
+  FunctionComponent,
+  HTMLProps,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export interface PokemonAutocompleteProps extends FieldProps {
   pokemon?: PokeDetails;
@@ -22,17 +28,27 @@ export const PokemonAutocomplete: FunctionComponent<
   label,
 }) => {
   const [search, setSearch] = useState("");
+  const [pokemonList, setPokemonList] = useState<{
+    data: PokeDetails[] | undefined;
+    count: number | undefined;
+  }>();
 
-  const pokemonList = useMemo(() => {
-    return getPokemonDataList({
-      limit: total,
-    });
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getPokemonDataList({
+        limit: total,
+      });
+
+      setPokemonList(data);
+    };
+
+    getData();
   }, []);
 
   const filteredPokemon = useMemo(
     () =>
       search
-        ? pokemonList?.data.filter((c) =>
+        ? pokemonList?.data?.filter((c) =>
             c.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
           )
         : pokemonList?.data,
