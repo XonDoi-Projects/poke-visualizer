@@ -7,3 +7,4 @@ export * from "./Field";
 export * from "./LabelWithValue";
 export * from "./Cover";
 export * from "./Drawer";
+export * from "./Table";

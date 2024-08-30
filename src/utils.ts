@@ -392,7 +392,7 @@ export const getPokemon = async (index: number) => {
                   return {
                     version: v.version_group.name,
                     levelLearned: v.level_learned_at,
-                    learnMethod: v.move_learn_method,
+                    learnMethod: v.move_learn_method.name,
                   };
                 }),
                 accuracy: fourthData.accuracy,
@@ -409,7 +409,7 @@ export const getPokemon = async (index: number) => {
                   return {
                     version: v.version_group.name,
                     levelLearned: v.level_learned_at,
-                    learnMethod: v.move_learn_method,
+                    learnMethod: v.move_learn_method.name,
                   };
                 }),
                 accuracy: fourthData.accuracy,
@@ -422,8 +422,6 @@ export const getPokemon = async (index: number) => {
       };
     }
   }
-
-  console.log(pokeDetails);
 
   return pokeDetails;
 };

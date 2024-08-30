@@ -10,6 +10,7 @@ import {
   Row,
   Small,
   Span,
+  Table,
 } from "@/components/LayoutComponents";
 import { total, useDarkTheme, useSize } from "@/components/Providers";
 import {
@@ -55,8 +56,6 @@ export const DexEntry = () => {
       (PokeDetails & { evolutionDetails: Omit<EvolutionType, "name"> })[]
     >();
 
-  const [loading, setLoading] = useState(false);
-
   const currentIndex = useMemo(
     () => parseInt(router.query.id as string),
     [router.query]
@@ -95,7 +94,6 @@ export const DexEntry = () => {
   }, [pokemon]);
 
   const loadEvolutionChain = useCallback(async () => {
-    setLoading(true);
     if (pokemon?.evolvesFrom) {
       const fromResult = await getPokemonDataName({
         name: pokemon.evolvesFrom,
@@ -123,7 +121,6 @@ export const DexEntry = () => {
     } else {
       setEvolvesTo(undefined);
     }
-    setLoading(false);
   }, [pokemon]);
 
   useEffect(() => {
@@ -548,6 +545,31 @@ export const DexEntry = () => {
             </Row>
           </Column>
         </Row>
+        <Table
+          headers={[
+            { name: "Name", keyId: "name", expandable: false },
+            { name: "Damage Class", keyId: "damageClass", expandable: false },
+            { name: "Damage Type", keyId: "type", expandable: false },
+            { name: "Power", keyId: "power", expandable: false },
+            { name: "Accuracy", keyId: "accuracy", expandable: false },
+            { name: "Effect Chance", keyId: "effectChance", expandable: false },
+            {
+              name: "Version",
+              keyId: "versions",
+              expandable: true,
+              subHeaders: [
+                { name: "Version", keyId: "version" },
+                { name: "Level Learned", keyId: "levelLearned" },
+                { name: "Learn Method", keyId: "learnMethod" },
+              ],
+            },
+          ]}
+          rows={
+            pokemon.moves?.map((m) => {
+              return { ...m, type: <TypeChip value={m.type || ""} /> };
+            }) || []
+          }
+        />
         <Drawer show={showStats} onClose={() => setShowStats(false)}>
           <StatCompareTool pokemon={pokemon} />
         </Drawer>
