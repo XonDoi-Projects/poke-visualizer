@@ -8,3 +8,4 @@ export * from "./LabelWithValue";
 export * from "./Cover";
 export * from "./Drawer";
 export * from "./Table";
+export * from "./InfoTooltip";

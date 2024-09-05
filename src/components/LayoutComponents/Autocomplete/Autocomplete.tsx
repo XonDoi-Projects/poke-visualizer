@@ -69,10 +69,12 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
     }
 
     if (query) {
-      setTimeout(() => setSearch(query), 300);
+      timeout = setTimeout(() => setSearch(query), 300);
     }
 
-    return () => clearTimeout(timeout);
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
   }, [query, setSearch]);
 
   useClickOutside(ref, () => {

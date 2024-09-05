@@ -20,7 +20,9 @@ export const Chip: FunctionComponent<ChipProps> = (props) => {
       >
         {props.value.toLocaleUpperCase()}
       </Small>
-      <Container className={`h-full`}>{props.suffix}</Container>
+      {props.suffix && (
+        <Container className={`h-full`}>{props.suffix}</Container>
+      )}
     </Row>
   );
 };
