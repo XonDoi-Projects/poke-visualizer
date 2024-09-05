@@ -1,12 +1,20 @@
-import { Button, Container, Row } from "@/components/LayoutComponents";
-import { useDarkTheme } from "..";
-import { BiAdjust } from "react-icons/bi";
+import {
+  Button,
+  Column,
+  Container,
+  Row,
+  Small,
+  Span,
+} from "@/components/LayoutComponents";
+import { useDarkTheme, useData } from "..";
+import { BiAdjust, BiRefresh } from "react-icons/bi";
 import Image from "next/image";
 import { PokemonAutocomplete } from "./Dex/PokemonAutocomplete/PokemonAutocomplete";
 import { useRouter } from "next/router";
 
 export const Header = () => {
   const { light, setLight } = useDarkTheme();
+  const { loadingState, syncInBackground, setSyncInBackground } = useData();
 
   const router = useRouter();
 
@@ -42,6 +50,34 @@ export const Header = () => {
             placeHolder="Search . . ."
             label=""
           />
+        </Container>
+        <Container className="relative flex flex-row">
+          <Button
+            onClick={() => setSyncInBackground(true)}
+            className={`!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all`}
+            type="text"
+            tooltip
+            tooltipDetails={
+              <Column className={`w-[200px]`}>
+                <Small
+                  className={` ${light ? "text-blue-900" : "text-slate-300"} `}
+                >{`${
+                  syncInBackground
+                    ? `Syncing in Progress ${loadingState}%`
+                    : "PokeAPI may occasionally update their database. You can sync data once a day."
+                }`}</Small>
+              </Column>
+            }
+          >
+            <BiRefresh
+              className={`${syncInBackground ? "animate-spin-icon" : ""} ${
+                light
+                  ? "text-blue-950 group-hover:text-blue-800"
+                  : "text-yellow-500 group-hover:text-yellow-400"
+              }`}
+              style={{ fontSize: "20px" }}
+            />
+          </Button>
         </Container>
       </Row>
 
