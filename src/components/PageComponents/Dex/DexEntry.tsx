@@ -13,16 +13,11 @@ import {
   Table,
 } from "@/components/LayoutComponents";
 import { total, useDarkTheme, useSize } from "@/components/Providers";
-import {
-  EvolutionType,
-  PokeDetails,
-  getPokemonDataID,
-  getPokemonDataName,
-} from "@/utils";
+import { EvolutionType, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TypeChip } from "./TypeChip";
 import {
   BiChevronLeft,
@@ -40,6 +35,7 @@ import { Chip } from "@/components/LayoutComponents/Chip";
 import { StatCompareTool } from "./StatCompareTool/StatCompareTool";
 import { EvolutionChart } from "./EvolutionChart";
 import { complexionData } from "@/pokemonTypes";
+import { useQuery } from "@tanstack/react-query";
 
 export const DexEntry = () => {
   const router = useRouter();
@@ -49,26 +45,37 @@ export const DexEntry = () => {
 
   const [showStats, setShowStats] = useState(false);
 
-  const [pokemon, setPokemon] = useState<PokeDetails | undefined>();
-  const [evolvesFrom, setEvolvesFrom] = useState<PokeDetails>();
-  const [evolvesTo, setEvolvesTo] =
-    useState<
-      (PokeDetails & { evolutionDetails: Omit<EvolutionType, "name"> })[]
-    >();
-
   const currentIndex = useMemo(
     () => parseInt(router.query.id as string),
     [router.query]
   );
 
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getPokemonDataID({ index: currentIndex });
+  const getOnePokemon = async () => {
+    const data = await fetch("/api/pokemon/get-one", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        index: currentIndex,
+      }),
+    });
 
-      setPokemon(data);
-    };
-    getData();
-  }, [currentIndex]);
+    return await data.json();
+  };
+
+  const {
+    data: pokemon,
+    error,
+    isLoading,
+  } = useQuery<PokeDetails | undefined>({
+    queryKey: ["getOnePokemon", currentIndex],
+    queryFn: getOnePokemon,
+    enabled: currentIndex ? true : false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
 
   useEffect(() => {
     document.title = `Pokemon PokeDex - ${pokemon?.name}`;
@@ -93,41 +100,78 @@ export const DexEntry = () => {
     return audio;
   }, [pokemon]);
 
-  const loadEvolutionChain = useCallback(async () => {
-    if (pokemon?.evolvesFrom) {
-      const fromResult = await getPokemonDataName({
-        name: pokemon.evolvesFrom,
-      });
-      setEvolvesFrom(fromResult);
-    } else {
-      setEvolvesFrom(undefined);
-    }
+  const loadEvolveFrom = async () => {
+    const data = await fetch("/api/pokemon/get-one", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: pokemon?.evolvesFrom,
+      }),
+    });
 
-    if (pokemon?.evolvesTo?.length) {
-      let toResult: (PokeDetails & {
-        evolutionDetails: Omit<EvolutionType, "name">;
-      })[] = [];
-      for (let i = 0; i < pokemon.evolvesTo.length; i++) {
-        const { name, ...restOfDetails } = pokemon.evolvesTo[i];
-        const fromResult = await getPokemonDataName({
-          name: name.value,
+    return await data.json();
+  };
+
+  const {
+    data: evolvesFrom,
+    error: evolvesFromError,
+    isLoading: evolvesFromIsLoading,
+  } = useQuery<PokeDetails>({
+    queryKey: ["loadEvolveFrom", pokemon?.evolvesFrom],
+    queryFn: loadEvolveFrom,
+    enabled: pokemon?.evolvesFrom ? true : false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
+
+  const loadEvolveTo = async () => {
+    let toResult:
+      | (PokeDetails & {
+          evolutionDetails: Omit<EvolutionType, "name">;
+        })[]
+      | undefined;
+    if (pokemon?.evolvesTo) {
+      for (let i = 0; i < pokemon?.evolvesTo?.length; i++) {
+        const { name, ...restOfDetails } = pokemon?.evolvesTo[i];
+        const data = await fetch("/api/pokemon/get-one", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name.value,
+          }),
         });
 
-        if (fromResult) {
-          toResult.push({ ...fromResult, evolutionDetails: restOfDetails });
+        const jsonData = await data.json();
+
+        if (jsonData) {
+          toResult = [...(toResult || []), jsonData];
         }
       }
-      setEvolvesTo(toResult);
-    } else {
-      setEvolvesTo(undefined);
     }
-  }, [pokemon]);
 
-  useEffect(() => {
-    if (pokemon) {
-      loadEvolutionChain();
-    }
-  }, [pokemon, loadEvolutionChain]);
+    return toResult;
+  };
+
+  const {
+    data: evolvesTo,
+    error: evolvesToError,
+    isLoading: evolvesToIsLoading,
+  } = useQuery<
+    | (PokeDetails & { evolutionDetails: Omit<EvolutionType, "name"> })[]
+    | undefined
+  >({
+    queryKey: ["loadEvolveTo", pokemon?.evolvesTo],
+    queryFn: loadEvolveTo,
+    enabled: pokemon?.evolvesTo ? true : false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
 
   const receivesDouble = useMemo(() => {
     if (pokemon?.types && pokemon.types.length > 1) {
@@ -327,7 +371,7 @@ export const DexEntry = () => {
                   <Row className={`gap-2`}>
                     <H5>Strong Against</H5>
                     <InfoButton
-                      details={
+                      tooltipDetails={
                         <Column className={`w-[150px] gap-2`}>
                           <Row className={`flex-1 gap-2`}>
                             <FaAngleUp
@@ -390,7 +434,7 @@ export const DexEntry = () => {
                   <Row className={`gap-2`}>
                     <H5>Weak Against</H5>
                     <InfoButton
-                      details={
+                      tooltipDetails={
                         <Column className={`w-[150px] gap-2`}>
                           <Row className={`flex-1 gap-2`}>
                             <FaAngleDown

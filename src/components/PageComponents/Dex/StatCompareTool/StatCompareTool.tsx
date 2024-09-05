@@ -1,6 +1,6 @@
 import { Column, H5, Row, Span } from "@/components/LayoutComponents";
 import { useDarkTheme } from "@/components/Providers";
-import { PokeDetails, getPokemonDataList } from "@/utils";
+import { PokeDetails } from "@/utils";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import {
   Bar,

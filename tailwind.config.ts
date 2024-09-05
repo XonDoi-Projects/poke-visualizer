@@ -25,6 +25,14 @@ const config: Config = {
         border: "0px 0px 10px 0px rgba(0, 0, 0, 0.3)",
       },
       keyframes: {
+        spin: {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
         move: {
           "0%": {
             top: "var(--topOld)",
@@ -51,6 +59,7 @@ const config: Config = {
         },
       },
       animation: {
+        "spin-icon": "spin 1s forwards linear infinite",
         "move-ball": "move 2s ease-in-out 1",
         "show-ball": "show 1s forwards ease-in-out",
         "move-gradient": "moveGradient forwards 1s linear 1",

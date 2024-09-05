@@ -1,7 +1,7 @@
 import { FieldProps } from "@/components/LayoutComponents";
 import { Autocomplete } from "@/components/LayoutComponents/Autocomplete/Autocomplete";
-import { total } from "@/components/Providers";
-import { getPokemonDataList, PokeDetails } from "@/utils";
+import { PokeDetails } from "@/utils";
+import { useQuery } from "@tanstack/react-query";
 import {
   FunctionComponent,
   HTMLProps,
@@ -28,37 +28,35 @@ export const PokemonAutocomplete: FunctionComponent<
   label,
 }) => {
   const [search, setSearch] = useState("");
-  const [pokemonList, setPokemonList] = useState<{
+
+  const getData = async () => {
+    const data = await fetch("/api/pokemon/get-autocomplete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ search }),
+    });
+
+    return await data.json();
+  };
+
+  const { data, error, isLoading } = useQuery<{
     data: PokeDetails[] | undefined;
     count: number | undefined;
-  }>();
-
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getPokemonDataList({
-        limit: total,
-      });
-
-      setPokemonList(data);
-    };
-
-    getData();
-  }, []);
-
-  const filteredPokemon = useMemo(
-    () =>
-      search
-        ? pokemonList?.data?.filter((c) =>
-            c.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-          )
-        : pokemonList?.data,
-    [pokemonList, search]
-  );
+  }>({
+    queryKey: ["getData", search],
+    queryFn: getData,
+    enabled: search ? true : false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
 
   return (
     <Autocomplete
       label={label || ""}
-      list={filteredPokemon || []}
+      list={data?.data || []}
       search={search}
       setSearch={setSearch}
       option={pokemon}

@@ -1,7 +1,5 @@
 import { mergedBasesUrl, pokeBaseUrl } from "./components";
-import { JSDOM } from "jsdom";
-import { complexionData, TypeWeakness } from "./pokemonTypes";
-import { getPokemonData } from "./components/Storage/pokemonStorage";
+import { complexionData } from "./pokemonTypes";
 
 export type PokeAbility = string;
 export type PokeForm = string;
@@ -75,6 +73,7 @@ export type EvolutionType = {
 };
 
 export interface PokeDetails {
+  id: number;
   name: string;
   index: string;
   weight: number;
@@ -276,6 +275,7 @@ export const getPokemon = async (index: number) => {
   const secondData = await extraData.json();
 
   pokeDetails = {
+    id: firstData.id,
     name: (firstData.species.name as string).toUpperCase(),
     index: firstData.id,
     imageLink: firstData.sprites.front_default,
@@ -363,8 +363,6 @@ export const getPokemon = async (index: number) => {
     };
   }
 
-  console.log(firstData.moves);
-
   if (firstData.moves.length) {
     for (let i = 0; i < firstData.moves.length; i++) {
       const thisMove = firstData.moves[i];
@@ -426,25 +424,6 @@ export const getPokemon = async (index: number) => {
   return pokeDetails;
 };
 
-export const getPokemonList = async (limit?: number, offset?: number) => {
-  let pokemonList: PokeDetails[] = [];
-
-  const result = await fetch(
-    `${pokeBaseUrl}/pokemon/?offset=${offset}&limit=${limit || 20}`
-  );
-  const data = await result.json();
-
-  for (let i = 0; i < data.results.length; i++) {
-    const pokemonResult = await getPokemon(i + 1);
-
-    if (pokemonResult) {
-      pokemonList.push(pokemonResult);
-    }
-  }
-
-  return { data: pokemonList, count: data.count };
-};
-
 export type PokeArgsMany = {
   limit: number;
   range?: { start: number; end: number };
@@ -458,61 +437,6 @@ export type PokeArgsOneById = {
 };
 export type PokeArgsOneByName = {
   name: string;
-};
-
-export const getPokemonDataList = async (args?: PokeArgsMany) => {
-  if (typeof window !== "undefined") {
-    if (!args) {
-      const pokeData = await getPokemonData();
-      return { data: pokeData || [], count: pokeData?.length || 0 };
-    }
-
-    let data = await getPokemonData();
-
-    if (args.types && !args.types?.includes("any")) {
-      data = data?.filter((d) =>
-        args.types
-          ?.map((t) => d.types?.includes(t.toLowerCase()))
-          .some((b) => b)
-      );
-    }
-
-    if (args.region && args.region !== "all") {
-      data = data?.filter((d) => args.region?.includes(d.region));
-    }
-
-    const count = data?.length;
-
-    if (args.range) {
-      data = data?.slice(
-        args.range.start,
-        data.length - args.range.start > args.limit
-          ? args.range.end
-          : data.length
-      );
-    }
-
-    return { data, count };
-  }
-  return;
-};
-
-export const getPokemonDataID = async (args: PokeArgsOneById) => {
-  const pokeData = await getPokemonData();
-
-  if (pokeData) {
-    return pokeData[args.index - 1];
-  }
-  return;
-};
-
-export const getPokemonDataName = async (args: PokeArgsOneByName) => {
-  const pokeData = await getPokemonData();
-
-  if (pokeData) {
-    return pokeData.find((d) => d.name === args.name);
-  }
-  return;
 };
 
 //----------- Merged Pokemon Data ------------

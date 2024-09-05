@@ -1,18 +1,18 @@
 import { Button, Column, Container, H2, H5, Row } from "../../LayoutComponents";
 import { total, useDarkTheme, useSize } from "../..";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { clsx } from "clsx";
 import {
   PokeDetails,
   PokeRegion,
   PokeType,
-  getPokemonDataList,
   pokeRegions,
   pokeTypes,
 } from "@/utils";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { Selector } from "@/components/LayoutComponents/Selector";
 import { PokeCardRound } from "./PokeCardRound";
+import { useQuery } from "@tanstack/react-query";
 
 export const Dex = () => {
   const { size } = useSize();
@@ -20,10 +20,6 @@ export const Dex = () => {
 
   const [region, setRegion] = useState<PokeRegion>("all");
   const [types, setTypes] = useState<PokeType[]>(["any"]);
-  const [pokemon, setPokemon] = useState<{
-    data: PokeDetails[] | undefined;
-    count: number | undefined;
-  }>();
 
   const [currentOffset, setCurrentOffset] = useState(0);
 
@@ -45,32 +41,50 @@ export const Dex = () => {
     "grid-cols-[repeat(8,minmax(200px,300px))]": numberOfCols === 8,
   });
 
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getPokemonDataList({
-        range: { start: currentOffset, end: currentOffset + limit },
-        types,
-        limit,
-        region,
-      });
-
-      setPokemon(data);
-    };
-    getData();
-  }, [currentOffset, limit, types, region]);
-
   const scrollElement = useMemo(
-    () => document.getElementById("main-content"),
+    () =>
+      typeof window !== "undefined"
+        ? document?.getElementById("main-content")
+        : undefined,
     []
   );
 
+  const getPokemonByFilter = useCallback(async () => {
+    const data = await fetch("/api/pokemon/get-many", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        range: { start: currentOffset, end: currentOffset + limit },
+        types: types.includes("any") ? undefined : types,
+        limit,
+        region: region === "all" ? undefined : region,
+      }),
+    });
+
+    return await data.json();
+  }, [currentOffset, limit, region, types]);
+
+  const { data, error, isLoading } = useQuery<{
+    data: PokeDetails[] | undefined;
+    count: number | undefined;
+  }>({
+    queryKey: ["getPokemonByFilter", currentOffset, limit, region, types],
+    queryFn: getPokemonByFilter,
+    enabled: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
+
   return (
-    pokemon?.data && (
+    data?.data && (
       <Column className={`gap-5`}>
         <H2>Welcome to PokeVis</H2>
-        <H5>{`You are currently viewing Pokemon #${pokemon.data[0].index
+        <H5>{`You are currently viewing Pokemon #${data.data[0].index
           .toString()
-          .padStart(4, "0")} to #${pokemon.data[pokemon.data?.length - 1].index
+          .padStart(4, "0")} to #${data.data[data.data?.length - 1].index
           .toString()
           .padStart(4, "0")}`}</H5>
         <Container className={`w-full justify-end gap-5`}>
@@ -79,8 +93,8 @@ export const Dex = () => {
               label="Type"
               list={pokeTypes.map((p) => p[0].toUpperCase() + p.slice(1))}
               option={types.map((t) => t[0].toUpperCase() + t.slice(1))}
-              setOption={(value) => {
-                setTypes([value]);
+              setOption={(value: PokeType) => {
+                setTypes([value.toLowerCase() as PokeType]);
                 setCurrentOffset(0);
                 setLimit(20);
               }}
@@ -91,8 +105,8 @@ export const Dex = () => {
               label="Region"
               list={pokeRegions.map((p) => p[0].toUpperCase() + p.slice(1))}
               option={region[0].toUpperCase() + region.slice(1)}
-              setOption={(value) => {
-                setRegion(value);
+              setOption={(value: PokeRegion) => {
+                setRegion(value.toLowerCase() as PokeRegion);
                 setCurrentOffset(0);
                 setLimit(20);
               }}
@@ -101,7 +115,7 @@ export const Dex = () => {
         </Container>
 
         <Container className={`grid ${gridCols} gap-10 p-5 justify-center`}>
-          {pokemon?.data.map((poke) => (
+          {data?.data.map((poke) => (
             <Container
               key={poke.index}
               className={"flex items-center justify-center"}
@@ -133,7 +147,7 @@ export const Dex = () => {
               setCurrentOffset(currentOffset + 20);
               scrollElement?.scrollTo({ top: 0 });
             }}
-            disable={currentOffset + 20 >= (pokemon?.count || total)}
+            disable={currentOffset + 20 >= (data?.count || total)}
           >
             <BiChevronRight
               className={

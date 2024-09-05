@@ -4,19 +4,17 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from "react";
 import { getPokemon, PokeDetails } from "@/utils";
-import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
-import { checkPokemonData, setPokemonData } from "../Storage/pokemonStorage";
 
 export const total = 1025;
 
 export interface IDataContext {
   loadingState: number;
-  isCached?: boolean;
+  setSyncInBackground: (value: boolean) => void;
+  syncInBackground: boolean;
 }
 
 export const DataContext = createContext<IDataContext | undefined>(undefined);
@@ -26,10 +24,8 @@ export interface IDataProviderProps {
 }
 
 export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
-  const [loadingState, setLoadingState] = useState(0);
-  const [isCached, setIsCached] = useState<boolean>();
-
-  const router = useRouter();
+  const [loadingState, setLoadingState] = useState<number | null>(null);
+  const [syncInBackground, setSyncInBackground] = useState(false);
 
   const getAllPokemon = useCallback(async () => {
     let pokemonList: PokeDetails[] = [];
@@ -43,47 +39,27 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
       setLoadingState(i + 1);
     }
 
-    setPokemonData(pokemonList);
+    //update mongodb, use a timestamp to avoid multiple re-syncs
+    setSyncInBackground(false);
+
+    return pokemonList;
   }, []);
 
-  const query = useQuery({
+  useQuery({
     queryKey: ["getPokemon"],
     queryFn: getAllPokemon,
-    enabled: isCached === false && loadingState === 0,
+    enabled: syncInBackground && loadingState === 0,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: true,
   });
 
-  const checkCache = useCallback(async () => {
-    if (!(await checkPokemonData())) {
-      setIsCached(false);
-    } else {
-      setIsCached(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    const doMagic = () => {
-      checkCache();
-    };
-
-    router.events.on("routeChangeStart", doMagic);
-
-    return () => {
-      router.events.off("routeChangeStart", doMagic);
-    };
-  }, [checkCache, router.events]);
-
-  useEffect(() => {
-    checkCache();
-  }, [checkCache]);
-
   return (
     <DataContext.Provider
       value={{
-        loadingState: Math.floor((loadingState / total) * 100),
-        isCached,
+        loadingState: Math.floor(((loadingState || 0) / total) * 100),
+        setSyncInBackground,
+        syncInBackground,
       }}
     >
       {props.children}

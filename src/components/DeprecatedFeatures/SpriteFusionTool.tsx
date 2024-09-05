@@ -6,20 +6,20 @@ import {
   Span,
 } from "@/components/LayoutComponents";
 import { Autocomplete } from "@/components/LayoutComponents/Autocomplete/Autocomplete";
-import { InputField } from "@/components/LayoutComponents/Inputs";
-import { total, useDarkTheme } from "@/components/Providers";
-import { PokeDetails, getMergedPokemon, getPokemonDataList } from "@/utils";
-import { data } from "autoprefixer";
+import {} from "@/components/LayoutComponents/Inputs";
+import { useDarkTheme } from "@/components/Providers";
+import { PokeDetails, getMergedPokemon } from "@/utils";
+import {} from "autoprefixer";
 import {
   FunctionComponent,
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import Image from "next/image";
 import clsx from "clsx";
+import { useQuery } from "@tanstack/react-query";
 
 export interface SpriteFusionToolProps {
   pokemon: PokeDetails;
@@ -34,32 +34,30 @@ export const SpriteFusionTool: FunctionComponent<SpriteFusionToolProps> = ({
   const [pokemonTwo, setPokemonTwo] = useState<PokeDetails>();
 
   const [imageUrl, setImageUrl] = useState("");
-  const [comparePokemon, setComparePokemon] = useState<{
+
+  const getData = async () => {
+    const data = await fetch("/api/pokemon/get-autocomplete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ search }),
+    });
+
+    return await data.json();
+  };
+
+  const { data, error, isLoading } = useQuery<{
     data: PokeDetails[] | undefined;
     count: number | undefined;
-  }>();
-
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getPokemonDataList({
-        limit: total,
-      });
-
-      setComparePokemon(data);
-    };
-
-    getData();
-  }, []);
-
-  const filteredPokemon = useMemo(
-    () =>
-      search
-        ? comparePokemon?.data?.filter((c) =>
-            c.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-          )
-        : comparePokemon?.data,
-    [comparePokemon, search]
-  );
+  }>({
+    queryKey: ["getData", search],
+    queryFn: getData,
+    enabled: search ? true : false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+  });
 
   const dropShadow = clsx({
     "drop-shadow-no-offset-light": light,
@@ -89,7 +87,7 @@ export const SpriteFusionTool: FunctionComponent<SpriteFusionToolProps> = ({
         >{`Select a pokemon to fuse with ${pokemon.name.toLocaleUpperCase()}`}</Span>
         <Autocomplete
           label=""
-          list={filteredPokemon || []}
+          list={data?.data || []}
           search={search}
           setSearch={setSearch}
           option={pokemonTwo}
