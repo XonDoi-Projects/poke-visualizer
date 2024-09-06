@@ -9,3 +9,4 @@ export * from "./Cover";
 export * from "./Drawer";
 export * from "./Table";
 export * from "./InfoTooltip";
+export * from "./Loading";

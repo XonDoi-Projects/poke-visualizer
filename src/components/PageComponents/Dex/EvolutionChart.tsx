@@ -61,7 +61,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
           </Column>
         )}
 
-        {evolvesTo && (
+        {evolvesTo?.length && (
           <Column
             className={
               "flex-1 w-full items-center justify-center gap-5 min-w-[200px]"

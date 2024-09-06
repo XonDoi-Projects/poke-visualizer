@@ -57,8 +57,28 @@ const config: Config = {
           "0%": { transform: "translateX(-100%) translateY(-100%)" },
           "100%": { transform: "translateX(100%) translateY(100%)" },
         },
+        shake: {
+          "0%": { transform: "translateX(0px) rotate(0deg)" },
+          "25%": { transform: "translateX(5px) rotate(20deg)" },
+          "50%": { transform: "translateX(-5px) rotate(-20deg)" },
+          "75%": { transform: "translateX(5px) rotate(20deg)" },
+          "100%": { transform: "translateX(0px) rotate(0deg)" },
+        },
+        pulse: {
+          "0%": {
+            backgroundColor: "rgb(255,255,255)",
+          },
+          "50%": {
+            backgroundColor: "rgb(255, 127, 127)",
+          },
+          "100%": {
+            backgroundColor: "rgb(255,255,255)",
+          },
+        },
       },
       animation: {
+        "pokeball-pulse": "pulse 1s forwards ease-out infinite",
+        "pokeball-shake": "shake 1s forwards ease-in-out infinite",
         "spin-icon": "spin 1s forwards linear infinite",
         "move-ball": "move 2s ease-in-out 1",
         "show-ball": "show 1s forwards ease-in-out",

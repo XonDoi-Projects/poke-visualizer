@@ -10,6 +10,7 @@ import {
   Row,
   Small,
   Span,
+  Loading,
   Table,
 } from "@/components/LayoutComponents";
 import { total, useDarkTheme, useSize } from "@/components/Providers";
@@ -131,8 +132,7 @@ export const DexEntry = () => {
     let toResult:
       | (PokeDetails & {
           evolutionDetails: Omit<EvolutionType, "name">;
-        })[]
-      | undefined;
+        })[] = [];
     if (pokemon?.evolvesTo) {
       for (let i = 0; i < pokemon?.evolvesTo?.length; i++) {
         const { name, ...restOfDetails } = pokemon?.evolvesTo[i];
@@ -149,7 +149,10 @@ export const DexEntry = () => {
         const jsonData = await data.json();
 
         if (jsonData) {
-          toResult = [...(toResult || []), jsonData];
+          toResult = [
+            ...(toResult || []),
+            { ...jsonData, evolutionDetails: restOfDetails },
+          ];
         }
       }
     }
@@ -162,8 +165,7 @@ export const DexEntry = () => {
     error: evolvesToError,
     isLoading: evolvesToIsLoading,
   } = useQuery<
-    | (PokeDetails & { evolutionDetails: Omit<EvolutionType, "name"> })[]
-    | undefined
+    (PokeDetails & { evolutionDetails: Omit<EvolutionType, "name"> })[]
   >({
     queryKey: ["loadEvolveTo", pokemon?.evolvesTo],
     queryFn: loadEvolveTo,
@@ -213,7 +215,12 @@ export const DexEntry = () => {
     return [];
   }, [pokemon?.types]);
 
-  return (
+  return isLoading || evolvesFromIsLoading || evolvesToIsLoading ? (
+    <Column className={`w-full h-full items-center justify-center`}>
+      <Loading />
+      <H5>{`Catching Pokemon!`}</H5>
+    </Column>
+  ) : (
     pokemon && (
       <Column className={`w-full h-full p-5 items-center gap-10`}>
         <Row className={`gap-5 justify-between`}>

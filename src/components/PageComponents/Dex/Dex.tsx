@@ -1,4 +1,12 @@
-import { Button, Column, Container, H2, H5, Row } from "../../LayoutComponents";
+import {
+  Button,
+  Column,
+  Container,
+  H2,
+  H5,
+  Row,
+  Loading,
+} from "../../LayoutComponents";
 import { total, useDarkTheme, useSize } from "../..";
 import { useCallback, useMemo, useState } from "react";
 import { clsx } from "clsx";
@@ -78,7 +86,12 @@ export const Dex = () => {
     refetchOnReconnect: true,
   });
 
-  return (
+  return isLoading ? (
+    <Column className={`w-full h-full items-center justify-center`}>
+      <Loading />
+      <H5>Catching Them All!</H5>
+    </Column>
+  ) : (
     data?.data && (
       <Column className={`gap-5`}>
         <H2>Welcome to PokeVis</H2>
