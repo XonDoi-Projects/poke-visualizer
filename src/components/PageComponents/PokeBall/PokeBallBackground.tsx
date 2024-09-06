@@ -9,6 +9,7 @@ import {
 } from "react";
 import { Column, Container } from "../../LayoutComponents";
 import { useSize } from "@/components";
+import { PokeBall } from "./PokeBall";
 
 interface PokePosition {
   top: string;
@@ -125,7 +126,7 @@ export const PokeBallBackground: FunctionComponent<PokeBallBackgroundProps> = (
     >
       {showBall && isAnimate ? (
         <Column
-          className={`relative  justify-center items-center overflow-hidden 
+          className={`relative justify-center items-center overflow-hidden 
         ${isAnimate ? "animate-move-ball" : ""}
        `}
           style={
@@ -142,49 +143,7 @@ export const PokeBallBackground: FunctionComponent<PokeBallBackgroundProps> = (
               : {}
           }
         >
-          <Column
-            className="flex rounded-[50%] border-[5px] border-black border-solid overflow-hidden box-content"
-            style={{ borderWidth: mobile ? "2px" : "5px" }}
-          >
-            <Container
-              className={`flex bg-red-600 border-black border-solid overflow-hidden`}
-              style={{
-                width: mobile ? "96px" : "290px",
-                height: mobile ? "48px" : "145px",
-                borderTopRightRadius: mobile ? "48px" : "145px",
-                borderTopLeftRadius: mobile ? "48px" : "145px",
-                borderBottomWidth: mobile ? "3px" : "7.5px",
-              }}
-            />
-            <Container
-              className="flex bg-slate-100 border-black border-solid overflow-hidden"
-              style={{
-                width: mobile ? "96px" : "290px",
-                height: mobile ? "48px" : "145px",
-                borderBottomRightRadius: mobile ? "48px" : "145px",
-                borderBottomLeftRadius: mobile ? "48px" : "145px",
-                borderTopWidth: mobile ? "3px" : "7.5px",
-              }}
-            />
-          </Column>
-          <Container
-            className="absolute bg-white z-[2] rounded-[50%] border-black border-solid justify-center items-center"
-            style={{
-              width: mobile ? "27px" : "80px",
-              height: mobile ? "27px" : "80px",
-              top: `calc(50% - ${mobile ? "12.5px" : "40px"})`,
-              left: `calc(50% - ${mobile ? "12.5px" : "40px"})`,
-              borderWidth: mobile ? "6px" : "15px",
-            }}
-          >
-            <Container
-              className="flex w-[25px] h-[25px] rounded-[50%] border-2 border-black border-solid"
-              style={{
-                width: mobile ? "7px" : "25px",
-                height: mobile ? "7px" : "25px",
-              }}
-            />
-          </Container>
+          <PokeBall />
         </Column>
       ) : (
         <></>
