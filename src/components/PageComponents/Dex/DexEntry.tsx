@@ -13,7 +13,7 @@ import {
   Loading,
   Table,
 } from "@/components/LayoutComponents";
-import { total, useDarkTheme, useSize } from "@/components/Providers";
+import { total, useDarkTheme, useData, useSize } from "@/components/Providers";
 import { EvolutionType, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
@@ -43,6 +43,7 @@ export const DexEntry = () => {
 
   const { light } = useDarkTheme();
   const { mobile } = useSize();
+  const { isLocallyLoaded } = useData();
 
   const [showStats, setShowStats] = useState(false);
 
@@ -70,7 +71,7 @@ export const DexEntry = () => {
     error,
     isLoading,
   } = useQuery<PokeDetails | undefined>({
-    queryKey: ["getOnePokemon", currentIndex],
+    queryKey: ["getOnePokemon", currentIndex, isLocallyLoaded],
     queryFn: getOnePokemon,
     enabled: currentIndex ? true : false,
     refetchOnWindowFocus: false,

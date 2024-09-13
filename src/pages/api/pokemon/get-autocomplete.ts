@@ -5,7 +5,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const client = await clientPromise;
-    const dbScore = client.db("pokemons");
+    const dbPokemon = client.db("pokemons").collection("pokemons");
 
     const { search } = req.body;
 
@@ -15,13 +15,12 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
       filter = { ...filter, name: { $regex: search, $options: "i" } };
     }
 
-    let result = await dbScore
-      .collection("pokemons")
+    let result = await dbPokemon
       .find<PokeDetails>(filter)
       .sort("index", "ascending")
       .toArray();
 
-    let count = await dbScore.collection("pokemons").countDocuments();
+    let count = await dbPokemon.countDocuments();
 
     if (result) {
       return res.status(200).json({
@@ -36,7 +35,9 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
   } catch (e: any) {
-    return res.status(404).json({ message: `Failed to get pokemon: ${e}` });
+    return res
+      .status(404)
+      .json({ message: `Failed to get pokemon: ${e.message}` });
   }
 };
 

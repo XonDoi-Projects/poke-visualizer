@@ -33,13 +33,15 @@ export const Button: FunctionComponent<ButtonProps> = ({
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <Container className={``}>
+    <Container
+      onTouchStart={() => setShowTooltip(true)}
+      onTouchEnd={() => setShowTooltip(false)}
+      onPointerEnter={() => setShowTooltip(true)}
+      onPointerLeave={() => setShowTooltip(false)}
+      className={``}
+    >
       <button
         {...props}
-        onTouchStart={() => setShowTooltip(true)}
-        onTouchEnd={() => setShowTooltip(false)}
-        onPointerEnter={() => setShowTooltip(true)}
-        onPointerLeave={() => setShowTooltip(false)}
         onClick={(e) => {
           if (!disable) {
             onClick && onClick(e);
@@ -84,7 +86,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
         )}
       </button>{" "}
       {tooltip && showTooltip ? (
-        <InfoTooltip details={tooltipDetails} />
+        <InfoTooltip details={tooltipDetails} setShowTooltip={setShowTooltip} />
       ) : (
         <></>
       )}

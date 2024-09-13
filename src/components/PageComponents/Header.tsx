@@ -11,10 +11,18 @@ import { BiAdjust, BiRefresh } from "react-icons/bi";
 import Image from "next/image";
 import { PokemonAutocomplete } from "./Dex/PokemonAutocomplete/PokemonAutocomplete";
 import { useRouter } from "next/router";
+import { Chip } from "../LayoutComponents/Chip";
 
 export const Header = () => {
   const { light, setLight } = useDarkTheme();
-  const { loadingState, syncInBackground, setSyncInBackground } = useData();
+  const {
+    loadingState,
+    syncInBackground,
+    setSyncInBackground,
+    isRecentlyUpdated,
+    isCheckingData,
+    isBeingUpdated,
+  } = useData();
 
   const router = useRouter();
 
@@ -53,20 +61,41 @@ export const Header = () => {
         </Container>
         <Container className="relative flex flex-row">
           <Button
-            onClick={() => setSyncInBackground(true)}
             className={`!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all`}
             type="text"
             tooltip
             tooltipDetails={
-              <Column className={`w-[200px]`}>
+              <Container>
                 <Small
-                  className={` ${light ? "text-blue-900" : "text-slate-300"} `}
+                  className={` ${
+                    light ? "text-blue-900" : "text-slate-300"
+                  } text-wrap pointer-events-none`}
                 >{`${
-                  syncInBackground
+                  isRecentlyUpdated
+                    ? "Database is up to date!"
+                    : isBeingUpdated
+                    ? "Database is currently being updated!"
+                    : syncInBackground
                     ? `Syncing in Progress ${loadingState}%`
-                    : "PokeAPI may occasionally update their database. You can sync data once a day."
+                    : "You can sync data once a day"
                 }`}</Small>
-              </Column>
+                {!isRecentlyUpdated && !syncInBackground && !isBeingUpdated ? (
+                  <Chip
+                    value="Update"
+                    onClick={() => setSyncInBackground(true)}
+                    className={`cursor-pointer ${
+                      light ? "bg-blue-950" : "bg-yellow-500"
+                    } `}
+                    contrast={!light}
+                  />
+                ) : null}
+              </Container>
+            }
+            disable={
+              isRecentlyUpdated ||
+              isBeingUpdated ||
+              isCheckingData ||
+              syncInBackground
             }
           >
             <BiRefresh

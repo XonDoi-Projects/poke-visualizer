@@ -8,11 +8,13 @@ export interface ChipProps {
   className?: HTMLProps<"HTMLElement">["className"];
   contrast?: boolean;
   suffix?: ReactNode;
+  onClick?: () => void;
 }
 
 export const Chip: FunctionComponent<ChipProps> = (props) => {
   return (
     <Row
+      onClick={props.onClick}
       className={`flex-row items-center rounded-md w-fit ${props.className} px-2 py-1 min-h-[20px] h-fit gap-1 `}
     >
       <Small

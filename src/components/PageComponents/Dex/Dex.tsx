@@ -7,7 +7,7 @@ import {
   Row,
   Loading,
 } from "../../LayoutComponents";
-import { total, useDarkTheme, useSize } from "../..";
+import { total, useDarkTheme, useData, useSize } from "../..";
 import { useCallback, useMemo, useState } from "react";
 import { clsx } from "clsx";
 import {
@@ -25,6 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 export const Dex = () => {
   const { size } = useSize();
   const { light } = useDarkTheme();
+  const { isLocallyLoaded } = useData();
 
   const [region, setRegion] = useState<PokeRegion>("all");
   const [types, setTypes] = useState<PokeType[]>(["any"]);
@@ -78,7 +79,14 @@ export const Dex = () => {
     data: PokeDetails[] | undefined;
     count: number | undefined;
   }>({
-    queryKey: ["getPokemonByFilter", currentOffset, limit, region, types],
+    queryKey: [
+      "getPokemonByFilter",
+      currentOffset,
+      limit,
+      region,
+      types,
+      isLocallyLoaded,
+    ],
     queryFn: getPokemonByFilter,
     enabled: true,
     refetchOnWindowFocus: false,
