@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 const Index = () => {
   useEffect(() => {
-    document.title = "Pokemon PokeDex";
+    document.title = "PokeVis";
   });
   return (
     <Landing>

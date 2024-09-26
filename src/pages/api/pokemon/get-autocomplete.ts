@@ -30,6 +30,8 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
           stats: r.stats,
           height: r.height,
           weight: r.weight,
+          imageLinkHighRes: r.imageLinkHighRes,
+          types: r.types,
         })),
         count,
       });
