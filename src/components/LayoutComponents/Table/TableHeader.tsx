@@ -1,12 +1,15 @@
 import { FunctionComponent } from "react";
 import { Container } from "../Container";
 import { Span } from "../Typography";
+import clsx from "clsx";
+import { TableCell } from "./TableCell";
 
 export type TableHeaderType = {
   name: string;
   expandable?: boolean;
   keyId: string;
   subHeaders?: TableHeaderType[];
+  minWidth?: string;
 };
 
 export interface TableHeaderProps {
@@ -16,13 +19,14 @@ export interface TableHeaderProps {
 
 export const TableHeader: FunctionComponent<TableHeaderProps> = (props) => {
   return props.headers.map((h) => (
-    <Container
+    <TableCell
       key={h.keyId}
-      className={`max-w-[200px] min-w-[200px] p-2 items-center`}
-    >
-      <Span className={`${props.subLayer ? "text-xs" : ""}`}>
-        {h.name.toUpperCase()}
-      </Span>
-    </Container>
+      minWidth={h.minWidth || "200px"}
+      cell={
+        <Span className={`${props.subLayer ? "text-xs" : ""}`}>
+          {h.name.toUpperCase()}
+        </Span>
+      }
+    />
   ));
 };

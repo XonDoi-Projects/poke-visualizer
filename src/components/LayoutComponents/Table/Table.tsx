@@ -16,7 +16,7 @@ export const Table: FunctionComponent<TableProps> = (props) => {
 
   return (
     <Container className={"h-fit w-full overflow-x-auto bg-transparent"}>
-      <Column>
+      <Column className={`flex-1`}>
         <Row className={`h-[40px]`}>
           <TableHeader headers={props.headers} />
         </Row>

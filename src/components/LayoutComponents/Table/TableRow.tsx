@@ -7,6 +7,7 @@ import { Column } from "../Column";
 import { useDarkTheme } from "@/components/Providers";
 import { Button } from "../Buttons";
 import { BiChevronDown } from "react-icons/bi";
+import { TableCell } from "./TableCell";
 
 export interface TableRowProps {
   headers: TableHeaderType[];
@@ -23,53 +24,57 @@ export const TableRow: FunctionComponent<TableRowProps> = (props) => {
     <Column>
       <Row className={`min-h-[40px]`}>
         {props.headers.map((h, index) => (
-          <Container
+          <TableCell
             key={h.keyId + index}
-            className={`max-w-[200px] min-w-[200px] p-2 items-center`}
-          >
-            {props.value ? (
-              typeof props.value[h.keyId] === "string" ? (
-                <Span className={`${props.subLayer ? "text-xs" : ""}`}>
-                  {props.value[h.keyId]
-                    .split("-")
-                    .map((s: string) => s[0].toUpperCase() + s.slice(1))
-                    .join("-")}
-                </Span>
-              ) : typeof props.value[h.keyId] === "number" ? (
-                <Span className={`${props.subLayer ? "text-xs" : ""}`}>
-                  {props.value[h.keyId].toString()}
-                </Span>
-              ) : !props.value[h.keyId] ? (
-                <Span className={`${props.subLayer ? "text-xs" : ""}`}>-</Span>
-              ) : typeof props.value[h.keyId] === "object" && h.expandable ? (
-                <Button
-                  onClick={() =>
-                    setExpand({
-                      value: expand?.value === undefined ? true : !expand.value,
-                      keyId: h.keyId,
-                    })
-                  }
-                  className="!w-[15px] !h-[15px] rounded-[50%] !p-0 !m-0 transition-all"
-                  type="text"
-                >
-                  <BiChevronDown
-                    className={`transform transition-all ${
-                      expand?.value ? "rotate-180" : "rotate-0"
-                    } ${
-                      light
-                        ? "text-blue-900 group-hover:text-blue-800"
-                        : "text-slate-300 group-hover:text-slate-200"
-                    }`}
-                    style={{ fontSize: "20px" }}
-                  />
-                </Button>
+            cell={
+              props.value ? (
+                typeof props.value[h.keyId] === "string" ? (
+                  <Span className={`${props.subLayer ? "text-xs" : ""}`}>
+                    {props.value[h.keyId]
+                      .split("-")
+                      .map((s: string) => s[0].toUpperCase() + s.slice(1))
+                      .join("-")}
+                  </Span>
+                ) : typeof props.value[h.keyId] === "number" ? (
+                  <Span className={`${props.subLayer ? "text-xs" : ""}`}>
+                    {props.value[h.keyId].toString()}
+                  </Span>
+                ) : !props.value[h.keyId] ? (
+                  <Span className={`${props.subLayer ? "text-xs" : ""}`}>
+                    -
+                  </Span>
+                ) : typeof props.value[h.keyId] === "object" && h.expandable ? (
+                  <Button
+                    onClick={() =>
+                      setExpand({
+                        value:
+                          expand?.value === undefined ? true : !expand.value,
+                        keyId: h.keyId,
+                      })
+                    }
+                    className="!w-[15px] !h-[15px] rounded-[50%] !p-0 !m-0 transition-all"
+                    type="text"
+                  >
+                    <BiChevronDown
+                      className={`transform transition-all ${
+                        expand?.value ? "rotate-180" : "rotate-0"
+                      } ${
+                        light
+                          ? "text-blue-900 group-hover:text-blue-800"
+                          : "text-slate-300 group-hover:text-slate-200"
+                      }`}
+                      style={{ fontSize: "20px" }}
+                    />
+                  </Button>
+                ) : (
+                  props.value[h.keyId]
+                )
               ) : (
-                props.value[h.keyId]
+                <></>
               )
-            ) : (
-              <></>
-            )}
-          </Container>
+            }
+            minWidth={h.minWidth || "200px"}
+          />
         ))}
       </Row>
       {expand?.value && props.index !== undefined ? (
