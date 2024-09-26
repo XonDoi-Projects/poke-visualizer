@@ -32,7 +32,9 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
   const { light } = useDarkTheme();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onValueChange(e.currentTarget.value);
+    if (!disable) {
+      onValueChange(e.currentTarget.value);
+    }
   };
 
   return (

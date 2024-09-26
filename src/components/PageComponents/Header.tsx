@@ -36,7 +36,7 @@ export const Header = () => {
     >
       <Row className={`flex-1 gap-5`}>
         <Container
-          className={`relative min-w-[100px] w-[100px] items-center justify-center pl-5`}
+          className={`relative min-w-[80px] w-[80px] items-center justify-center pl-5`}
         >
           <picture>
             <Image

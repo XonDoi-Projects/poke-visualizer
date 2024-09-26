@@ -34,7 +34,7 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
     <Column className={`gap-1 w-full h-full ${className}`}>
       {label && <Span>{label}</Span>}
       <Row
-        className={`h-full items-center gap-2 rounded border-solid border-[1px] rounded-md ${
+        className={`h-[40px] items-center gap-2 rounded border-solid border-[1px] rounded-md ${
           light ? "border-blue-900" : "border-slate-300"
         } ${
           type !== "transparent"
