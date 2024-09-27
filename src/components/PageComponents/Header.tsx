@@ -7,7 +7,7 @@ import {
   Span,
 } from "@/components/LayoutComponents";
 import { useDarkTheme, useData } from "..";
-import { BiAdjust, BiRefresh } from "react-icons/bi";
+import { BiAdjust, BiGroup, BiRefresh } from "react-icons/bi";
 import Image from "next/image";
 import { PokemonAutocomplete } from "./Dex/PokemonAutocomplete/PokemonAutocomplete";
 import { useRouter } from "next/router";
@@ -28,13 +28,13 @@ export const Header = () => {
 
   return (
     <Row
-      className={`h-[50px] z-10 sticky justify-between items-center transition-all ${
+      className={`h-[50px] z-10 sticky justify-between items-center transition-all gap-2 ${
         light
           ? "bg-slate-200 shadow-bottom shadow-slate-300"
           : "bg-gray-900 shadow-bottom shadow-gray-800"
       } `}
     >
-      <Row className={`flex-1 gap-5`}>
+      <Row className={`flex-1 gap-2`}>
         <Container
           className={`relative min-w-[80px] w-[80px] items-center justify-center pl-5`}
         >
@@ -110,13 +110,27 @@ export const Header = () => {
         </Container>
       </Row>
 
-      <Container className="flex flex-1 flex-row-reverse z-[3] pr-5">
+      <Container className="flex flex-1 flex-row-reverse z-[3] pr-2 gap-1">
         <Button
           onClick={() => setLight(!light)}
           className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
           type="text"
         >
           <BiAdjust
+            className={
+              light
+                ? "text-blue-950 group-hover:text-blue-800"
+                : "text-yellow-500 group-hover:text-yellow-400"
+            }
+            style={{ fontSize: "20px" }}
+          />
+        </Button>
+        <Button
+          onClick={() => router.push("/team-planner")}
+          className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
+          type="text"
+        >
+          <BiGroup
             className={
               light
                 ? "text-blue-950 group-hover:text-blue-800"
