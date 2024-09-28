@@ -10,3 +10,5 @@ export * from "./Drawer";
 export * from "./Table";
 export * from "./InfoTooltip";
 export * from "./Loading";
+export * from "./Switch";
+export * from "./Popup";

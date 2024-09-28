@@ -2,13 +2,7 @@ import { FieldProps } from "@/components/LayoutComponents";
 import { Autocomplete } from "@/components/LayoutComponents/Autocomplete/Autocomplete";
 import { PokeDetails } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
-import {
-  FunctionComponent,
-  HTMLProps,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FunctionComponent, useState } from "react";
 
 export interface PokemonAutocompleteProps extends FieldProps {
   pokemon?: PokeDetails;
@@ -22,10 +16,11 @@ export const PokemonAutocomplete: FunctionComponent<
   pokemon,
   setPokemon,
   className,
-  noDropDownOnClick,
+  noDropDownOnClick = false,
   placeHolder,
   type,
   label,
+  disable,
 }) => {
   const [search, setSearch] = useState("");
 
@@ -47,7 +42,8 @@ export const PokemonAutocomplete: FunctionComponent<
   }>({
     queryKey: ["getData", search],
     queryFn: getData,
-    enabled: search ? true : false,
+    enabled:
+      !noDropDownOnClick || (noDropDownOnClick && search !== "") ? true : false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: true,
@@ -57,7 +53,6 @@ export const PokemonAutocomplete: FunctionComponent<
     <Autocomplete
       label={label || ""}
       list={data?.data || []}
-      search={search}
       setSearch={setSearch}
       option={pokemon}
       setOption={(value: PokeDetails | undefined) => {
@@ -69,6 +64,8 @@ export const PokemonAutocomplete: FunctionComponent<
       noDropDownOnClick={noDropDownOnClick}
       placeHolder={placeHolder}
       type={type}
+      disable={disable}
+      loading={isLoading}
     />
   );
 };

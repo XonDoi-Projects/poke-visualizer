@@ -22,17 +22,16 @@ export interface AutocompleteProps<T> extends FieldProps {
   list: T[];
   option?: T;
   setOption: (value: T | undefined) => void;
-  search: string;
   setSearch: (value: string) => void;
   getDisplayName: (value: T) => string;
   noDropDownOnClick?: boolean;
+  loading?: boolean;
 }
 
 export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   list,
   option,
   setOption,
-  search,
   setSearch,
   getDisplayName,
   className,
@@ -40,6 +39,8 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   type,
   placeHolder,
   label,
+  disable,
+  loading,
 }: AutocompleteProps<T>) => {
   const { light } = useDarkTheme();
 
@@ -85,7 +86,12 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   });
 
   return (
-    <Column className={`relative w-full ${className}`} ref={ref}>
+    <Column
+      className={`relative w-full ${className} ${
+        disable ? "pointer-events-none" : ""
+      }`}
+      ref={ref}
+    >
       <InputField
         label={label || ""}
         placeHolder={placeHolder}
@@ -105,6 +111,8 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
                 }}
                 onClick={() => {
                   setOption(undefined);
+                  setQuery("");
+                  setSearch("");
                 }}
               />
               <BiChevronDown
@@ -126,10 +134,26 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
           setIsFocus(true);
         }}
         type={type}
+        disable={disable}
       />
 
-      {(showOptions && !noDropDownOnClick && list.length) ||
-      (query && list.length) ? (
+      {loading && showOptions ? (
+        <Column
+          style={{ "--bot-pos": bottom + "px" } as CSSProperties}
+          className={`absolute z-[2] top-[var(--bot-pos)] right-0 border-[1px] w-full max-h-[150px] h-[100px] rounded-md border-solid ${
+            light ? "border-blue-900" : "border-slate-300"
+          } shadow-border ${light ? "shadow-black-200" : "shadow-blue-400"} ${
+            light ? "bg-slate-300" : "bg-gray-800"
+          } items-center justify-center`}
+        >
+          <Container
+            className={`w-[30px] h-[30px] border-4 ${
+              light ? "border-blue-900" : "border-slate-300"
+            } border-t-transparent rounded-full animate-spin `}
+          />
+        </Column>
+      ) : (showOptions && !noDropDownOnClick && list.length) ||
+        (query && list.length) ? (
         <Column
           style={{ "--bot-pos": bottom + "px" } as CSSProperties}
           className={`absolute z-[2] top-[var(--bot-pos)] right-0 border-[1px] w-full max-h-[150px] overflow-y-auto rounded-md border-solid ${

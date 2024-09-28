@@ -17,6 +17,7 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
 
     let result = await dbPokemon
       .find<PokeDetails>(filter)
+      .limit(10)
       .sort("index", "ascending")
       .toArray();
 
@@ -32,6 +33,7 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
           weight: r.weight,
           imageLinkHighRes: r.imageLinkHighRes,
           types: r.types,
+          moves: r.moves,
         })),
         count,
       });
