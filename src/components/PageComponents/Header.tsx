@@ -9,7 +9,7 @@ import {
 import { useDarkTheme, useData } from "..";
 import { BiAdjust, BiGroup, BiRefresh } from "react-icons/bi";
 import Image from "next/image";
-import { PokemonAutocomplete } from "./Dex/PokemonAutocomplete/PokemonAutocomplete";
+import { PokemonAutocomplete } from "./PageAutocomplete/PokemonAutocomplete";
 import { useRouter } from "next/router";
 import { Chip } from "../LayoutComponents/Chip";
 
@@ -84,7 +84,7 @@ export const Header = () => {
                     value="Update"
                     onClick={() => setSyncInBackground(true)}
                     className={`cursor-pointer ${
-                      light ? "bg-blue-950" : "bg-yellow-500"
+                      light ? "bg-blue-950" : "bg-slate-300"
                     } `}
                     contrast={!light}
                   />
@@ -102,7 +102,7 @@ export const Header = () => {
               className={`${syncInBackground ? "animate-spin-icon" : ""} ${
                 light
                   ? "text-blue-950 group-hover:text-blue-800"
-                  : "text-yellow-500 group-hover:text-yellow-400"
+                  : "text-slate-300 group-hover:text-slate-200"
               }`}
               style={{ fontSize: "20px" }}
             />
@@ -120,7 +120,7 @@ export const Header = () => {
             className={
               light
                 ? "text-blue-950 group-hover:text-blue-800"
-                : "text-yellow-500 group-hover:text-yellow-400"
+                : "text-slate-300 group-hover:text-slate-200"
             }
             style={{ fontSize: "20px" }}
           />
@@ -134,7 +134,7 @@ export const Header = () => {
             className={
               light
                 ? "text-blue-950 group-hover:text-blue-800"
-                : "text-yellow-500 group-hover:text-yellow-400"
+                : "text-slate-300 group-hover:text-slate-200"
             }
             style={{ fontSize: "20px" }}
           />

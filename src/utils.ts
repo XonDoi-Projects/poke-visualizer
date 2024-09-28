@@ -1,6 +1,24 @@
 import { mergedBasesUrl, pokeBaseUrl } from "./components";
 import { complexionData } from "./pokemonTypes";
 
+export const statShortHand: { [key in string]: string } = {
+  attack: "atk",
+  defense: "def",
+  speed: "spd",
+  hp: "hp",
+  "special-attack": "s-atk",
+  "special-defense": "s-def",
+};
+
+export const maxStats: { [key in string]: number } = {
+  attack: 190,
+  defense: 230,
+  speed: 200,
+  hp: 255,
+  "special-attack": 194,
+  "special-defense": 230,
+};
+
 export type PokeAbility = string;
 export type PokeForm = string;
 export type PokeStat = { name: string; value: number };

@@ -38,7 +38,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
       onTouchEnd={() => setShowTooltip(false)}
       onPointerEnter={() => setShowTooltip(true)}
       onPointerLeave={() => setShowTooltip(false)}
-      className={``}
+      className={`relative`}
     >
       <button
         {...props}
@@ -53,18 +53,18 @@ export const Button: FunctionComponent<ButtonProps> = ({
           type === "contained"
             ? light
               ? `bg-blue-950 ${!disable ? "hover:bg-blue-800" : ""}`
-              : `bg-yellow-500 ${!disable ? "hover:bg-yellow-400" : ""}`
+              : `bg-slate-300 ${!disable ? "hover:bg-slate-400" : ""}`
             : type === "outlined"
             ? light
               ? `bg-transparent border-2 border-solid border-blue-950 ${
                   !disable ? "hover:border-blue-800" : ""
                 }`
-              : `bg-transparent border-2 border-solid border-yellow-500 ${
-                  !disable ? "hover:border-yellow-400" : ""
+              : `bg-transparent border-2 border-solid border-slate-300 ${
+                  !disable ? "hover:border-slate-400" : ""
                 }`
             : light
             ? `bg-transparent ${!disable ? "hover:bg-blue-800/20" : ""}`
-            : `bg-transparent ${!disable ? "hover:bg-yellow-400/20" : ""}`
+            : `bg-transparent ${!disable ? "hover:bg-slate-400/20" : ""}`
         } ${disable ? "opacity-20" : ""} ${className} `}
       >
         {typeof children === "string" ? (

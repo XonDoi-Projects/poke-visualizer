@@ -24,7 +24,7 @@ export const InfoButton: FunctionComponent<InfoButtonProps> = (props) => {
             className={
               light
                 ? "text-blue-950 group-hover:text-blue-800"
-                : "text-yellow-500 group-hover:text-yellow-400"
+                : "text-slate-300 group-hover:text-slate-200"
             }
             style={{ fontSize: "20px" }}
           />

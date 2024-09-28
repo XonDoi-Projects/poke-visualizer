@@ -88,7 +88,6 @@ export const SpriteFusionTool: FunctionComponent<SpriteFusionToolProps> = ({
         <Autocomplete
           label=""
           list={data?.data || []}
-          search={search}
           setSearch={setSearch}
           option={pokemonTwo}
           setOption={(value: PokeDetails) => {

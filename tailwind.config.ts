@@ -18,6 +18,12 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "physical-gradient":
+          "linear-gradient(90deg, #999999, var(--tw-gradient-stops))",
+        "special-gradient":
+          "linear-gradient(90deg, #007BFF, var(--tw-gradient-stops))",
+        "status-gradient":
+          "linear-gradient(90deg, #FF0000, var(--tw-gradient-stops))",
       },
       boxShadow: {
         bottom: "0 5px 10px 2px rgba(0, 0, 0, 0.3)",

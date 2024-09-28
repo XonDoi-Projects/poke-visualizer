@@ -28,7 +28,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
   return (
     <Column className={`flex-1 gap-5 items-start`}>
       <Row className={`flex-1 w-full flex-wrap gap-5 items-start`}>
-        {evolvesFrom && (
+        {evolvesFrom ? (
           <Column
             className={`flex-1 w-full items-center justify-center gap-5 min-w-[200px]`}
           >
@@ -59,9 +59,11 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
               </Small>
             </Column>
           </Column>
+        ) : (
+          <></>
         )}
 
-        {evolvesTo?.length && (
+        {evolvesTo?.length ? (
           <Column
             className={
               "flex-1 w-full items-center justify-center gap-5 min-w-[200px]"
@@ -150,6 +152,8 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
               </Column>
             ))}
           </Column>
+        ) : (
+          <></>
         )}
       </Row>
     </Column>

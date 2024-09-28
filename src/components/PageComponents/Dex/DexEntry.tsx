@@ -37,6 +37,7 @@ import { StatCompareTool } from "./StatCompareTool/StatCompareTool";
 import { EvolutionChart } from "./EvolutionChart";
 import { complexionData } from "@/pokemonTypes";
 import { useQuery } from "@tanstack/react-query";
+import { ClassChip } from "./ClassChip";
 
 export const DexEntry = () => {
   const router = useRouter();
@@ -80,7 +81,7 @@ export const DexEntry = () => {
   });
 
   useEffect(() => {
-    document.title = `Pokemon PokeDex - ${pokemon?.name}`;
+    document.title = `PokeVis - ${pokemon?.name}`;
   }, [pokemon]);
 
   const dropShadow = clsx({
@@ -231,10 +232,11 @@ export const DexEntry = () => {
             <Button
               onClick={() => router.push(`/dex/${currentIndex - 1}`)}
               className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+              style={{ padding: "5px" }}
               disable={currentIndex <= 1}
             >
               <BiChevronLeft
-                className={light ? "text-slate-200" : "text-gray-900"}
+                className={!light ? "text-blue-900" : "text-slate-300"}
                 style={{ fontSize: "20px" }}
               />
             </Button>
@@ -243,9 +245,10 @@ export const DexEntry = () => {
           <Button
             onClick={() => router.push(`/dex`)}
             className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+            style={{ padding: "5px" }}
           >
             <BiGridAlt
-              className={light ? "text-slate-200" : "text-gray-900"}
+              className={!light ? "text-blue-900" : "text-slate-300"}
               style={{ fontSize: "20px" }}
             />
           </Button>
@@ -256,10 +259,11 @@ export const DexEntry = () => {
             <Button
               onClick={() => router.push(`/dex/${currentIndex + 1}`)}
               className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all `}
+              style={{ padding: "5px" }}
               disable={currentIndex >= total}
             >
               <BiChevronRight
-                className={light ? "text-slate-200" : "text-gray-900"}
+                className={!light ? "text-blue-900" : "text-slate-300"}
                 style={{
                   fontSize: "20px",
                 }}
@@ -282,9 +286,11 @@ export const DexEntry = () => {
                     <Button
                       onClick={() => setShowStats(true)}
                       className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+                      style={{ padding: "5px" }}
                     >
                       <Small
-                        className={light ? "text-slate-200" : "text-gray-900"}
+                        className={!light ? "text-blue-900" : "text-slate-300"}
+                        style={{ fontSize: "20px" }}
                       >
                         VS
                       </Small>
@@ -294,11 +300,12 @@ export const DexEntry = () => {
                     <Button
                       onClick={() => audio?.play()}
                       className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+                      style={{ padding: "5px" }}
                     >
                       <BiVolumeFull
-                        className={light ? "text-slate-200" : "text-gray-900"}
+                        className={!light ? "text-blue-900" : "text-slate-300"}
                         style={{
-                          fontSize: "24px",
+                          fontSize: "20px",
                         }}
                       />
                     </Button>
@@ -363,7 +370,7 @@ export const DexEntry = () => {
                             key={f}
                             value={f}
                             className={`${
-                              light ? "bg-blue-950" : "bg-yellow-500"
+                              light ? "bg-blue-950" : "bg-slate-300"
                             } `}
                             contrast={!light}
                           />
@@ -515,9 +522,7 @@ export const DexEntry = () => {
                       <Chip
                         key={a}
                         value={a}
-                        className={`${
-                          light ? "bg-blue-950" : "bg-yellow-500"
-                        } `}
+                        className={`${light ? "bg-blue-950" : "bg-slate-300"} `}
                         contrast={!light}
                       />
                     ))}
@@ -542,21 +547,21 @@ export const DexEntry = () => {
                   <Row className={`gap-2 flex-wrap`}>
                     <Chip
                       value={"Baby"}
-                      className={`${light ? "bg-blue-950" : "bg-yellow-500"} ${
+                      className={`${light ? "bg-blue-950" : "bg-slate-300"} ${
                         !pokemon.isBaby ? "opacity-[0.3]" : "opacity-1"
                       }`}
                       contrast={!light}
                     />
                     <Chip
                       value={"Legendary"}
-                      className={`${light ? "bg-blue-950" : "bg-yellow-500"}  ${
+                      className={`${light ? "bg-blue-950" : "bg-slate-300"}  ${
                         !pokemon.isLegendary ? "opacity-[0.3]" : "opacity-1"
                       }`}
                       contrast={!light}
                     />
                     <Chip
                       value={"Mythical"}
-                      className={`${light ? "bg-blue-950" : "bg-yellow-500"}  ${
+                      className={`${light ? "bg-blue-950" : "bg-slate-300"}  ${
                         !pokemon.isMythical ? "opacity-[0.3]" : "opacity-1"
                       }`}
                       contrast={!light}
@@ -599,16 +604,47 @@ export const DexEntry = () => {
         </Row>
         <Table
           headers={[
-            { name: "Name", keyId: "name", expandable: false },
-            { name: "Damage Class", keyId: "damageClass", expandable: false },
-            { name: "Damage Type", keyId: "type", expandable: false },
-            { name: "Power", keyId: "power", expandable: false },
-            { name: "Accuracy", keyId: "accuracy", expandable: false },
-            { name: "Effect Chance", keyId: "effectChance", expandable: false },
+            {
+              name: "Name",
+              keyId: "name",
+              expandable: false,
+              minWidth: "150px",
+            },
+            {
+              name: "Damage Class",
+              keyId: "damageClass",
+              expandable: false,
+              minWidth: "150px",
+            },
+            {
+              name: "Damage Type",
+              keyId: "type",
+              expandable: false,
+              minWidth: "150px",
+            },
+            {
+              name: "Power",
+              keyId: "power",
+              expandable: false,
+              minWidth: "100px",
+            },
+            {
+              name: "Accuracy",
+              keyId: "accuracy",
+              expandable: false,
+              minWidth: "100px",
+            },
+            {
+              name: "Effect Chance",
+              keyId: "effectChance",
+              expandable: false,
+              minWidth: "150px",
+            },
             {
               name: "Version",
               keyId: "versions",
               expandable: true,
+              minWidth: "100px",
               subHeaders: [
                 { name: "Version", keyId: "version" },
                 { name: "Level Learned", keyId: "levelLearned" },
@@ -618,7 +654,11 @@ export const DexEntry = () => {
           ]}
           rows={
             pokemon.moves?.map((m) => {
-              return { ...m, type: <TypeChip value={m.type || ""} /> };
+              return {
+                ...m,
+                type: <TypeChip value={m.type || ""} />,
+                damageClass: <ClassChip value={m.damageClass || ""} />,
+              };
             }) || []
           }
         />

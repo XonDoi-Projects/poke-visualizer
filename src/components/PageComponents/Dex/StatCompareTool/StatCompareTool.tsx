@@ -17,7 +17,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { PokemonAutocomplete } from "../PokemonAutocomplete/PokemonAutocomplete";
+import { PokemonAutocomplete } from "../../PageAutocomplete/PokemonAutocomplete";
 import { CustomTooltip } from "./CustomTooltip";
 
 export interface StatCompareToolProps {
@@ -180,13 +180,13 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
             >
               <PolarGrid
                 strokeDasharray="1 1"
-                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                stroke={light ? "rgb(23 37 84)" : "rgb(203 213 225)"}
                 opacity={0.2}
               />
               <PolarAngleAxis
                 tickLine={false}
                 dataKey="subject"
-                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                stroke={light ? "rgb(23 37 84)" : "rgb(203 213 225)"}
                 baselineShift={-5}
               />
               <PolarRadiusAxis angle={30} domain={[0, 200]} opacity={0} />
@@ -222,17 +222,17 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
             <BarChart data={[barData[0]]} layout="vertical">
               <CartesianGrid
                 strokeDasharray="1 1"
-                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                stroke={light ? "rgb(23 37 84)" : "rgb(203 213 225)"}
                 opacity={0.2}
               />
               <YAxis
                 dataKey="subject"
                 type="category"
-                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                stroke={light ? "rgb(23 37 84)" : "rgb(203 213 225)"}
               />
               <XAxis
                 type="number"
-                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                stroke={light ? "rgb(23 37 84)" : "rgb(203 213 225)"}
                 domain={[
                   0,
                   pokemonTwo
@@ -277,17 +277,17 @@ export const StatCompareTool: FunctionComponent<StatCompareToolProps> = ({
             <BarChart data={[barData[1]]} layout="vertical">
               <CartesianGrid
                 strokeDasharray="1 1"
-                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                stroke={light ? "rgb(23 37 84)" : "rgb(203 213 225)"}
                 opacity={0.2}
               />
               <YAxis
                 dataKey="subject"
                 type="category"
-                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                stroke={light ? "rgb(23 37 84)" : "rgb(203 213 225)"}
               />
               <XAxis
                 type="number"
-                stroke={light ? "rgb(23 37 84)" : "rgb(234 179 8)"}
+                stroke={light ? "rgb(23 37 84)" : "rgb(203 213 225)"}
                 domain={[
                   0,
                   pokemonTwo

@@ -41,10 +41,11 @@ export const Drawer: FunctionComponent<PropsWithChildren<DrawerProps>> = ({
         <Container className={`w-full justify-end`}>
           <Button
             onClick={onClose}
-            className={`items-center justify-center rounded-full w-[35px] h-[35px] cursor-pointer transition-all`}
+            className={`items-center justify-center rounded-full w-[25px] h-[25px] cursor-pointer transition-all`}
+            style={{ padding: "5px" }}
           >
             <BiX
-              className={light ? "text-slate-200" : "text-gray-900"}
+              className={!light ? "text-blue-900" : "text-slate-300"}
               style={{
                 fontSize: "24px",
               }}
