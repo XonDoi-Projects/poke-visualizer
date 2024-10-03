@@ -29,8 +29,13 @@ export const Page: FunctionComponent<PageProps> = (props) => {
           <Container className={`absolute bottom-[-5px] left-[10px]`}>
             <Link href={"https://buymeacoffee.com/nathanmagro"} target="_blank">
               {" "}
-              <Button className={`px-[5px] py-[5px] rounded-full`}>
-                <Small>Buy me a coffee</Small>
+              <Button
+                className={`px-[5px] py-[5px] rounded-full bg-yellow-500 hover:bg-yellow-400 shadow-border ${
+                  light ? "shadow-black-200" : "shadow-zinc-500"
+                }
+                `}
+              >
+                <Small className={"text-blue-900"}>Buy me a coffee</Small>
               </Button>
             </Link>
           </Container>
