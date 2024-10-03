@@ -20,7 +20,7 @@ export const Page: FunctionComponent<PageProps> = (props) => {
         id="main-content"
         className={`h-fit w-screen flex-1 ${
           light ? "bg-slate-200" : " bg-gray-900"
-        } overflow-auto gap-5`}
+        } overflow-auto scrollbar ${light ? "light" : "dark"} gap-5`}
       >
         <Column className={`relative flex-1 items-center`}>
           <Column className={"flex-1 p-5 max-w-[1440px] w-full"}>

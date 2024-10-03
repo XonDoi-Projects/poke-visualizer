@@ -15,7 +15,11 @@ export const Table: FunctionComponent<TableProps> = (props) => {
   const { light } = useDarkTheme();
 
   return (
-    <Container className={"h-fit w-full overflow-x-auto bg-transparent"}>
+    <Container
+      className={`h-fit w-full overflow-x-auto bg-transparent scrollbar ${
+        light ? "light" : "dark"
+      }`}
+    >
       <Column className={`flex-1`}>
         <Row className={`h-[40px]`}>
           <TableHeader headers={props.headers} />

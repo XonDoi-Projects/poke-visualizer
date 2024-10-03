@@ -391,7 +391,11 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
         onCancel={() => setShowMoves(false)}
         onConfirm={() => handleConfirmMoves()}
       >
-        <Column className={`h-[400px] overflow-y-auto gap-5`}>
+        <Column
+          className={`h-[400px] overflow-y-auto scrollbar ${
+            light ? "light" : "dark"
+          } gap-5`}
+        >
           <MoveAutocomplete
             data={item?.item.moves || []}
             label=""

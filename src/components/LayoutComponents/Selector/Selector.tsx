@@ -72,7 +72,9 @@ export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
       {showOptions && list.length ? (
         <Column
           style={{ "--bot-pos": bottom + "px" } as CSSProperties}
-          className={`absolute z-[2] top-[var(--bot-pos)] right-0 border-[1px] w-[150px] max-h-[150px] overflow-y-auto rounded-md border-solid ${
+          className={`absolute z-[2] top-[var(--bot-pos)] right-0 border-[1px] w-[150px] max-h-[150px] overflow-y-auto scrollbar ${
+            light ? "light" : "dark"
+          } rounded-md border-solid ${
             light ? "border-blue-900" : "border-slate-300"
           } shadow-border ${light ? "shadow-black-200" : "shadow-zinc-500"}`}
         >

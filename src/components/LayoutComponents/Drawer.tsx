@@ -35,7 +35,7 @@ export const Drawer: FunctionComponent<PropsWithChildren<DrawerProps>> = ({
           openDirection === "right" ? "right-0" : "left-0"
         } ${light ? "bg-slate-200" : " bg-gray-900"} shadow-border ${
           light ? "shadow-slate-200" : "shadow-gray-900"
-        } overflow-y-auto`}
+        } overflow-y-auto scrollbar ${light ? "light" : "dark"}`}
         onClick={(e) => e.stopPropagation()}
       >
         <Container className={`w-full justify-end`}>
