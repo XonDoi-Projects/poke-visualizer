@@ -10,9 +10,9 @@ export interface ClassChipProps {
 export const ClassChip: FunctionComponent<ClassChipProps> = (props) => {
   const color = clsx({
     "bg-physical-gradient from-white to-gray-400": props.value === "physical",
-    "bg-special-gradient from-blue-300 to-purple-600":
+    "bg-special-gradient from-blue-300 to-purple-300":
       props.value === "special",
-    "bg-status-gradient from-red-400 to-slate-200": props.value === "status",
+    "bg-status-gradient from-red-400 to-yellow-200": props.value === "status",
   });
 
   const contrast = useMemo(

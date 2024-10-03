@@ -21,9 +21,9 @@ const config: Config = {
         "physical-gradient":
           "linear-gradient(90deg, #999999, var(--tw-gradient-stops))",
         "special-gradient":
-          "linear-gradient(90deg, #007BFF, var(--tw-gradient-stops))",
+          "linear-gradient(90deg, #447BFF, var(--tw-gradient-stops))",
         "status-gradient":
-          "linear-gradient(90deg, #FF0000, var(--tw-gradient-stops))",
+          "linear-gradient(90deg, #FF4444, var(--tw-gradient-stops))",
       },
       boxShadow: {
         bottom: "0 5px 10px 2px rgba(0, 0, 0, 0.3)",
