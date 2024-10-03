@@ -15,7 +15,7 @@ export const H1: FunctionComponent<H1Props> = ({
   return (
     <h1
       {...props}
-      className={`flex font-sans font-semibold text-5xl ${
+      className={`flex font-sans font-semibold text-5xl transition-all ${
         light ? "text-blue-600" : "text-slate-300"
       } ${className}`}
     >

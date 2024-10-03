@@ -21,7 +21,7 @@ export const TableRow: FunctionComponent<TableRowProps> = (props) => {
   const [expand, setExpand] = useState<{ value: boolean; keyId: string }>();
 
   return (
-    <Column>
+    <Column className={`flex-1`}>
       <Row className={`min-h-[40px]`}>
         {props.headers.map((h, index) => (
           <TableCell
@@ -113,7 +113,7 @@ export const TableRow: FunctionComponent<TableRowProps> = (props) => {
           {props.value[expand.keyId].map((r: any, index: number) => (
             <Row
               key={index}
-              className={`flex-1 w-full min-h-[40px] items-center `}
+              className={`flex-1 w-full max-h-[40px] items-center `}
             >
               <TableRow
                 headers={

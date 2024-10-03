@@ -31,11 +31,11 @@ export const Table: FunctionComponent<TableProps> = (props) => {
             className={`flex-1 w-full ${
               light
                 ? index % 2 === 0
-                  ? "bg-slate-300"
-                  : "bg-slate-400"
+                  ? "bg-slate-300/50"
+                  : "bg-slate-400/50"
                 : index % 2 === 0
-                ? "bg-gray-800"
-                : "bg-gray-700"
+                ? "bg-gray-800/50"
+                : "bg-gray-700/50"
             }`}
           >
             <TableRow headers={props.headers} value={r} index={index} />

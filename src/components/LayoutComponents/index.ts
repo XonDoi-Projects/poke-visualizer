@@ -12,3 +12,4 @@ export * from "./InfoTooltip";
 export * from "./Loading";
 export * from "./Switch";
 export * from "./Popup";
+export * from "./Menu";

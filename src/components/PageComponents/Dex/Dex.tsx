@@ -157,7 +157,7 @@ export const Dex = () => {
             <BiChevronLeft
               className={
                 !light
-                  ? "text-blue-950 group-hover:text-blue-800"
+                  ? "text-blue-900 group-hover:text-blue-800"
                   : "text-slate-200 group-hover:text-slate-100"
               }
               style={{ fontSize: "20px" }}
@@ -173,7 +173,7 @@ export const Dex = () => {
             <BiChevronRight
               className={
                 !light
-                  ? "text-blue-950 group-hover:text-blue-800"
+                  ? "text-blue-900 group-hover:text-blue-800"
                   : "text-slate-200 group-hover:text-slate-100"
               }
               style={{

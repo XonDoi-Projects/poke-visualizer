@@ -23,7 +23,7 @@ export const Switch: FunctionComponent<SwitchProps> = (props) => {
       }}
       className={`items-center w-fit ${props.className} gap-2 ${
         props.switchPosition === "left" ? "flex-row" : "flex-row-reverse"
-      }`}
+      } cursor-pointer`}
     >
       <Container
         className={`relative box-content w-[40px] h-[20px] rounded-full ${

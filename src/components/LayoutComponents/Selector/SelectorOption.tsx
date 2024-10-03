@@ -22,7 +22,7 @@ export const SelectorOption: FunctionComponent<SelectorOptionProps<any>> = <
         light
           ? "bg-slate-300 hover:bg-slate-400"
           : "bg-gray-800 hover:bg-gray-700"
-      } cursor-pointer p-2`}
+      } cursor-pointer p-2 transition-all`}
       onClick={() => setOption(value)}
     >
       <Span className={`flex-1`}>

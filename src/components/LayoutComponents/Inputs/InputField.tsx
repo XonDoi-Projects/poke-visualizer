@@ -20,7 +20,8 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
   label,
   errorText,
   helperText,
-  suffix,
+  elementPrefix,
+  elementSuffix,
   value,
   onValueChange,
   disable,
@@ -42,7 +43,8 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
       label={label}
       errorText={errorText}
       helperText={helperText}
-      suffix={suffix}
+      elementPrefix={elementPrefix}
+      elementSuffix={elementSuffix}
       type={type}
     >
       <input
@@ -50,17 +52,17 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeHolder}
-        className={`w-full h-[20px] justify-center outline-0 items-center px-[10px]  ${
+        className={`w-full h-[20px] justify-center outline-0 items-center px-[10px] ${
           !disable ? "cursor-text" : "cursor-auto"
         } transition-all bg-transparent
          ${
            light
-             ? `text-blue-950 ${!disable ? "hover:text-blue-800" : ""}`
+             ? `text-blue-900 ${!disable ? "hover:text-blue-800" : ""}`
              : `text-slate-300 ${!disable ? "hover:text-slate-200" : ""}`
          }
         ${
           light
-            ? `placeholder-blue-950 ${
+            ? `placeholder-blue-900 ${
                 !disable ? "hover:placeholder-blue-800" : ""
               }`
             : `placeholder-slate-300 ${

@@ -44,7 +44,7 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
               onClick={() => setShowShiny(!showShiny)}
               className={
                 light
-                  ? "text-blue-950 group-hover:text-blue-800"
+                  ? "text-blue-900 group-hover:text-blue-800"
                   : "text-slate-300 group-hover:text-slate-200"
               }
               style={{ fontSize: "20px" }}
@@ -54,7 +54,7 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
               onClick={() => setShowShiny(!showShiny)}
               className={
                 light
-                  ? "text-blue-950 group-hover:text-blue-800"
+                  ? "text-blue-900 group-hover:text-blue-800"
                   : "text-slate-300 group-hover:text-slate-200"
               }
               style={{ fontSize: "20px" }}

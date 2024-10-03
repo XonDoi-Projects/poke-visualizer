@@ -370,7 +370,7 @@ export const DexEntry = () => {
                             key={f}
                             value={f}
                             className={`${
-                              light ? "bg-blue-950" : "bg-slate-300"
+                              light ? "bg-blue-900" : "bg-slate-300"
                             } `}
                             contrast={!light}
                           />
@@ -522,7 +522,7 @@ export const DexEntry = () => {
                       <Chip
                         key={a}
                         value={a}
-                        className={`${light ? "bg-blue-950" : "bg-slate-300"} `}
+                        className={`${light ? "bg-blue-900" : "bg-slate-300"} `}
                         contrast={!light}
                       />
                     ))}
@@ -547,21 +547,21 @@ export const DexEntry = () => {
                   <Row className={`gap-2 flex-wrap`}>
                     <Chip
                       value={"Baby"}
-                      className={`${light ? "bg-blue-950" : "bg-slate-300"} ${
+                      className={`${light ? "bg-blue-900" : "bg-slate-300"} ${
                         !pokemon.isBaby ? "opacity-[0.3]" : "opacity-1"
                       }`}
                       contrast={!light}
                     />
                     <Chip
                       value={"Legendary"}
-                      className={`${light ? "bg-blue-950" : "bg-slate-300"}  ${
+                      className={`${light ? "bg-blue-900" : "bg-slate-300"}  ${
                         !pokemon.isLegendary ? "opacity-[0.3]" : "opacity-1"
                       }`}
                       contrast={!light}
                     />
                     <Chip
                       value={"Mythical"}
-                      className={`${light ? "bg-blue-950" : "bg-slate-300"}  ${
+                      className={`${light ? "bg-blue-900" : "bg-slate-300"}  ${
                         !pokemon.isMythical ? "opacity-[0.3]" : "opacity-1"
                       }`}
                       contrast={!light}
@@ -608,19 +608,19 @@ export const DexEntry = () => {
               name: "Name",
               keyId: "name",
               expandable: false,
-              minWidth: "150px",
+              minWidth: "170px",
             },
             {
-              name: "Damage Class",
+              name: "Class",
               keyId: "damageClass",
               expandable: false,
-              minWidth: "150px",
+              minWidth: "130px",
             },
             {
-              name: "Damage Type",
+              name: "Type",
               keyId: "type",
               expandable: false,
-              minWidth: "150px",
+              minWidth: "130px",
             },
             {
               name: "Power",
@@ -646,7 +646,7 @@ export const DexEntry = () => {
               expandable: true,
               minWidth: "100px",
               subHeaders: [
-                { name: "Version", keyId: "version" },
+                { name: "Version", keyId: "version", minWidth: "300px" },
                 { name: "Level Learned", keyId: "levelLearned" },
                 { name: "Learn Method", keyId: "learnMethod" },
               ],

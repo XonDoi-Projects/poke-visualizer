@@ -31,7 +31,7 @@ export const InfoTooltip: FunctionComponent<InfoTooltipProps> = (props) => {
       }}
       className={`absolute top-[100%] left-[50%] rounded transform translate-x-[-50%] w-max max-w-[200px] overflow-hidden h-fit p-2 z-10 ${
         light ? "bg-slate-300" : "bg-gray-800"
-      } shadow-border ${light ? "shadow-black-200" : "shadow-blue-400"} `}
+      } shadow-border ${light ? "shadow-black-200" : "shadow-zinc-500"} `}
     >
       {props.details}
     </Column>

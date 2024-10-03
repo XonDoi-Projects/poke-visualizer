@@ -15,7 +15,7 @@ export const H2: FunctionComponent<H2Props> = ({
   return (
     <h2
       {...props}
-      className={`flex font-sans font-semibold text-4xl ${
+      className={`flex font-sans font-semibold text-4xl transition-all ${
         light ? "text-blue-800" : "text-slate-300"
       } ${className}`}
     >

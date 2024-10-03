@@ -17,7 +17,7 @@ export const Span: FunctionComponent<SpanProps> = ({
   return (
     <span
       {...props}
-      className={`flex font-sans font-semibold text-base ${
+      className={`flex font-sans font-semibold text-base transition-all ${
         (light && !swapColor) || (!light && swapColor)
           ? "text-blue-900"
           : "text-slate-300"

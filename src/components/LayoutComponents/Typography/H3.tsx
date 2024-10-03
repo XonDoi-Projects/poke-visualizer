@@ -15,7 +15,7 @@ export const H3: FunctionComponent<H3Props> = ({
   return (
     <h3
       {...props}
-      className={`flex font-sans font-semibold text-3xl ${
+      className={`flex font-sans font-semibold text-3xl transition-all ${
         light ? "text-blue-800" : "text-slate-300"
       } ${className}`}
     >

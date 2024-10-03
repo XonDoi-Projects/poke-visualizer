@@ -13,7 +13,8 @@ export interface FieldProps {
   label: string;
   errorText?: string;
   helperText?: string;
-  suffix?: ReactNode;
+  elementPrefix?: ReactNode;
+  elementSuffix?: ReactNode;
   disable?: boolean;
   placeHolder?: string;
   type?: "normal" | "transparent";
@@ -24,7 +25,8 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
   errorText,
   helperText,
   disable,
-  suffix,
+  elementPrefix,
+  elementSuffix,
   type,
   className,
   ...props
@@ -42,10 +44,11 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
               ? "bg-slate-300 hover:bg-slate-200"
               : "bg-gray-800 hover:bg-gray-700"
             : ""
-        } px-1 group`}
+        } px-1 group transition-all`}
       >
+        {elementPrefix}
         {props.children}
-        {suffix}
+        {elementSuffix}
       </Row>
       {(errorText || helperText) && <Small>{errorText || helperText}</Small>}
     </Column>

@@ -52,11 +52,11 @@ export const Button: FunctionComponent<ButtonProps> = ({
         } transition-all group ${
           type === "contained"
             ? light
-              ? `bg-blue-950 ${!disable ? "hover:bg-blue-800" : ""}`
+              ? `bg-blue-900 ${!disable ? "hover:bg-blue-800" : ""}`
               : `bg-slate-300 ${!disable ? "hover:bg-slate-400" : ""}`
             : type === "outlined"
             ? light
-              ? `bg-transparent border-2 border-solid border-blue-950 ${
+              ? `bg-transparent border-2 border-solid border-blue-900 ${
                   !disable ? "hover:border-blue-800" : ""
                 }`
               : `bg-transparent border-2 border-solid border-slate-300 ${
@@ -72,11 +72,11 @@ export const Button: FunctionComponent<ButtonProps> = ({
             className={`${
               type === "outlined"
                 ? light
-                  ? "!text-blue-950 group-hover:!text-blue-800"
+                  ? "!text-blue-900 group-hover:!text-blue-800"
                   : "!text-gray-400 group-hover:!text-gray-300"
                 : light
                 ? "!text-gray-400 group-hover:!text-gray-300"
-                : "!text-blue-950 group-hover:!text-blue-800"
+                : "!text-blue-900 group-hover:!text-blue-800"
             }`}
           >
             {children}

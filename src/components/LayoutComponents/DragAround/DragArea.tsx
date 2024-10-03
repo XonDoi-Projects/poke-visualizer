@@ -294,7 +294,7 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
           }}
           className={`absolute flex-1 transition-all duration-75 rounded-lg mb-[15px] cursor-pointer ${
             item.index === dragIndex ? "shadow-border" : ""
-          } ${light ? "shadow-black-200" : "shadow-blue-400"}`}
+          } ${light ? "shadow-black-200" : "shadow-zinc-500"}`}
           style={{
             top: itemPositions[index].top,
             width: itemDims?.width

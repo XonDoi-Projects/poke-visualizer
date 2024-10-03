@@ -59,7 +59,7 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
                 <BiChevronDown
                   className={
                     !light
-                      ? "text-blue-950 group-hover:text-blue-800"
+                      ? "text-blue-900 group-hover:text-blue-800"
                       : "text-slate-300 group-hover:text-slate-200"
                   }
                   style={{ fontSize: "16px" }}
@@ -77,7 +77,7 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
                 <BiChevronUp
                   className={
                     !light
-                      ? "text-blue-950 group-hover:text-blue-800"
+                      ? "text-blue-900 group-hover:text-blue-800"
                       : "text-slate-300 group-hover:text-slate-200"
                   }
                   style={{ fontSize: "16px" }}
@@ -96,7 +96,7 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
           <BiX
             className={
               !light
-                ? "text-blue-950 group-hover:text-blue-800"
+                ? "text-blue-900 group-hover:text-blue-800"
                 : "text-slate-300 group-hover:text-slate-200"
             }
             style={{ fontSize: "16px" }}

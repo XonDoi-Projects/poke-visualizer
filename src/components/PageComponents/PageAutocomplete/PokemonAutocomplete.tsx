@@ -21,6 +21,7 @@ export const PokemonAutocomplete: FunctionComponent<
   type,
   label,
   disable,
+  elementPrefix,
 }) => {
   const [search, setSearch] = useState("");
 
@@ -66,6 +67,7 @@ export const PokemonAutocomplete: FunctionComponent<
       type={type}
       disable={disable}
       loading={isLoading}
+      elementPrefix={elementPrefix}
     />
   );
 };
