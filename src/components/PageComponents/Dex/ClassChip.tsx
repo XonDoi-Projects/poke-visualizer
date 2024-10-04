@@ -5,6 +5,7 @@ import { FunctionComponent, HTMLProps, ReactNode, useMemo } from "react";
 export interface ClassChipProps {
   value: string;
   className?: HTMLProps<"HTMLElement">["className"];
+  small?: boolean;
 }
 
 export const ClassChip: FunctionComponent<ClassChipProps> = (props) => {
@@ -24,6 +25,11 @@ export const ClassChip: FunctionComponent<ClassChipProps> = (props) => {
   );
 
   return (
-    <Chip value={props.value} className={`${color}`} contrast={contrast} />
+    <Chip
+      value={props.value}
+      className={`${color}`}
+      contrast={contrast}
+      small={props.small}
+    />
   );
 };

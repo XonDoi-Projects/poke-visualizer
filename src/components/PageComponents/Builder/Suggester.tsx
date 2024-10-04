@@ -14,6 +14,7 @@ import { useDarkTheme } from "@/components/Providers";
 import { complexionData, TypeWeakness } from "@/pokemonTypes";
 import { TypeChip } from "../Dex/TypeChip";
 import { PokeDetailsWithSelectedMoves } from "./Builder";
+import { ClassChip } from "../Dex";
 
 type SuggestedStats = {
   speedValue?: number;
@@ -417,8 +418,25 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({ pokemons }) => {
               {
                 name: "MOVE",
                 keyId: "moves",
-                expandable: false,
+                expandable: true,
                 minWidth: "80px",
+                subHeaders: [
+                  {
+                    keyId: "pokemonName",
+                    name: "Pokemon",
+                    minWidth: "100px",
+                  },
+                  {
+                    keyId: "moveName",
+                    name: "Move",
+                    minWidth: "170px",
+                  },
+                  {
+                    keyId: "damageClass",
+                    name: "Class",
+                    minWidth: "100px",
+                  },
+                ],
               },
             ]}
             rows={pokeTypes
@@ -433,8 +451,28 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({ pokemons }) => {
                 )?.totalCount,
                 stab: stats?.typeComposition?.stab?.find((r) => r.name === t)
                   ?.totalCount,
-                moves: stats?.typeComposition?.moves?.find((r) => r.name === t)
-                  ?.totalCount,
+                moves: {
+                  cellData: stats?.typeComposition?.moves?.find(
+                    (r) => r.name === t
+                  )?.totalCount,
+                  subLayer: pokemons.flatMap((p) =>
+                    p.selectedMoves?.flatMap((s) =>
+                      t === s.type
+                        ? {
+                            damageClass: (
+                              <ClassChip
+                                value={s.damageClass || ""}
+                                key={s.name}
+                                small
+                              />
+                            ),
+                            moveName: s.name,
+                            pokemonName: p.name,
+                          }
+                        : []
+                    )
+                  ),
+                },
               }))}
           />
         </Column>

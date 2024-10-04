@@ -658,6 +658,7 @@ export const DexEntry = () => {
                 ...m,
                 type: <TypeChip value={m.type || ""} />,
                 damageClass: <ClassChip value={m.damageClass || ""} />,
+                versions: { subLayer: m.versions },
               };
             }) || []
           }

@@ -31,6 +31,7 @@ export const TableRow: FunctionComponent<TableRowProps> = (props) => {
                 typeof props.value[h.keyId] === "string" ? (
                   <Span className={`${props.subLayer ? "text-xs" : ""}`}>
                     {props.value[h.keyId]
+                      ?.toString()
                       .split("-")
                       .map((s: string) => s[0].toUpperCase() + s.slice(1))
                       .join("-")}
@@ -44,28 +45,41 @@ export const TableRow: FunctionComponent<TableRowProps> = (props) => {
                     -
                   </Span>
                 ) : typeof props.value[h.keyId] === "object" && h.expandable ? (
-                  <Button
-                    onClick={() =>
-                      setExpand({
-                        value:
-                          expand?.value === undefined ? true : !expand.value,
-                        keyId: h.keyId,
-                      })
-                    }
-                    className="!w-[15px] !h-[15px] rounded-[50%] !p-0 !m-0 transition-all"
-                    type="text"
-                  >
-                    <BiChevronDown
-                      className={`transform transition-all ${
-                        expand?.value ? "rotate-180" : "rotate-0"
-                      } ${
-                        light
-                          ? "text-blue-900 group-hover:text-blue-800"
-                          : "text-slate-300 group-hover:text-slate-200"
-                      }`}
-                      style={{ fontSize: "20px" }}
-                    />
-                  </Button>
+                  <Row className={`gap-2 items-center`}>
+                    <Span className={`${props.subLayer ? "text-xs" : ""}`}>
+                      {props.value[h.keyId].cellData
+                        ?.toString()
+                        ?.split("-")
+                        .map((s: string) => s[0].toUpperCase() + s.slice(1))
+                        .join("-")}
+                    </Span>
+                    {props.value[h.keyId].subLayer.length ? (
+                      <Button
+                        onClick={() =>
+                          setExpand({
+                            value:
+                              expand?.value === undefined
+                                ? true
+                                : !expand.value,
+                            keyId: h.keyId,
+                          })
+                        }
+                        className="!w-[15px] !h-[15px] rounded-[50%] !p-0 !m-0 transition-all"
+                        type="text"
+                      >
+                        <BiChevronDown
+                          className={`transform transition-all ${
+                            expand?.value ? "rotate-180" : "rotate-0"
+                          } ${
+                            light
+                              ? "text-blue-900 group-hover:text-blue-800"
+                              : "text-slate-300 group-hover:text-slate-200"
+                          }`}
+                          style={{ fontSize: "20px" }}
+                        />
+                      </Button>
+                    ) : null}
+                  </Row>
                 ) : (
                   props.value[h.keyId]
                 )
@@ -110,7 +124,7 @@ export const TableRow: FunctionComponent<TableRowProps> = (props) => {
               light ? "bg-slate-200" : "bg-gray-900"
             } border-solid`}
           />
-          {props.value[expand.keyId].map((r: any, index: number) => (
+          {props.value[expand.keyId].subLayer.map((r: any, index: number) => (
             <Row
               key={index}
               className={`flex-1 w-full max-h-[40px] items-center `}

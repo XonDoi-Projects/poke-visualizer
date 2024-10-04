@@ -9,6 +9,7 @@ export interface ChipProps {
   contrast?: boolean;
   suffix?: ReactNode;
   onClick?: () => void;
+  small?: boolean;
 }
 
 export const Chip: FunctionComponent<ChipProps> = (props) => {
@@ -18,7 +19,9 @@ export const Chip: FunctionComponent<ChipProps> = (props) => {
       className={`flex-row items-center rounded-md w-fit ${props.className} px-2 py-1 min-h-[20px] h-fit gap-1 `}
     >
       <Small
-        className={`${props.contrast ? "text-blue-900" : "text-slate-300"}`}
+        className={`${props.contrast ? "text-blue-900" : "text-slate-300"} ${
+          props.small ? "text-xs" : ""
+        }`}
       >
         {props.value.toLocaleUpperCase()}
       </Small>
