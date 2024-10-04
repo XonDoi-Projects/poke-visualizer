@@ -19,7 +19,7 @@
   }
 
   .scrollbar.light::-webkit-scrollbar-track {
-    background: #cbd5e1;
+    background: rgb(200 200 225);
   }
 
   .scrollbar.light::-webkit-scrollbar-thumb {
@@ -32,7 +32,7 @@
   }
 
   .scrollbar.dark::-webkit-scrollbar-track {
-    background: #cbd5e1;
+    background: rgb(180 180 180);
   }
 
   .scrollbar.dark::-webkit-scrollbar-thumb {

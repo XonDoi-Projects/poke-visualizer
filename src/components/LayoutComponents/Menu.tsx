@@ -35,12 +35,18 @@ export const Menu: FunctionComponent<MenuProps> = ({ menuItems, onClose }) => {
     "top-[100%] right-[0px]": mobile === false,
   });
 
-  const menu = menuItems.map((item, index) => (
+  const menu = menuItems.map((item, index, arr) => (
     <Link
       key={index}
       href={item.link}
       className={`p-2 cursor-pointer transition-all ${
         light ? "hover:bg-slate-200" : "hover:bg-gray-700"
+      }  ${
+        index < arr.length - 1
+          ? `border-b-[1px] ${
+              light ? "border-blue-900/10" : "border-slate-300/10"
+            }`
+          : ""
       }`}
     >
       <Row className={`h-[30px] w-full gap-3 items-center cursor-pointer`}>
@@ -53,9 +59,13 @@ export const Menu: FunctionComponent<MenuProps> = ({ menuItems, onClose }) => {
   return mobile ? (
     <Cover onClick={onClose}>
       <Card
-        className={`absolute ${dimensions} ${position} rounded-md overflow-hidden`}
+        className={`absolute ${dimensions} ${position} rounded-b-md overflow-hidden`}
       >
-        <Row className={`w-full flex-row-reverse p-2`}>
+        <Row
+          className={`w-full flex-row-reverse p-2 border-b-[1px] ${
+            light ? "border-blue-900/10" : "border-slate-300/10"
+          }`}
+        >
           <Button
             className={`rounded-full h-[30px] w-[30px] px-[5px] py-[5px]`}
             onClick={onClose}

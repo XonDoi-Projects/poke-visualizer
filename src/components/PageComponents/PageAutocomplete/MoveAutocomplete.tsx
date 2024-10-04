@@ -39,7 +39,12 @@ export const MoveAutocomplete: FunctionComponent<MoveAutocompleteProps> = ({
         setMove && setMove(value);
         setSearch("");
       }}
-      getDisplayName={(value: PokeDetails) => value.name}
+      getDisplayName={(value: PokeDetails) =>
+        value.name
+          .split("-")
+          .map((s: string) => s[0].toUpperCase() + s.slice(1))
+          .join("-")
+      }
       className={`w-full ${className}`}
       noDropDownOnClick={noDropDownOnClick}
       placeHolder={placeHolder}

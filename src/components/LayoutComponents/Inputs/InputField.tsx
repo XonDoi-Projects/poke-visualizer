@@ -62,11 +62,11 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
          }
         ${
           light
-            ? `placeholder-blue-900 ${
-                !disable ? "hover:placeholder-blue-800" : ""
+            ? `placeholder-blue-900/50 ${
+                !disable ? "hover:placeholder-blue-800/50" : ""
               }`
-            : `placeholder-slate-300 ${
-                !disable ? "hover:placeholder-slate-200" : ""
+            : `placeholder-slate-300/50 ${
+                !disable ? "hover:placeholder-slate-200/50" : ""
               }`
         }
          ${disable ? "opacity-20" : ""} ${className} `}

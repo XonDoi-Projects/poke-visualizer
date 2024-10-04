@@ -35,7 +35,9 @@ export const Page: FunctionComponent<PageProps> = (props) => {
                 }
                 `}
               >
-                <Small className={"text-blue-900"}>Buy me a coffee</Small>
+                <Small className={"text-blue-900"} style={{ fontSize: "18px" }}>
+                  Buy me a coffee
+                </Small>
               </Button>
             </Link>
           </Container>

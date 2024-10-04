@@ -32,12 +32,18 @@ export const Button: FunctionComponent<ButtonProps> = ({
   const { light } = useDarkTheme();
   const [showTooltip, setShowTooltip] = useState(false);
 
+  const [hoveringTooltip, setHoveringTooltip] = useState(false);
+
   return (
     <Container
       onTouchStart={() => setShowTooltip(true)}
       onTouchEnd={() => setShowTooltip(false)}
       onPointerEnter={() => setShowTooltip(true)}
-      onPointerLeave={() => setShowTooltip(false)}
+      onPointerLeave={(e) => {
+        if (!hoveringTooltip) {
+          setShowTooltip(false);
+        }
+      }}
       className={`relative`}
     >
       <button
@@ -85,8 +91,12 @@ export const Button: FunctionComponent<ButtonProps> = ({
           children
         )}
       </button>{" "}
-      {tooltip && showTooltip ? (
-        <InfoTooltip details={tooltipDetails} setShowTooltip={setShowTooltip} />
+      {tooltip && (showTooltip || hoveringTooltip) ? (
+        <InfoTooltip
+          details={tooltipDetails}
+          setShowTooltip={setShowTooltip}
+          setHoveringTooltip={setHoveringTooltip}
+        />
       ) : (
         <></>
       )}

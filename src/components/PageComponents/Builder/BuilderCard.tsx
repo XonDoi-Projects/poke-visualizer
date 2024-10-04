@@ -4,6 +4,7 @@ import {
   Container,
   LabelWithValue,
   Row,
+  Small,
   Span,
 } from "@/components/LayoutComponents";
 import { PokeDetails, statShortHand } from "@/utils";
@@ -11,7 +12,7 @@ import { FunctionComponent } from "react";
 import Image from "next/image";
 import { TypeChip } from "../Dex/TypeChip";
 import { Card } from "@/components/LayoutComponents/Card";
-import { BiAdjust, BiChevronDown, BiChevronUp, BiX } from "react-icons/bi";
+import { BiChevronDown, BiChevronUp, BiX } from "react-icons/bi";
 import { useDarkTheme, useSize } from "@/components/Providers";
 
 export interface BuilderCardProps {
@@ -22,6 +23,7 @@ export interface BuilderCardProps {
   moveDown?: () => void;
   disableMoveDown?: boolean;
   placeholder?: boolean;
+  onClick?: () => void;
 }
 
 export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
@@ -32,6 +34,7 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
   moveUp,
   placeholder,
   disableMoveUp,
+  onClick,
 }) => {
   const { light } = useDarkTheme();
   const { mobile } = useSize();
@@ -45,64 +48,72 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
     </Card>
   ) : (
     <Card className={`rounded-lg p-3 flex-1 h-fit`} noShadow>
-      <Row className={`gap-2 w-full flex-wrap flex-1 justify-end`}>
-        {mobile && (
-          <>
-            {!disableMoveDown && (
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  moveDown && moveDown();
-                }}
-                className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
-              >
-                <BiChevronDown
-                  className={
-                    !light
-                      ? "text-blue-900 group-hover:text-blue-800"
-                      : "text-slate-300 group-hover:text-slate-200"
-                  }
-                  style={{ fontSize: "16px" }}
-                />
-              </Button>
-            )}
-            {!disableMoveUp && (
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  moveUp && moveUp();
-                }}
-                className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
-              >
-                <BiChevronUp
-                  className={
-                    !light
-                      ? "text-blue-900 group-hover:text-blue-800"
-                      : "text-slate-300 group-hover:text-slate-200"
-                  }
-                  style={{ fontSize: "16px" }}
-                />
-              </Button>
-            )}
-          </>
-        )}
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            removePokemon && removePokemon();
-          }}
-          className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
-        >
-          <BiX
-            className={
-              !light
-                ? "text-blue-900 group-hover:text-blue-800"
-                : "text-slate-300 group-hover:text-slate-200"
-            }
-            style={{ fontSize: "16px" }}
-          />
-        </Button>
+      <Row className={`gap-2 w-full flex-wrap flex-1 justify-between`}>
+        <Row>
+          <Button className={`rounded-full`} onClick={onClick}>
+            <Small>Add Moves</Small>
+          </Button>
+        </Row>
+        <Row className={`gap-2 w-full flex-wrap flex-1 justify-end`}>
+          {mobile && (
+            <>
+              {!disableMoveDown && (
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    moveDown && moveDown();
+                  }}
+                  className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
+                >
+                  <BiChevronDown
+                    className={
+                      !light
+                        ? "text-blue-900 group-hover:text-blue-800"
+                        : "text-slate-300 group-hover:text-slate-200"
+                    }
+                    style={{ fontSize: "16px" }}
+                  />
+                </Button>
+              )}
+              {!disableMoveUp && (
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    moveUp && moveUp();
+                  }}
+                  className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
+                >
+                  <BiChevronUp
+                    className={
+                      !light
+                        ? "text-blue-900 group-hover:text-blue-800"
+                        : "text-slate-300 group-hover:text-slate-200"
+                    }
+                    style={{ fontSize: "16px" }}
+                  />
+                </Button>
+              )}
+            </>
+          )}
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              removePokemon && removePokemon();
+            }}
+            className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
+          >
+            <BiX
+              className={
+                !light
+                  ? "text-blue-900 group-hover:text-blue-800"
+                  : "text-slate-300 group-hover:text-slate-200"
+              }
+              style={{ fontSize: "16px" }}
+            />
+          </Button>
+        </Row>
       </Row>
+
       <Row
         className={`gap-5 w-full flex-wrap flex-1 justify-between pointer-events-none p-1`}
       >

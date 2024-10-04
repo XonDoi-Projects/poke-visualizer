@@ -1,6 +1,6 @@
 import { FieldProps } from "@/components/LayoutComponents";
 import { Autocomplete } from "@/components/LayoutComponents/Autocomplete/Autocomplete";
-import { PokeDetails } from "@/utils";
+import { PokeDetails, PokeRegion, PokeTrait, PokeType } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { FunctionComponent, useState } from "react";
 
@@ -8,6 +8,11 @@ export interface PokemonAutocompleteProps extends FieldProps {
   pokemon?: PokeDetails;
   setPokemon?: (value: PokeDetails | undefined) => void;
   noDropDownOnClick?: boolean;
+  filter?: {
+    region: PokeRegion;
+    types: PokeType[];
+    trait: PokeTrait;
+  };
 }
 
 export const PokemonAutocomplete: FunctionComponent<
@@ -22,6 +27,8 @@ export const PokemonAutocomplete: FunctionComponent<
   label,
   disable,
   elementPrefix,
+  helperText,
+  filter,
 }) => {
   const [search, setSearch] = useState("");
 
@@ -31,17 +38,22 @@ export const PokemonAutocomplete: FunctionComponent<
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ search }),
+      body: JSON.stringify({
+        search,
+        region: filter?.region === "any" ? undefined : filter?.region,
+        trait: filter?.trait === "any" ? undefined : filter?.trait,
+        types: filter?.types.includes("any") ? undefined : filter?.types,
+      }),
     });
 
     return await data.json();
   };
 
-  const { data, error, isLoading } = useQuery<{
+  const { data, isLoading } = useQuery<{
     data: PokeDetails[] | undefined;
     count: number | undefined;
   }>({
-    queryKey: ["getData", search],
+    queryKey: ["getData", search, filter],
     queryFn: getData,
     enabled:
       !noDropDownOnClick || (noDropDownOnClick && search !== "") ? true : false,
@@ -68,6 +80,7 @@ export const PokemonAutocomplete: FunctionComponent<
       disable={disable}
       loading={isLoading}
       elementPrefix={elementPrefix}
+      helperText={helperText}
     />
   );
 };

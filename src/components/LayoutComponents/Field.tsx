@@ -32,11 +32,12 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
   ...props
 }) => {
   const { light } = useDarkTheme();
+
   return (
     <Column className={`gap-1 w-full h-full ${className}`}>
       {label && <Span>{label}</Span>}
       <Row
-        className={`h-[40px] items-center gap-2 rounded border-solid border-[1px] rounded-md ${
+        className={`h-[40px] items-center gap-1 rounded border-solid border-[1px] rounded-md ${
           light ? "border-blue-900" : "border-slate-300"
         } ${
           type !== "transparent"
@@ -44,13 +45,17 @@ export const Field: FunctionComponent<PropsWithChildren<FieldProps>> = ({
               ? "bg-slate-300 hover:bg-slate-200"
               : "bg-gray-800 hover:bg-gray-700"
             : ""
-        } px-1 group transition-all`}
+        } px-2 group transition-all`}
       >
         {elementPrefix}
         {props.children}
         {elementSuffix}
       </Row>
-      {(errorText || helperText) && <Small>{errorText || helperText}</Small>}
+      {(errorText || helperText) && (
+        <Small className={light ? "text-blue-900" : "text-slate-300"}>
+          {errorText || helperText}
+        </Small>
+      )}
     </Column>
   );
 };

@@ -27,7 +27,7 @@ export const Dex = () => {
   const { light } = useDarkTheme();
   const { isLocallyLoaded } = useData();
 
-  const [region, setRegion] = useState<PokeRegion>("all");
+  const [region, setRegion] = useState<PokeRegion>("any");
   const [types, setTypes] = useState<PokeType[]>(["any"]);
 
   const [currentOffset, setCurrentOffset] = useState(0);
@@ -68,7 +68,7 @@ export const Dex = () => {
         range: { start: currentOffset, end: currentOffset + limit },
         types: types.includes("any") ? undefined : types,
         limit,
-        region: region === "all" ? undefined : region,
+        region: region === "any" ? undefined : region,
       }),
     });
 

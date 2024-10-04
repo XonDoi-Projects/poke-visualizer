@@ -7,9 +7,44 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
     const client = await clientPromise;
     const dbPokemon = client.db("pokemons").collection("pokemons");
 
-    const { search } = req.body;
+    const { search, region, trait, types } = req.body;
 
     let filter = {};
+
+    if (trait === "legendary") {
+      filter = { ...filter, isLegendary: true };
+    }
+
+    if (trait === "mythical") {
+      filter = { ...filter, isMythical: true };
+    }
+
+    if (trait === "baby") {
+      filter = { ...filter, isBaby: true };
+    }
+
+    if (trait === "other") {
+      filter = {
+        ...filter,
+        isBaby: false,
+        isLegendary: false,
+        isMythical: false,
+      };
+    }
+
+    if (region) {
+      filter = { ...filter, region: region.toString().toLowerCase() };
+    }
+
+    if (types) {
+      filter = {
+        ...filter,
+
+        $or: types.map((t: string) => ({
+          types: t.toString().toLowerCase(),
+        })),
+      };
+    }
 
     if (search) {
       filter = { ...filter, name: { $regex: search, $options: "i" } };

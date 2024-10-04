@@ -40,6 +40,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
   disable,
   loading,
   elementPrefix,
+  helperText,
 }: AutocompleteProps<T>) => {
   const { light } = useDarkTheme();
 
@@ -96,6 +97,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps<any>> = <T,>({
         placeHolder={placeHolder}
         onValueChange={setQuery}
         value={isFocus ? query : option ? getDisplayName(option) : ""}
+        helperText={helperText}
         elementPrefix={elementPrefix}
         elementSuffix={
           !noDropDownOnClick && (

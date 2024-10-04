@@ -626,6 +626,11 @@ video {
   margin: 0px !important;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .mb-\[15px\] {
   margin-bottom: 15px;
 }
@@ -728,6 +733,10 @@ video {
 
 .h-\[60\%\] {
   height: 60%;
+}
+
+.h-\[60px\] {
+  height: 60px;
 }
 
 .h-\[75px\] {
@@ -863,6 +872,10 @@ video {
 
 .min-w-\[100px\] {
   min-width: 100px;
+}
+
+.min-w-\[150px\] {
+  min-width: 150px;
 }
 
 .min-w-\[200px\] {
@@ -1223,6 +1236,11 @@ video {
   border-radius: 0.375rem;
 }
 
+.rounded-b-md {
+  border-bottom-right-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
 .border-2 {
   border-width: 2px;
 }
@@ -1257,9 +1275,17 @@ video {
   border-color: rgb(30 58 138 / var(--tw-border-opacity));
 }
 
+.border-blue-900\/10 {
+  border-color: rgb(30 58 138 / 0.1);
+}
+
 .border-slate-300 {
   --tw-border-opacity: 1;
   border-color: rgb(203 213 225 / var(--tw-border-opacity));
+}
+
+.border-slate-300\/10 {
+  border-color: rgb(203 213 225 / 0.1);
 }
 
 .border-t-transparent {
@@ -1545,11 +1571,6 @@ video {
   padding: 1.25rem;
 }
 
-.px-1 {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-}
-
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -1672,24 +1693,20 @@ video {
   text-decoration-line: underline;
 }
 
-.placeholder-blue-900::-moz-placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(30 58 138 / var(--tw-placeholder-opacity));
+.placeholder-blue-900\/50::-moz-placeholder {
+  color: rgb(30 58 138 / 0.5);
 }
 
-.placeholder-blue-900::placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(30 58 138 / var(--tw-placeholder-opacity));
+.placeholder-blue-900\/50::placeholder {
+  color: rgb(30 58 138 / 0.5);
 }
 
-.placeholder-slate-300::-moz-placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(203 213 225 / var(--tw-placeholder-opacity));
+.placeholder-slate-300\/50::-moz-placeholder {
+  color: rgb(203 213 225 / 0.5);
 }
 
-.placeholder-slate-300::placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(203 213 225 / var(--tw-placeholder-opacity));
+.placeholder-slate-300\/50::placeholder {
+  color: rgb(203 213 225 / 0.5);
 }
 
 .opacity-20 {
@@ -1789,11 +1806,11 @@ video {
 }
 
 .scrollbar.light::-webkit-scrollbar-track {
-  background: #cbd5e1;
+  background: rgb(200 200 225);
 }
 
 .scrollbar.\!light::-webkit-scrollbar-track {
-  background: #cbd5e1 !important;
+  background: rgb(200 200 225) !important;
 }
 
 .scrollbar.light::-webkit-scrollbar-thumb {
@@ -1810,7 +1827,7 @@ video {
 }
 
 .scrollbar.dark::-webkit-scrollbar-track {
-  background: #cbd5e1;
+  background: rgb(180 180 180);
 }
 
 .scrollbar.dark::-webkit-scrollbar-thumb {
@@ -1877,24 +1894,20 @@ video {
     color: rgb(226 232 240 / var(--tw-text-opacity));
   }
 
-  .hover\:placeholder-blue-800:hover::-moz-placeholder {
-    --tw-placeholder-opacity: 1;
-    color: rgb(30 64 175 / var(--tw-placeholder-opacity));
+  .hover\:placeholder-blue-800\/50:hover::-moz-placeholder {
+    color: rgb(30 64 175 / 0.5);
   }
 
-  .hover\:placeholder-blue-800:hover::placeholder {
-    --tw-placeholder-opacity: 1;
-    color: rgb(30 64 175 / var(--tw-placeholder-opacity));
+  .hover\:placeholder-blue-800\/50:hover::placeholder {
+    color: rgb(30 64 175 / 0.5);
   }
 
-  .hover\:placeholder-slate-200:hover::-moz-placeholder {
-    --tw-placeholder-opacity: 1;
-    color: rgb(226 232 240 / var(--tw-placeholder-opacity));
+  .hover\:placeholder-slate-200\/50:hover::-moz-placeholder {
+    color: rgb(226 232 240 / 0.5);
   }
 
-  .hover\:placeholder-slate-200:hover::placeholder {
-    --tw-placeholder-opacity: 1;
-    color: rgb(226 232 240 / var(--tw-placeholder-opacity));
+  .hover\:placeholder-slate-200\/50:hover::placeholder {
+    color: rgb(226 232 240 / 0.5);
   }
 
   .group:hover .group-hover\:\!text-blue-800 {

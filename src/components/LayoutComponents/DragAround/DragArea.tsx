@@ -12,7 +12,7 @@ import {
 } from "@/components/PageComponents";
 import { Popup } from "../Popup";
 import { MoveDetailsType } from "@/utils";
-import { Span } from "../Typography";
+import { H5, Span } from "../Typography";
 
 export interface DragAreaProps {
   list: PokeDetailsWithSelectedMoves[];
@@ -301,10 +301,6 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
               ? itemDims.width + "px"
               : ref.current?.getBoundingClientRect().width + "px",
           }}
-          onClick={() => {
-            setShowMoves(true);
-            setItem(item);
-          }}
           onDragStart={(e) => {
             e.currentTarget.style.opacity = "0.4";
 
@@ -375,6 +371,10 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
             disableMoveDown={index === items.length - 1}
             moveUp={() => handleMoveUp(index)}
             disableMoveUp={index === 0}
+            onClick={() => {
+              setShowMoves(true);
+              setItem(item);
+            }}
           />
         </Container>
       ))}
@@ -396,6 +396,7 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
             light ? "light" : "dark"
           } gap-5`}
         >
+          <Span>{`Select Moves for ${item?.item.name}`}</Span>
           <MoveAutocomplete
             data={item?.item.moves || []}
             label=""
