@@ -25,7 +25,10 @@ export const MoveAutocomplete: FunctionComponent<MoveAutocompleteProps> = ({
   const [search, setSearch] = useState("");
 
   const filteredData = useMemo(
-    () => data.filter((d) => d.name.includes(search)) || [],
+    () =>
+      data
+        .filter((d) => d.name.includes(search))
+        .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0)) || [],
     [data, search]
   );
 

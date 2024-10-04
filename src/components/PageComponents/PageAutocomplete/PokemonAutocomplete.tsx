@@ -40,9 +40,9 @@ export const PokemonAutocomplete: FunctionComponent<
       },
       body: JSON.stringify({
         search,
-        region: filter?.region === "any" ? undefined : filter?.region,
-        trait: filter?.trait === "any" ? undefined : filter?.trait,
-        types: filter?.types.includes("any") ? undefined : filter?.types,
+        region: filter?.region === "all" ? undefined : filter?.region,
+        trait: filter?.trait === "all" ? undefined : filter?.trait,
+        types: filter?.types.includes("all") ? undefined : filter?.types,
       }),
     });
 

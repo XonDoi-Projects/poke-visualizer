@@ -23,7 +23,7 @@ export type PokeAbility = string;
 export type PokeForm = string;
 export type PokeStat = { name: string; value: number };
 export type PokeRegion =
-  | "any"
+  | "all"
   | "kanto"
   | "johto"
   | "hoenn"
@@ -34,7 +34,7 @@ export type PokeRegion =
   | "hisui"
   | "paldea";
 export type PokeType =
-  | "any"
+  | "all"
   | "grass"
   | "fire"
   | "water"
@@ -53,7 +53,7 @@ export type PokeType =
   | "electric"
   | "bug"
   | "ice";
-export type PokeTrait = "any" | "baby" | "legendary" | "mythical" | "other";
+export type PokeTrait = "all" | "baby" | "legendary" | "mythical" | "other";
 
 export type MoveDetailsType = {
   name: string;
@@ -126,7 +126,7 @@ export interface PokeDetails {
 }
 
 export const pokeRegions = [
-  "any",
+  "all",
   "kanto",
   "johto",
   "hoenn",
@@ -139,7 +139,7 @@ export const pokeRegions = [
 ];
 
 export const pokeTypes = [
-  "any",
+  "all",
   "bug",
   "dark",
   "dragon",
@@ -160,7 +160,7 @@ export const pokeTypes = [
   "water",
 ];
 
-export const pokeTraits = ["any", "baby", "legendary", "mythical", "other"];
+export const pokeTraits = ["all", "baby", "legendary", "mythical", "other"];
 
 interface EvolveTriggerPokeAPI {
   item: { name: string } | null;

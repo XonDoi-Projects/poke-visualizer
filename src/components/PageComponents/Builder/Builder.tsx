@@ -5,6 +5,8 @@ import {
   H2,
   H3,
   Row,
+  Small,
+  Span,
 } from "@/components/LayoutComponents";
 import {
   MoveDetailsType,
@@ -21,21 +23,26 @@ import { PokemonAutocomplete } from "../PageAutocomplete/PokemonAutocomplete";
 import { DragArea } from "@/components/LayoutComponents/DragAround";
 import { Suggester } from "./Suggester";
 import { Selector } from "@/components/LayoutComponents/Selector";
+import { Card } from "@/components/LayoutComponents/Card";
+import { useDarkTheme } from "@/components/Providers";
 
 export interface PokeDetailsWithSelectedMoves extends PokeDetails {
   selectedMoves?: MoveDetailsType[];
 }
 
 export const Builder = () => {
+  const { light } = useDarkTheme();
   const [pokemons, setPokemons] = useState<PokeDetailsWithSelectedMoves[]>([]);
 
-  const [region, setRegion] = useState<PokeRegion>("any");
-  const [trait, setTrait] = useState<PokeTrait>("any");
-  const [types, setTypes] = useState<PokeType[]>(["any"]);
+  const [showTypes, setShowTypes] = useState(true);
+
+  const [region, setRegion] = useState<PokeRegion>("all");
+  const [trait, setTrait] = useState<PokeTrait>("all");
+  const [types, setTypes] = useState<PokeType[]>(["all"]);
 
   const helperText = useMemo(() => {
     const filter = [region, trait, ...types]
-      .filter((f) => f !== "any")
+      .filter((f) => f !== "all")
       .map((f) => f.slice(0, 1).toUpperCase() + f.slice(1));
 
     if (filter.length > 1) {
@@ -47,9 +54,9 @@ export const Builder = () => {
   }, [region, trait, types]);
 
   const handleReset = () => {
-    setRegion("any");
-    setTrait("any");
-    setTypes(["any"]);
+    setRegion("all");
+    setTrait("all");
+    setTypes(["all"]);
   };
 
   return (
@@ -107,12 +114,12 @@ export const Builder = () => {
             }}
           />
         </Container>
-        <Container className={`h-full items-end`}>
-          <Button className={`h-[40px]`} onClick={handleReset}>
-            Reset
-          </Button>
-        </Container>
       </Row>
+      <Container className={`h-full items-end`}>
+        <Button className={`h-[30px] rounded-full`} onClick={handleReset}>
+          Reset
+        </Button>
+      </Container>
 
       <Row className={`relative flex-wrap gap-5`}>
         <Column className={`relative flex-1 rounded gap-2 p-3`}>
@@ -120,8 +127,32 @@ export const Builder = () => {
           <DragArea list={pokemons} setList={setPokemons} />
         </Column>
         <Column className={`relative flex-1 rounded gap-2 w-full p-3`}>
-          <H3>Details</H3>
-          {pokemons.length > 0 && <Suggester pokemons={pokemons} />}
+          <Row className={`justify-between items-center`}>
+            <H3>{showTypes ? "Type Composition" : "Stat Details"}</H3>
+            <Button className={`rounded-full`}>
+              <Small
+                onClick={() => setShowTypes(!showTypes)}
+                className={`${!light ? "text-blue-900" : "text-slate-300"}  `}
+              >
+                {showTypes ? "See Stats" : "See Types"}
+              </Small>
+            </Button>
+          </Row>
+
+          {pokemons.length > 0 ? (
+            <Suggester
+              pokemons={pokemons}
+              setShowTypes={setShowTypes}
+              showTypes={showTypes}
+            />
+          ) : (
+            <Card
+              className={`flex-1 items-center justify-center rounded-md opacity-40`}
+              noShadow
+            >
+              <Span>Start building your team!</Span>
+            </Card>
+          )}
         </Column>
       </Row>
     </Column>

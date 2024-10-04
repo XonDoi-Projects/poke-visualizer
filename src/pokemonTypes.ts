@@ -1,6 +1,6 @@
 import { PokeType } from "./utils";
 
-export type TypeWeakness = Omit<PokeType, "any">;
+export type TypeWeakness = Omit<PokeType, "all">;
 
 export interface TypeComplexion {
   zero: TypeWeakness[];

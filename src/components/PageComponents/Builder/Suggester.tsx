@@ -1,4 +1,5 @@
 import {
+  Button,
   Column,
   H5,
   Row,
@@ -32,13 +33,18 @@ type SuggestedStats = {
 
 export interface SuggesterProps {
   pokemons: PokeDetailsWithSelectedMoves[];
+  setShowTypes: (value: boolean) => void;
+  showTypes: boolean;
 }
 
-export const Suggester: FunctionComponent<SuggesterProps> = ({ pokemons }) => {
+export const Suggester: FunctionComponent<SuggesterProps> = ({
+  pokemons,
+  setShowTypes,
+  showTypes,
+}) => {
   const { light } = useDarkTheme();
   const [stats, setStats] = useState<SuggestedStats>();
 
-  const [showTypes, setShowTypes] = useState(false);
   const [showAverage, setShowAverage] = useState(false);
 
   const getTeamStatsAverage = (
@@ -340,22 +346,7 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({ pokemons }) => {
     <Column className={`gap-3 flex-1 w-full`}>
       {!showTypes ? (
         <>
-          {" "}
           <Column className={`gap-2`}>
-            <Row>
-              <H5>Stat Information</H5>
-              <Row className={`flex-1 justify-end items-center`}>
-                <Small
-                  onClick={() => setShowTypes(true)}
-                  className={`underline cursor-pointer ${
-                    light ? "text-blue-900" : "text-slate-300"
-                  }  `}
-                >
-                  See Types
-                </Small>
-              </Row>
-            </Row>
-
             <Span>{`Your first pokemon has a speed of ${stats?.speedValue}, which is ${stats?.speedValueDetails}. ${stats?.conclusion}.`}</Span>
           </Column>
           <Column className={`gap-2`}>
@@ -376,19 +367,6 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({ pokemons }) => {
         </>
       ) : (
         <Column className={`gap-2 flex-1 w-full`}>
-          <Row>
-            <H5>Type Composition</H5>
-            <Row className={`flex-1 justify-end items-center`}>
-              <Small
-                onClick={() => setShowTypes(false)}
-                className={`underline cursor-pointer ${
-                  light ? "text-blue-900" : "text-slate-300"
-                }  `}
-              >
-                See Stats
-              </Small>
-            </Row>
-          </Row>
           <Table
             headers={[
               {
@@ -440,7 +418,7 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({ pokemons }) => {
               },
             ]}
             rows={pokeTypes
-              .filter((t) => t !== "any")
+              .filter((t) => t !== "all")
               .map((t) => ({
                 id: <TypeChip value={t} />,
                 resistances: stats?.typeComposition?.resistances?.find(
@@ -455,22 +433,23 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({ pokemons }) => {
                   cellData: stats?.typeComposition?.moves?.find(
                     (r) => r.name === t
                   )?.totalCount,
-                  subLayer: pokemons.flatMap((p) =>
-                    p.selectedMoves?.flatMap((s) =>
-                      t === s.type
-                        ? {
-                            damageClass: (
-                              <ClassChip
-                                value={s.damageClass || ""}
-                                key={s.name}
-                                small
-                              />
-                            ),
-                            moveName: s.name,
-                            pokemonName: p.name,
-                          }
-                        : []
-                    )
+                  subLayer: pokemons.flatMap(
+                    (p) =>
+                      p.selectedMoves?.flatMap((s) =>
+                        t === s.type
+                          ? {
+                              damageClass: (
+                                <ClassChip
+                                  value={s.damageClass || ""}
+                                  key={s.name}
+                                  small
+                                />
+                              ),
+                              moveName: s.name,
+                              pokemonName: p.name,
+                            }
+                          : []
+                      ) || []
                   ),
                 },
               }))}

@@ -27,8 +27,8 @@ export const Dex = () => {
   const { light } = useDarkTheme();
   const { isLocallyLoaded } = useData();
 
-  const [region, setRegion] = useState<PokeRegion>("any");
-  const [types, setTypes] = useState<PokeType[]>(["any"]);
+  const [region, setRegion] = useState<PokeRegion>("all");
+  const [types, setTypes] = useState<PokeType[]>(["all"]);
 
   const [currentOffset, setCurrentOffset] = useState(0);
 
@@ -66,9 +66,9 @@ export const Dex = () => {
       },
       body: JSON.stringify({
         range: { start: currentOffset, end: currentOffset + limit },
-        types: types.includes("any") ? undefined : types,
+        types: types.includes("all") ? undefined : types,
         limit,
-        region: region === "any" ? undefined : region,
+        region: region === "all" ? undefined : region,
       }),
     });
 
