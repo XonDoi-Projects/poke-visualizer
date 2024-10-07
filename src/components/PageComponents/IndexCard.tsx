@@ -29,7 +29,7 @@ export const IndexCard: FunctionComponent<IndexCardProps> = (props) => {
             <Column className="flex flex-1 justify-center items-start p-5 gap-5">
               <H5 className={`mr-10`}>
                 This is a Pokemon playground where you can you look up your
-                favorite pokemon to view stats or find fun pokemon fusions!
+                favorite pokemon to view them, compare stats or plan your team!
               </H5>
               <Button onClick={() => router.push("/dex")}>{"Let's Go!"}</Button>
             </Column>
@@ -44,7 +44,7 @@ export const IndexCard: FunctionComponent<IndexCardProps> = (props) => {
           <Column className="flex flex-1 justify-center items-start p-5 gap-5">
             <H5>
               This is a Pokemon playground where you can you look up your
-              favorite pokemon to view stats or find fun pokemon fusions!
+              favorite pokemon to view them, compare stats or plan your team!
             </H5>
             <Button onClick={() => router.push("/dex")}>{"Let's Go!"}</Button>
           </Column>
