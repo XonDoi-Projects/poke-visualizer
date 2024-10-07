@@ -51,7 +51,11 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
       <Row className={`gap-2 w-full flex-wrap flex-1 justify-between`}>
         <Row>
           <Button className={`rounded-full`} onClick={onClick}>
-            <Small>Add Moves</Small>
+            <Small
+              className={` ${!light ? "text-blue-900" : "text-slate-300"}`}
+            >
+              Add Moves
+            </Small>
           </Button>
         </Row>
         <Row className={`gap-2 w-full flex-wrap flex-1 justify-end`}>
