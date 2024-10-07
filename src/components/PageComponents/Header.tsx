@@ -126,7 +126,7 @@ export const Header = () => {
             type="text"
             tooltip
             tooltipDetails={
-              <Container className={`items-center`}>
+              <Container className={`items-center gap-1`}>
                 <Small
                   className={` ${
                     light ? "text-blue-900" : "text-slate-300"
