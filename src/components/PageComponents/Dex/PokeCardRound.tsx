@@ -18,6 +18,7 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
   const router = useRouter();
   const [showShiny, setShowShiny] = useState(false);
   const [hover, setHover] = useState(false);
+  const [isTouching, setIsTouching] = useState(false);
 
   const { light } = useDarkTheme();
 
@@ -66,9 +67,19 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
       <Card
         className={`w-[200px] h-[200px] hover:scale-105 rounded-full transition-all cursor-pointer overflow-hidden`}
         onPointerEnter={() => setHover(true)}
-        onPointerLeave={() => setHover(false)}
-        onTouchStart={() => setHover(true)}
-        onTouchEnd={() => setHover(false)}
+        onPointerLeave={() => {
+          if (!isTouching) {
+            setHover(false);
+          }
+        }}
+        onTouchStart={() => {
+          setIsTouching(true);
+          setHover(true);
+        }}
+        onTouchEnd={() => {
+          setIsTouching(false);
+          setHover(false);
+        }}
         onClick={() => router.push(`/dex/${props.data.index}`)}
       >
         <Container
