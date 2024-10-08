@@ -176,6 +176,8 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
     tempItems.splice(index, 0, firstSlice);
 
     setItems(tempItems);
+
+    console.log(tempItems, result);
   };
 
   const handleMoveUp = (index: number) => {
@@ -366,7 +368,7 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
         >
           <BuilderCard
             pokemon={item.item}
-            removePokemon={() => handleRemovePokemon(index)}
+            removePokemon={() => handleRemovePokemon(item.index)}
             moveDown={() => handleMoveDown(index)}
             disableMoveDown={index === items.length - 1}
             moveUp={() => handleMoveUp(index)}
