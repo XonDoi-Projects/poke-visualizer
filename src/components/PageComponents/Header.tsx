@@ -76,7 +76,7 @@ export const Header = () => {
 
   return (
     <Row
-      className={`h-[60px] z-10 sticky justify-between items-center transition-all gap-2 ${
+      className={`h-[60px] z-10 sticky justify-between items-center transition-all ${
         light
           ? "bg-slate-200 shadow-bottom shadow-slate-300"
           : "bg-gray-900 shadow-bottom shadow-gray-800"
@@ -84,19 +84,19 @@ export const Header = () => {
     >
       <Row className={`flex-1 gap-2 items-center`}>
         <Container
-          className={`relative min-w-[80px] w-[80px] items-center justify-center pl-2`}
+          className={`relative min-w-[90px] w-[100px] items-center justify-center pl-2`}
         >
           <Link href={"/dex"}>
             <picture>
               <Image
                 src={
-                  light ? "/PokeVis_Logo_Light.png" : "/PokeVis_Logo_Dark.png"
+                  light ? "/PokePlan_Logo_Light.png" : "/PokePlan_Logo_Dark.png"
                 }
                 alt="Logo"
                 sizes="100vw"
                 width="0"
                 height="0"
-                className="w-auto h-full"
+                className="w-[85px] h-[25px]"
                 loading="lazy"
                 fetchPriority="low"
               />

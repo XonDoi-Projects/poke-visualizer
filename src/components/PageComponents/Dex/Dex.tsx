@@ -102,7 +102,7 @@ export const Dex = () => {
   ) : (
     data?.data && (
       <Column className={`gap-5`}>
-        <H2>Welcome to PokeVis</H2>
+        <H2>Welcome to PokePlan</H2>
         <H5>{`You are currently viewing Pokemon #${data.data[0].index
           .toString()
           .padStart(4, "0")} to #${data.data[data.data?.length - 1].index

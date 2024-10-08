@@ -81,7 +81,7 @@ export const DexEntry = () => {
   });
 
   useEffect(() => {
-    document.title = `PokeVis - ${pokemon?.name}`;
+    document.title = `PokePlan - ${pokemon?.name}`;
   }, [pokemon]);
 
   const dropShadow = clsx({

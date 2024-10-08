@@ -25,15 +25,19 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           name="keywords"
           content="Pokemon, Visualizer, Team Builder, Team Planner, Pokedex, Pokemon Stats"
         />
-        <meta property="og:title" content="Pokemon Visualizer" />
+        <meta
+          property="og:title"
+          content="Pokemon Visualizer - Dex and Planner"
+        />
         <meta
           property="og:description"
           content="A website where you can view the different pokemon and their forms, compare stats and plan you team."
         />
-        <meta property="og:site_name" content="PokeVis" />
+        <meta property="og:site_name" content="PokePlan" />
         <meta property="og:type" content="Website" />
         <meta property="og:url" content="https://poke-visualizer.vercel.app" />
         {/* Favicon */}
+        <link rel="icon" type="image/x-icon" href="/PokePlan_Icon.png" />
       </Head>
       <DefaultFonts />
       <GlobalStyle />
