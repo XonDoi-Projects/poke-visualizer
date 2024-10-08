@@ -91,7 +91,16 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }: any) {
+      const newUtilities = {
+        ".no-tap-highlight": {
+          "-webkit-tap-highlight-color": "transparent",
+        },
+      };
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
+  ],
   future: { hoverOnlyWhenSupported: true },
 };
 export default config;

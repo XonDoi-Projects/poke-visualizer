@@ -751,10 +751,6 @@ video {
   height: 100vh;
 }
 
-.h-auto {
-  height: auto;
-}
-
 .max-h-\[150px\] {
   max-height: 150px;
 }
@@ -843,8 +839,8 @@ video {
   width: 75px;
 }
 
-.w-\[90px\] {
-  width: 90px;
+.w-\[85px\] {
+  width: 85px;
 }
 
 .w-auto {
@@ -867,10 +863,6 @@ video {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-\[85px\] {
-  width: 85px;
 }
 
 .min-w-\[100px\] {
@@ -1783,6 +1775,10 @@ video {
 
 .duration-75 {
   transition-duration: 75ms;
+}
+
+.no-tap-highlight {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .scrollbar::-webkit-scrollbar-track {

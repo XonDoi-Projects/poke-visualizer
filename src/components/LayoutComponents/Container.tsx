@@ -20,7 +20,11 @@ export interface ContainerProps
 export const Container: FunctionComponent<ContainerProps> = forwardRef(
   ({ children, className, ...props }, ref: ForwardedRef<HTMLDivElement>) => {
     return (
-      <div ref={ref} {...props} className={`flex ${className}`}>
+      <div
+        ref={ref}
+        {...props}
+        className={`flex no-tap-highlight ${className}`}
+      >
         {children}
       </div>
     );
