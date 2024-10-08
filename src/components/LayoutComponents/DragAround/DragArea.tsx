@@ -176,8 +176,6 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
     tempItems.splice(index, 0, firstSlice);
 
     setItems(tempItems);
-
-    console.log(tempItems, result);
   };
 
   const handleMoveUp = (index: number) => {
