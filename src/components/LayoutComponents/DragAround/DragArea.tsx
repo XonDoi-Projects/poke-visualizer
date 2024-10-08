@@ -366,7 +366,7 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
         >
           <BuilderCard
             pokemon={item.item}
-            removePokemon={() => handleRemovePokemon(index)}
+            removePokemon={() => handleRemovePokemon(item.index)}
             moveDown={() => handleMoveDown(index)}
             disableMoveDown={index === items.length - 1}
             moveUp={() => handleMoveUp(index)}
