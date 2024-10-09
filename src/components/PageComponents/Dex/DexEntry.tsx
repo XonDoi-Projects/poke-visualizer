@@ -591,12 +591,6 @@ export const DexEntry = () => {
                 <Container key={f.index} className={`flex-1 justify-center`}>
                   <PokeCard form={f} />
                 </Container>
-                // <Chip
-                //   key={f.index}
-                //   value={f.name}
-                //   className={`${light ? "bg-blue-900" : "bg-slate-300"} `}
-                //   contrast={!light}
-                // />
               ))
             ) : (
               <Span>No other forms.</Span>
