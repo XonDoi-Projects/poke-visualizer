@@ -38,6 +38,7 @@ import { EvolutionChart } from "./EvolutionChart";
 import { complexionData } from "@/pokemonTypes";
 import { useQuery } from "@tanstack/react-query";
 import { ClassChip } from "./ClassChip";
+import { PokeCard } from "./PokeCard";
 
 export const DexEntry = () => {
   const router = useRouter();
@@ -356,32 +357,6 @@ export const DexEntry = () => {
                     ))}
                   </Row>
                 </Column>
-
-                <Column className={`w-full gap-2`}>
-                  <H5>Description</H5>
-                  <Span>{pokemon.description}</Span>
-                </Column>
-                <Column className={`w-full gap-2`}>
-                  <H5>Forms</H5>
-                  <Row className={`gap-2 flex-wrap`}>
-                    {pokemon.forms && pokemon.forms?.length > 1 ? (
-                      pokemon.forms.map((f) => (
-                        <Chip
-                          key={f.index}
-                          value={f.name}
-                          className={`${
-                            light ? "bg-blue-900" : "bg-slate-300"
-                          } `}
-                          contrast={!light}
-                        />
-                      ))
-                    ) : (
-                      <Span>No other forms.</Span>
-                    )}
-                  </Row>
-                </Column>
-              </Column>
-              <Column className={`flex-1 gap-5 min-w-[200px]`}>
                 <Column className={`w-full gap-2`}>
                   <Row className={`gap-2`}>
                     <H5>Strong Against</H5>
@@ -508,13 +483,11 @@ export const DexEntry = () => {
                   </Row>
                 </Column>
               </Column>
-            </Row>
-            <Row
-              className={`flex-1 gap-10 w-full flex-wrap ${
-                mobile ? "" : "min-h-[300px]"
-              }`}
-            >
               <Column className={`flex-1 gap-5 min-w-[200px]`}>
+                <Column className={`w-full gap-2`}>
+                  <H5>Description</H5>
+                  <Span>{pokemon.description}</Span>
+                </Column>
                 <Column className={`w-full gap-2`}>
                   <H5>Abilities</H5>
                   <Row className={`gap-2 flex-wrap`}>
@@ -528,20 +501,6 @@ export const DexEntry = () => {
                     ))}
                   </Row>
                 </Column>
-                <Column className={`w-full gap-2`}>
-                  <H5>Stats</H5>
-                  <Column className={`gap-1`}>
-                    {pokemon.stats?.map((s) => (
-                      <LabelWithValue
-                        key={s.name}
-                        label={s.name}
-                        value={s.value.toString()}
-                      />
-                    ))}
-                  </Column>
-                </Column>
-              </Column>
-              <Column className={`flex-1 gap-5 min-w-[200px]`}>
                 <Column className={`w-full gap-2`}>
                   <H5>Special Trait</H5>
                   <Row className={`gap-2 flex-wrap`}>
@@ -568,6 +527,28 @@ export const DexEntry = () => {
                     />
                   </Row>
                 </Column>
+              </Column>
+            </Row>
+            <Row
+              className={`flex-1 gap-10 w-full flex-wrap ${
+                mobile ? "" : "min-h-[300px]"
+              }`}
+            >
+              <Column className={`flex-1 gap-5 min-w-[200px]`}>
+                <Column className={`w-full gap-2`}>
+                  <H5>Stats</H5>
+                  <Column className={`gap-1`}>
+                    {pokemon.stats?.map((s) => (
+                      <LabelWithValue
+                        key={s.name}
+                        label={s.name}
+                        value={s.value.toString()}
+                      />
+                    ))}
+                  </Column>
+                </Column>
+              </Column>
+              <Column className={`flex-1 gap-5 min-w-[200px]`}>
                 <Column className={`w-full gap-2`}>
                   <H5>Other Details</H5>
                   <Column className={`gap-1`}>
@@ -602,67 +583,90 @@ export const DexEntry = () => {
             </Row>
           </Column>
         </Row>
-        <Table
-          headers={[
-            {
-              name: "Name",
-              keyId: "name",
-              expandable: false,
-              minWidth: "170px",
-            },
-            {
-              name: "Class",
-              keyId: "damageClass",
-              expandable: false,
-              minWidth: "130px",
-            },
-            {
-              name: "Type",
-              keyId: "type",
-              expandable: false,
-              minWidth: "130px",
-            },
-            {
-              name: "Power",
-              keyId: "power",
-              expandable: false,
-              minWidth: "100px",
-            },
-            {
-              name: "Accuracy",
-              keyId: "accuracy",
-              expandable: false,
-              minWidth: "100px",
-            },
-            {
-              name: "Effect Chance",
-              keyId: "effectChance",
-              expandable: false,
-              minWidth: "150px",
-            },
-            {
-              name: "Version",
-              keyId: "versions",
-              expandable: true,
-              minWidth: "100px",
-              subHeaders: [
-                { name: "Version", keyId: "version", minWidth: "300px" },
-                { name: "Level Learned", keyId: "levelLearned" },
-                { name: "Learn Method", keyId: "learnMethod" },
-              ],
-            },
-          ]}
-          rows={
-            pokemon.moves?.map((m) => {
-              return {
-                ...m,
-                type: <TypeChip value={m.type || ""} />,
-                damageClass: <ClassChip value={m.damageClass || ""} />,
-                versions: { subLayer: m.versions },
-              };
-            }) || []
-          }
-        />
+        <Column className={`w-full gap-2 items-start`}>
+          <H5>Forms</H5>
+          <Row className={`gap-5 flex-wrap`}>
+            {pokemon.forms && pokemon.forms?.length > 1 ? (
+              pokemon.forms.map((f) => (
+                <Container key={f.index} className={`flex-1 justify-center`}>
+                  <PokeCard form={f} />
+                </Container>
+                // <Chip
+                //   key={f.index}
+                //   value={f.name}
+                //   className={`${light ? "bg-blue-900" : "bg-slate-300"} `}
+                //   contrast={!light}
+                // />
+              ))
+            ) : (
+              <Span>No other forms.</Span>
+            )}
+          </Row>
+        </Column>
+        <Column className={`w-full gap-2`}>
+          <H5>Moves</H5>
+          <Table
+            headers={[
+              {
+                name: "Name",
+                keyId: "name",
+                expandable: false,
+                minWidth: "170px",
+              },
+              {
+                name: "Class",
+                keyId: "damageClass",
+                expandable: false,
+                minWidth: "130px",
+              },
+              {
+                name: "Type",
+                keyId: "type",
+                expandable: false,
+                minWidth: "130px",
+              },
+              {
+                name: "Power",
+                keyId: "power",
+                expandable: false,
+                minWidth: "100px",
+              },
+              {
+                name: "Accuracy",
+                keyId: "accuracy",
+                expandable: false,
+                minWidth: "100px",
+              },
+              {
+                name: "Effect Chance",
+                keyId: "effectChance",
+                expandable: false,
+                minWidth: "150px",
+              },
+              {
+                name: "Version",
+                keyId: "versions",
+                expandable: true,
+                minWidth: "100px",
+                subHeaders: [
+                  { name: "Version", keyId: "version", minWidth: "300px" },
+                  { name: "Level Learned", keyId: "levelLearned" },
+                  { name: "Learn Method", keyId: "learnMethod" },
+                ],
+              },
+            ]}
+            rows={
+              pokemon.moves?.map((m) => {
+                return {
+                  ...m,
+                  type: <TypeChip value={m.type || ""} />,
+                  damageClass: <ClassChip value={m.damageClass || ""} />,
+                  versions: { subLayer: m.versions },
+                };
+              }) || []
+            }
+          />
+        </Column>
         <Drawer show={showStats} onClose={() => setShowStats(false)}>
           <StatCompareTool pokemon={pokemon} />
         </Drawer>

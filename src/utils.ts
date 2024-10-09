@@ -26,8 +26,6 @@ export type PokeForm = {
   types: PokeType[];
   imageLink: string;
   imageLinkShiny?: string;
-  animated?: string;
-  animatedShiny?: string;
 };
 export type PokeVariety = {
   name: string;
