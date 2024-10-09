@@ -14,7 +14,7 @@ import {
   Table,
 } from "@/components/LayoutComponents";
 import { total, useDarkTheme, useData, useSize } from "@/components/Providers";
-import { EvolutionType, PokeDetails } from "@/utils";
+import { EvolutionType, getPokemon, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -217,6 +217,8 @@ export const DexEntry = () => {
     return [];
   }, [pokemon?.types]);
 
+  getPokemon(493);
+
   return isLoading || evolvesFromIsLoading || evolvesToIsLoading ? (
     <Column className={`w-full h-full items-center justify-center`}>
       <Loading />
@@ -363,18 +365,16 @@ export const DexEntry = () => {
                   <H5>Forms</H5>
                   <Row className={`gap-2 flex-wrap`}>
                     {pokemon.forms && pokemon.forms?.length > 1 ? (
-                      pokemon.forms
-                        .slice(1, pokemon.forms.length)
-                        .map((f) => (
-                          <Chip
-                            key={f}
-                            value={f}
-                            className={`${
-                              light ? "bg-blue-900" : "bg-slate-300"
-                            } `}
-                            contrast={!light}
-                          />
-                        ))
+                      pokemon.forms.map((f) => (
+                        <Chip
+                          key={f.index}
+                          value={f.name}
+                          className={`${
+                            light ? "bg-blue-900" : "bg-slate-300"
+                          } `}
+                          contrast={!light}
+                        />
+                      ))
                     ) : (
                       <Span>No other forms.</Span>
                     )}

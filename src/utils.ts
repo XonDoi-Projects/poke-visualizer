@@ -20,7 +20,34 @@ export const maxStats: { [key in string]: number } = {
 };
 
 export type PokeAbility = string;
-export type PokeForm = string;
+export type PokeForm = {
+  index: string;
+  name: string;
+  types: PokeType[];
+  imageLink: string;
+  imageLinkShiny?: string;
+  animated?: string;
+  animatedShiny?: string;
+};
+export type PokeVariety = {
+  name: string;
+  index: string;
+  weight: number;
+  height: number;
+  imageLink: string;
+  imageLinkShiny?: string;
+  animated?: string;
+  animatedShiny?: string;
+  imageLinkHighRes?: string;
+  imageLinkHighResShiny?: string;
+  types: PokeType[];
+  stats?: PokeStat[];
+  abilities?: PokeAbility[];
+  region: PokeRegion;
+  cry?: string;
+  moves?: MoveDetailsType[];
+  forms?: PokeForm[];
+};
 export type PokeStat = { name: string; value: number };
 export type PokeRegion =
   | "all"
@@ -110,6 +137,7 @@ export interface PokeDetails {
   stats?: PokeStat[];
   abilities?: PokeAbility[];
   forms?: PokeForm[];
+  varieties?: PokeVariety[];
   region: PokeRegion;
   cry?: string;
   growthRate?: string;
@@ -295,6 +323,33 @@ export const getPokemon = async (index: number) => {
   const firstData = await basicData.json();
   const secondData = await extraData.json();
 
+  let forms: PokeForm[] = [];
+
+  const validForms = firstData.forms.filter(
+    (f: any) => f.url.split("/").slice(-2, -1)[0] !== index.toString()
+  );
+
+  for (let i = 0; i < validForms.length; i++) {
+    const formsData = await fetch(validForms[i].url);
+
+    const fourthData = await formsData.json();
+
+    forms.push({
+      index: validForms[i].url.split("/").slice(-2, -1)[0],
+      name: (fourthData.name as string).toUpperCase(),
+      types: fourthData.types.map((type: any) => type.type.name),
+      imageLink: fourthData.sprites.front_default,
+      imageLinkShiny: fourthData.sprites.front_shiny,
+    });
+  }
+
+  // const varietiesData = secondData.varieties
+  //   .filter((item: any) => !item.is_default)
+  //   .flatMap((item: any) => ({
+  //     name: (item.pokemon.name as string).toUpperCase(),
+  //     index: parseInt(item.pokemon.url.split("/").slice(-2, -1)[0]),
+  //   }));
+
   pokeDetails = {
     id: firstData.id,
     name: (firstData.species.name as string).toUpperCase(),
@@ -312,7 +367,8 @@ export const getPokemon = async (index: number) => {
       firstData.sprites.other["official-artwork"].front_shiny,
     types: firstData.types.map((type: any) => type.type.name),
     abilities: firstData.abilities.map((ability: any) => ability.ability.name),
-    forms: firstData.forms.map((form: any) => form.name),
+    forms: forms,
+    // varieties: varietiesData,
     stats: firstData.stats.map((stat: any) => {
       return { value: stat.base_stat, name: stat.stat.name };
     }),
