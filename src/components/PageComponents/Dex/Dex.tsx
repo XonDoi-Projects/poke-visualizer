@@ -29,6 +29,7 @@ export const Dex = () => {
 
   const [region, setRegion] = useState<PokeRegion>("all");
   const [types, setTypes] = useState<PokeType[]>(["all"]);
+  const [form, setForm] = useState<string>("base");
 
   const [currentOffset, setCurrentOffset] = useState(0);
 
@@ -69,11 +70,12 @@ export const Dex = () => {
         types: types.includes("all") ? undefined : types,
         limit,
         region: region === "all" ? undefined : region,
+        form: form,
       }),
     });
 
     return await data.json();
-  }, [currentOffset, limit, region, types]);
+  }, [currentOffset, form, limit, region, types]);
 
   const { data, error, isLoading } = useQuery<{
     data: PokeDetails[] | undefined;
@@ -86,6 +88,7 @@ export const Dex = () => {
       region,
       types,
       isLocallyLoaded,
+      form,
     ],
     queryFn: getPokemonByFilter,
     enabled: true,
@@ -109,6 +112,20 @@ export const Dex = () => {
           .toString()
           .padStart(4, "0")}`}</H5>
         <Container className={`w-full justify-end gap-5`}>
+          <Container className={`w-[150px]`}>
+            <Selector
+              label="Base"
+              list={["base", "variant"].map(
+                (p) => p[0].toUpperCase() + p.slice(1)
+              )}
+              option={form[0].toUpperCase() + form.slice(1)}
+              setOption={(value: string) => {
+                setForm(value.toLowerCase() as string);
+                setCurrentOffset(0);
+                setLimit(20);
+              }}
+            />
+          </Container>
           <Container className={`w-[150px]`}>
             <Selector
               label="Type"
@@ -141,7 +158,7 @@ export const Dex = () => {
               key={poke.index}
               className={"flex items-center justify-center"}
             >
-              <PokeCardRound data={poke} />
+              <PokeCardRound data={poke} form={form} />
             </Container>
           ))}
         </Container>

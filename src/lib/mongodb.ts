@@ -17,4 +17,16 @@ if (!process.env.NEXT_PUBLIC_MONGO_URI) {
 client = new MongoClient(uri, options);
 clientPromise = client.connect();
 
+async function setupIndexes() {
+  const client = await clientPromise;
+  const db = client.db("pokemons");
+  const pokemons = db.collection("pokemons");
+  const varieties = db.collection("varieties");
+
+  await pokemons.createIndex({ index: 1 }, { unique: true });
+  await varieties.createIndex({ index: 1 }, { unique: true });
+}
+
+setupIndexes().catch(console.error);
+
 export default clientPromise;

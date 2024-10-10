@@ -21,24 +21,33 @@ export const maxStats: { [key in string]: number } = {
 
 export type PokeAbility = string;
 export type PokeForm = {
-  index: string;
+  index: number;
   name: string;
   types: PokeType[];
-  imageLink: string;
+  imageLink?: string;
   imageLinkShiny?: string;
 };
 export type PokeVariety = {
+  index: number;
   name: string;
-  index: string;
+};
+export type PokeBaseForm = {
+  index: number;
+  name: string;
+};
+export type Variety = {
+  name: string;
+  index: number;
+  base: PokeBaseForm;
   weight: number;
   height: number;
-  imageLink: string;
+  imageLink?: string;
   imageLinkShiny?: string;
   animated?: string;
   animatedShiny?: string;
   imageLinkHighRes?: string;
   imageLinkHighResShiny?: string;
-  types: PokeType[];
+  types?: PokeType[];
   stats?: PokeStat[];
   abilities?: PokeAbility[];
   region: PokeRegion;
@@ -86,7 +95,7 @@ export type MoveDetailsType = {
   power: number | null;
   effectChance: number | null;
   damageClass: string | null;
-  type: string | null;
+  type: PokeType | null;
   versions: {
     levelLearned: number;
     learnMethod: string;
@@ -119,7 +128,7 @@ export type EvolutionType = {
 export interface PokeDetails {
   id: number;
   name: string;
-  index: string;
+  index: number;
   weight: number;
   height: number;
   imageLink: string;
@@ -129,13 +138,14 @@ export interface PokeDetails {
   imageLinkHighRes?: string;
   imageLinkHighResShiny?: string;
   description?: string;
-  types?: string[];
+  types?: PokeType[];
   preEvolution?: string;
   postEvolution?: string;
   stats?: PokeStat[];
   abilities?: PokeAbility[];
   forms?: PokeForm[];
   varieties?: PokeVariety[];
+  base?: PokeBaseForm;
   region: PokeRegion;
   cry?: string;
   growthRate?: string;
@@ -310,16 +320,24 @@ const getNextEvolution = (
   }
 };
 
-export const getPokemon = async (index: number) => {
+export const getPokemon = async (
+  index: number,
+  variety?: boolean,
+  region?: PokeRegion
+) => {
   let pokeDetails: PokeDetails | undefined;
 
-  const [basicData, extraData] = await Promise.all([
-    fetch(`${pokeBaseUrl}/pokemon/${index}`),
-    fetch(`${pokeBaseUrl}/pokemon-species/${index}`),
-  ]);
+  const [basicData, extraData] = await Promise.all(
+    !variety
+      ? [
+          fetch(`${pokeBaseUrl}/pokemon/${index}`),
+          fetch(`${pokeBaseUrl}/pokemon-species/${index}`),
+        ]
+      : [fetch(`${pokeBaseUrl}/pokemon/${index}`)]
+  );
 
   const firstData = await basicData.json();
-  const secondData = await extraData.json();
+  const secondData = await extraData?.json();
 
   let forms: PokeForm[] = [];
 
@@ -333,7 +351,7 @@ export const getPokemon = async (index: number) => {
     const fourthData = await formsData.json();
 
     forms.push({
-      index: validForms[i].url.split("/").slice(-2, -1)[0],
+      index: parseInt(validForms[i].url.split("/").slice(-2, -1)[0]),
       name: (fourthData.name as string).toUpperCase(),
       types: fourthData.types.map((type: any) => type.type.name),
       imageLink: fourthData.sprites.front_default,
@@ -341,16 +359,31 @@ export const getPokemon = async (index: number) => {
     });
   }
 
-  // const varietiesData = secondData.varieties
-  //   .filter((item: any) => !item.is_default)
-  //   .flatMap((item: any) => ({
-  //     name: (item.pokemon.name as string).toUpperCase(),
-  //     index: parseInt(item.pokemon.url.split("/").slice(-2, -1)[0]),
-  //   }));
+  const pokemonRegion = region
+    ? region
+    : index <= 151
+    ? "kanto"
+    : index <= 251
+    ? "johto"
+    : index <= 386
+    ? "hoenn"
+    : index <= 493
+    ? "sinnoh"
+    : index <= 649
+    ? "unova"
+    : index <= 721
+    ? "kalos"
+    : index <= 809
+    ? "alola"
+    : index <= 905
+    ? "hisui"
+    : "paldea";
 
   pokeDetails = {
     id: firstData.id,
-    name: (firstData.species.name as string).toUpperCase(),
+    name: variety
+      ? (firstData.name as string).toUpperCase()
+      : (firstData.species.name as string).toUpperCase(),
     index: firstData.id,
     imageLink: firstData.sprites.front_default,
     imageLinkShiny: firstData.sprites.front_shiny,
@@ -366,76 +399,82 @@ export const getPokemon = async (index: number) => {
     types: firstData.types.map((type: any) => type.type.name),
     abilities: firstData.abilities.map((ability: any) => ability.ability.name),
     forms: forms,
-    // varieties: varietiesData,
     stats: firstData.stats.map((stat: any) => {
       return { value: stat.base_stat, name: stat.stat.name };
     }),
     cry: firstData.cries.latest,
     weight: firstData.weight,
     height: firstData.height,
-    region:
-      index <= 151
-        ? "kanto"
-        : index <= 251
-        ? "johto"
-        : index <= 386
-        ? "hoenn"
-        : index <= 493
-        ? "sinnoh"
-        : index <= 649
-        ? "unova"
-        : index <= 721
-        ? "kalos"
-        : index <= 809
-        ? "alola"
-        : index <= 905
-        ? "hisui"
-        : "paldea",
+    region: pokemonRegion,
   };
 
-  const flavorText = secondData.flavor_text_entries.filter(
-    (entry: any) => entry.language.name === "en"
-  );
+  let varietyData: Variety[] = [];
 
-  pokeDetails = {
-    ...pokeDetails,
-    description: `${flavorText[0].flavor_text.replace(/[\n\f]/g, " ")}`,
-    captureRate: secondData.capture_rate.toString(),
-    genderRate:
-      secondData.gender_rate === -1
-        ? undefined
-        : ((secondData.gender_rate / 8) * 100).toString() + "%",
-    growthRate:
-      (secondData.growth_rate.name as string).charAt(0).toUpperCase() +
-      (secondData.growth_rate.name as string).slice(1),
-    baseHappiness: secondData.base_happiness?.toString() || "N/A",
-    isBaby: secondData.is_baby,
-    isLegendary: secondData.is_legendary,
-    isMythical: secondData.is_mythical,
-    shape:
-      (secondData.shape?.name as string)?.charAt(0).toUpperCase() +
-        (secondData.shape?.name as string)?.slice(1) || "No Shape",
-    evolvesFrom: (
-      secondData.evolves_from_species?.name as string
-    )?.toUpperCase(),
-  };
+  if (secondData) {
+    const varieties = secondData.varieties
+      .filter(
+        (f: any) =>
+          f.pokemon.url.split("/").slice(-2, -1)[0] !== index.toString()
+      )
+      .map((v: any) => ({
+        index: parseInt(v.pokemon.url.split("/").slice(-2, -1)[0]),
+        name: v.pokemon.name.toUpperCase(),
+      }));
 
-  if (secondData.evolution_chain.url) {
-    const evolutionChainUrl = secondData.evolution_chain.url;
+    for (let i = 0; i < varieties.length; i++) {
+      const variety = await getPokemon(varieties[i].index, true, pokemonRegion);
 
-    const evolutionChainData = await fetch(evolutionChainUrl);
+      varietyData.push({
+        ...variety.pokeDetails,
+        base: { index: pokeDetails.index, name: pokeDetails.name },
+      });
+    }
 
-    const thirdData = await evolutionChainData.json();
-
-    const evolvesTo = getNextEvolution(
-      pokeDetails.name.toLowerCase(),
-      thirdData.chain
+    const flavorText = secondData.flavor_text_entries.filter(
+      (entry: any) => entry.language.name === "en"
     );
 
     pokeDetails = {
       ...pokeDetails,
-      evolvesTo,
+      description: `${flavorText[0].flavor_text.replace(/[\n\f]/g, " ")}`,
+      captureRate: secondData.capture_rate.toString(),
+      genderRate:
+        secondData.gender_rate === -1
+          ? undefined
+          : ((secondData.gender_rate / 8) * 100).toString() + "%",
+      growthRate:
+        (secondData.growth_rate.name as string).charAt(0).toUpperCase() +
+        (secondData.growth_rate.name as string).slice(1),
+      baseHappiness: secondData.base_happiness?.toString() || "N/A",
+      isBaby: secondData.is_baby,
+      isLegendary: secondData.is_legendary,
+      isMythical: secondData.is_mythical,
+      shape:
+        (secondData.shape?.name as string)?.charAt(0).toUpperCase() +
+          (secondData.shape?.name as string)?.slice(1) || "No Shape",
+      evolvesFrom: (
+        secondData.evolves_from_species?.name as string
+      )?.toUpperCase(),
+      varieties: varieties,
     };
+
+    if (secondData.evolution_chain.url) {
+      const evolutionChainUrl = secondData.evolution_chain.url;
+
+      const evolutionChainData = await fetch(evolutionChainUrl);
+
+      const thirdData = await evolutionChainData.json();
+
+      const evolvesTo = getNextEvolution(
+        pokeDetails.name.toLowerCase(),
+        thirdData.chain
+      );
+
+      pokeDetails = {
+        ...pokeDetails,
+        evolvesTo,
+      };
+    }
   }
 
   if (firstData.moves.length) {
@@ -496,7 +535,7 @@ export const getPokemon = async (index: number) => {
     }
   }
 
-  return pokeDetails;
+  return { pokeDetails, varietyData };
 };
 
 export type PokeArgsMany = {

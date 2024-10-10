@@ -105,7 +105,7 @@ export const Header = () => {
         </Container>
         <Container className={`min-w-[100px] h-[30px]`}>
           <PokemonAutocomplete
-            setPokemon={(value) => router.push(`/dex/${value?.index}`)}
+            setPokemon={(value) => router.push(`/dex/bases/${value?.index}`)}
             noDropDownOnClick
             placeHolder="Search"
             elementPrefix={

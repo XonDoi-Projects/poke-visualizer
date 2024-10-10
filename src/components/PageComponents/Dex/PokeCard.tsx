@@ -38,58 +38,64 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
       <Container
         className={"relative flex-1 w-full items-center justify-center"}
       >
-        <Container className={`absolute top-0 right-0 pr-5 z-[5]`}>
-          {showShiny && props.form.imageLinkShiny ? (
-            <HiSparkles
-              onClick={() => setShowShiny(!showShiny)}
-              className={
-                light
-                  ? "text-blue-900 group-hover:text-blue-800"
-                  : "text-slate-300 group-hover:text-slate-200"
-              }
-              style={{ fontSize: "20px" }}
-            />
-          ) : (
-            <HiOutlineSparkles
-              onClick={() => setShowShiny(!showShiny)}
-              className={
-                light
-                  ? "text-blue-900 group-hover:text-blue-800"
-                  : "text-slate-300 group-hover:text-slate-200"
-              }
-              style={{ fontSize: "20px" }}
-            />
-          )}
-        </Container>
-        <div
-          className={`relative inline-block flex items-center justify-center overflow-hidden w-auto h-full`}
-          style={{
-            maskImage: `url(${
-              showShiny && props.form.imageLinkShiny
-                ? props.form.imageLinkShiny
-                : props.form.imageLink
-            })`,
-            maskSize: "contain",
-          }}
-        >
-          <Image
-            src={
-              showShiny && props.form.imageLinkShiny
-                ? props.form.imageLinkShiny
-                : props.form.imageLink
-            }
-            alt="Pokemon Image"
-            sizes="100vw"
-            width="0"
-            height="0"
-            loading="lazy"
-            fetchPriority="low"
-            className={`w-auto h-full`}
-          />
-          {showShiny && (
-            <div className="absolute inset-0 bg-gradient-to-br from-transparent from-[45%] via-white via-[50%] to-transparent to-[55%] pointer-events-none animate-move-gradient" />
-          )}
-        </div>
+        {props.form.imageLink ? (
+          <>
+            <Container className={`absolute top-0 right-0 pr-5 z-[5]`}>
+              {showShiny && props.form.imageLinkShiny ? (
+                <HiSparkles
+                  onClick={() => setShowShiny(!showShiny)}
+                  className={
+                    light
+                      ? "text-blue-900 group-hover:text-blue-800"
+                      : "text-slate-300 group-hover:text-slate-200"
+                  }
+                  style={{ fontSize: "20px" }}
+                />
+              ) : (
+                <HiOutlineSparkles
+                  onClick={() => setShowShiny(!showShiny)}
+                  className={
+                    light
+                      ? "text-blue-900 group-hover:text-blue-800"
+                      : "text-slate-300 group-hover:text-slate-200"
+                  }
+                  style={{ fontSize: "20px" }}
+                />
+              )}
+            </Container>
+            <div
+              className={`relative inline-block flex items-center justify-center overflow-hidden w-auto h-full`}
+              style={{
+                maskImage: `url(${
+                  showShiny && props.form.imageLinkShiny
+                    ? props.form.imageLinkShiny
+                    : props.form.imageLink
+                })`,
+                maskSize: "contain",
+              }}
+            >
+              <Image
+                src={
+                  showShiny && props.form.imageLinkShiny
+                    ? props.form.imageLinkShiny
+                    : props.form.imageLink
+                }
+                alt="Pokemon Image"
+                sizes="100vw"
+                width="0"
+                height="0"
+                loading="lazy"
+                fetchPriority="low"
+                className={`w-auto h-full`}
+              />
+              {showShiny && (
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent from-[45%] via-white via-[50%] to-transparent to-[55%] pointer-events-none animate-move-gradient" />
+              )}
+            </div>
+          </>
+        ) : (
+          <Span>Sprite not available</Span>
+        )}
       </Container>
     </Card>
   );

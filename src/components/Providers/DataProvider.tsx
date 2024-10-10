@@ -107,18 +107,23 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
       const pokemonDetails = await getPokemon(i + 1);
 
       if (pokemonDetails) {
-        pokemonList.push(pokemonDetails);
+        pokemonList.push(pokemonDetails.pokeDetails);
       }
 
       try {
         const result = await fetch(
-          `/api/pokemon/refresh?index=${pokemonDetails.index}`,
+          `/api/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ pokemon: { ...pokemonDetails } }),
+            body: JSON.stringify({
+              pokemon: {
+                pokeDetails: pokemonDetails.pokeDetails,
+                varietyData: pokemonDetails.varietyData,
+              },
+            }),
           }
         );
 

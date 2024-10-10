@@ -16,7 +16,11 @@ export const Chip: FunctionComponent<ChipProps> = (props) => {
   return (
     <Row
       onClick={props.onClick}
-      className={`flex-row items-center rounded-md w-fit ${props.className} px-2 py-1 min-h-[20px] h-fit gap-1 `}
+      className={`flex-row items-center rounded-md w-fit ${
+        props.className
+      } px-2 py-1 min-h-[20px] h-fit gap-1 ${
+        props.onClick ? "cursor-pointer" : ""
+      }`}
     >
       <Small
         className={`${props.contrast ? "text-blue-900" : "text-slate-300"} ${
