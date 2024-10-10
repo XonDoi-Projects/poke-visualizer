@@ -14,12 +14,12 @@ import {
   Table,
 } from "@/components/LayoutComponents";
 import { total, useDarkTheme, useData, useSize } from "@/components/Providers";
-import { EvolutionType, PokeDetails } from "@/utils";
+import { EvolutionType, getPokemon, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { TypeChip } from "./TypeChip";
+import { TypeChip } from "../Dex/TypeChip";
 import {
   BiChevronLeft,
   BiChevronRight,
@@ -33,11 +33,13 @@ import {
   FaAngleDown,
 } from "react-icons/fa";
 import { Chip } from "@/components/LayoutComponents/Chip";
-import { StatCompareTool } from "./StatCompareTool/StatCompareTool";
+import { StatCompareTool } from "../Dex/StatCompareTool/StatCompareTool";
 import { EvolutionChart } from "./EvolutionChart";
 import { complexionData } from "@/pokemonTypes";
 import { useQuery } from "@tanstack/react-query";
-import { ClassChip } from "./ClassChip";
+import { ClassChip } from "../Dex/ClassChip";
+import { PokeCard } from "../Dex/PokeCard";
+import { DexEntryPagination } from "./DexEntryPagination";
 
 export const DexEntry = () => {
   const router = useRouter();
@@ -53,6 +55,11 @@ export const DexEntry = () => {
     [router.query]
   );
 
+  const isVariant = useMemo(
+    () => router.pathname.includes("variants"),
+    [router.pathname]
+  );
+
   const getOnePokemon = async () => {
     const data = await fetch("/api/pokemon/get-one", {
       method: "POST",
@@ -61,6 +68,7 @@ export const DexEntry = () => {
       },
       body: JSON.stringify({
         index: currentIndex,
+        isVariant,
       }),
     });
 
@@ -71,8 +79,10 @@ export const DexEntry = () => {
     data: pokemon,
     error,
     isLoading,
-  } = useQuery<PokeDetails | undefined>({
-    queryKey: ["getOnePokemon", currentIndex, isLocallyLoaded],
+  } = useQuery<
+    (PokeDetails & { prevValue: number; nextValue: number }) | undefined
+  >({
+    queryKey: ["getOnePokemon", currentIndex, isLocallyLoaded, isVariant],
     queryFn: getOnePokemon,
     enabled: currentIndex ? true : false,
     refetchOnWindowFocus: false,
@@ -225,52 +235,11 @@ export const DexEntry = () => {
   ) : (
     pokemon && (
       <Column className={`w-full h-full p-5 items-center gap-10`}>
-        <Row className={`gap-5 justify-between`}>
-          <Row
-            className={`relative items-center gap-2 h-[35px] w-[100px] justify-start`}
-          >
-            <Button
-              onClick={() => router.push(`/dex/${currentIndex - 1}`)}
-              className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
-              style={{ padding: "5px" }}
-              disable={currentIndex <= 1}
-            >
-              <BiChevronLeft
-                className={!light ? "text-blue-900" : "text-slate-300"}
-                style={{ fontSize: "20px" }}
-              />
-            </Button>
-            <Span>Prev</Span>
-          </Row>
-          <Button
-            onClick={() => router.push(`/dex`)}
-            className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
-            style={{ padding: "5px" }}
-          >
-            <BiGridAlt
-              className={!light ? "text-blue-900" : "text-slate-300"}
-              style={{ fontSize: "20px" }}
-            />
-          </Button>
-          <Row
-            className={`relative items-center gap-2 h-[35px] w-[100px] justify-end`}
-          >
-            <Span>Next</Span>
-            <Button
-              onClick={() => router.push(`/dex/${currentIndex + 1}`)}
-              className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all `}
-              style={{ padding: "5px" }}
-              disable={currentIndex >= total}
-            >
-              <BiChevronRight
-                className={!light ? "text-blue-900" : "text-slate-300"}
-                style={{
-                  fontSize: "20px",
-                }}
-              />
-            </Button>
-          </Row>
-        </Row>
+        <DexEntryPagination
+          isVariant={isVariant}
+          nextValue={pokemon.nextValue}
+          prevValue={pokemon.prevValue}
+        />
 
         <Row className={`gap-10 w-full flex-wrap gap-10`}>
           <Column className={`flex-1 gap-10`}>
@@ -354,34 +323,6 @@ export const DexEntry = () => {
                     ))}
                   </Row>
                 </Column>
-
-                <Column className={`w-full gap-2`}>
-                  <H5>Description</H5>
-                  <Span>{pokemon.description}</Span>
-                </Column>
-                <Column className={`w-full gap-2`}>
-                  <H5>Forms</H5>
-                  <Row className={`gap-2 flex-wrap`}>
-                    {pokemon.forms && pokemon.forms?.length > 1 ? (
-                      pokemon.forms
-                        .slice(1, pokemon.forms.length)
-                        .map((f) => (
-                          <Chip
-                            key={f}
-                            value={f}
-                            className={`${
-                              light ? "bg-blue-900" : "bg-slate-300"
-                            } `}
-                            contrast={!light}
-                          />
-                        ))
-                    ) : (
-                      <Span>No other forms.</Span>
-                    )}
-                  </Row>
-                </Column>
-              </Column>
-              <Column className={`flex-1 gap-5 min-w-[200px]`}>
                 <Column className={`w-full gap-2`}>
                   <Row className={`gap-2`}>
                     <H5>Strong Against</H5>
@@ -508,13 +449,13 @@ export const DexEntry = () => {
                   </Row>
                 </Column>
               </Column>
-            </Row>
-            <Row
-              className={`flex-1 gap-10 w-full flex-wrap ${
-                mobile ? "" : "min-h-[300px]"
-              }`}
-            >
               <Column className={`flex-1 gap-5 min-w-[200px]`}>
+                {pokemon.description && (
+                  <Column className={`w-full gap-2`}>
+                    <H5>Description</H5>
+                    <Span>{pokemon.description}</Span>
+                  </Column>
+                )}
                 <Column className={`w-full gap-2`}>
                   <H5>Abilities</H5>
                   <Row className={`gap-2 flex-wrap`}>
@@ -528,20 +469,6 @@ export const DexEntry = () => {
                     ))}
                   </Row>
                 </Column>
-                <Column className={`w-full gap-2`}>
-                  <H5>Stats</H5>
-                  <Column className={`gap-1`}>
-                    {pokemon.stats?.map((s) => (
-                      <LabelWithValue
-                        key={s.name}
-                        label={s.name}
-                        value={s.value.toString()}
-                      />
-                    ))}
-                  </Column>
-                </Column>
-              </Column>
-              <Column className={`flex-1 gap-5 min-w-[200px]`}>
                 <Column className={`w-full gap-2`}>
                   <H5>Special Trait</H5>
                   <Row className={`gap-2 flex-wrap`}>
@@ -568,6 +495,28 @@ export const DexEntry = () => {
                     />
                   </Row>
                 </Column>
+              </Column>
+            </Row>
+            <Row
+              className={`flex-1 gap-10 w-full flex-wrap ${
+                mobile ? "" : "min-h-[300px]"
+              }`}
+            >
+              <Column className={`flex-1 gap-5 min-w-[200px]`}>
+                <Column className={`w-full gap-2`}>
+                  <H5>Stats</H5>
+                  <Column className={`gap-1`}>
+                    {pokemon.stats?.map((s) => (
+                      <LabelWithValue
+                        key={s.name}
+                        label={s.name}
+                        value={s.value.toString()}
+                      />
+                    ))}
+                  </Column>
+                </Column>
+              </Column>
+              <Column className={`flex-1 gap-5 min-w-[200px]`}>
                 <Column className={`w-full gap-2`}>
                   <H5>Other Details</H5>
                   <Column className={`gap-1`}>
@@ -579,90 +528,154 @@ export const DexEntry = () => {
                       label={"Weight"}
                       value={(pokemon.weight / 10).toString() + "kg"}
                     />
-                    <LabelWithValue
-                      label={"Capture Rate"}
-                      value={pokemon.captureRate + "%"}
-                    />
-                    <LabelWithValue
-                      label={"Gender Rate"}
-                      value={pokemon.genderRate || "No Gender"}
-                    />
-                    <LabelWithValue
-                      label={"Growth Rate"}
-                      value={pokemon.growthRate}
-                    />
-                    <LabelWithValue
-                      label={"Base Happiness"}
-                      value={pokemon.baseHappiness}
-                    />
-                    <LabelWithValue label={"Shape"} value={pokemon.shape} />
+                    {pokemon.captureRate && (
+                      <LabelWithValue
+                        label={"Capture Rate"}
+                        value={pokemon.captureRate + "%"}
+                      />
+                    )}
+                    {pokemon.genderRate && (
+                      <LabelWithValue
+                        label={"Gender Rate"}
+                        value={pokemon.genderRate || "No Gender"}
+                      />
+                    )}
+                    {pokemon.growthRate && (
+                      <LabelWithValue
+                        label={"Growth Rate"}
+                        value={pokemon.growthRate}
+                      />
+                    )}
+                    {pokemon.baseHappiness && (
+                      <LabelWithValue
+                        label={"Base Happiness"}
+                        value={pokemon.baseHappiness}
+                      />
+                    )}
+                    {pokemon.shape && (
+                      <LabelWithValue label={"Shape"} value={pokemon.shape} />
+                    )}
                   </Column>
                 </Column>
               </Column>
             </Row>
           </Column>
         </Row>
-        <Table
-          headers={[
-            {
-              name: "Name",
-              keyId: "name",
-              expandable: false,
-              minWidth: "170px",
-            },
-            {
-              name: "Class",
-              keyId: "damageClass",
-              expandable: false,
-              minWidth: "130px",
-            },
-            {
-              name: "Type",
-              keyId: "type",
-              expandable: false,
-              minWidth: "130px",
-            },
-            {
-              name: "Power",
-              keyId: "power",
-              expandable: false,
-              minWidth: "100px",
-            },
-            {
-              name: "Accuracy",
-              keyId: "accuracy",
-              expandable: false,
-              minWidth: "100px",
-            },
-            {
-              name: "Effect Chance",
-              keyId: "effectChance",
-              expandable: false,
-              minWidth: "150px",
-            },
-            {
-              name: "Version",
-              keyId: "versions",
-              expandable: true,
-              minWidth: "100px",
-              subHeaders: [
-                { name: "Version", keyId: "version", minWidth: "300px" },
-                { name: "Level Learned", keyId: "levelLearned" },
-                { name: "Learn Method", keyId: "learnMethod" },
-              ],
-            },
-          ]}
-          rows={
-            pokemon.moves?.map((m) => {
-              return {
-                ...m,
-                type: <TypeChip value={m.type || ""} />,
-                damageClass: <ClassChip value={m.damageClass || ""} />,
-                versions: { subLayer: m.versions },
-              };
-            }) || []
-          }
-        />
+        {pokemon.base ? (
+          <Column className={`w-full gap-2 items-start`}>
+            <H5>Base</H5>
+            <Row className={`gap-5 flex-wrap`}>
+              <Chip
+                value={pokemon.base.name}
+                className={`${light ? "bg-blue-900" : "bg-slate-300"} `}
+                contrast={!light}
+                onClick={() => router.push(`/dex/bases/${pokemon.base?.index}`)}
+              />
+            </Row>
+          </Column>
+        ) : null}
+        {pokemon.varieties?.filter((f) => f.index !== pokemon.index).length ? (
+          <Column className={`w-full gap-2 items-start`}>
+            <H5>Varieties</H5>
+            <Row className={`gap-5 flex-wrap`}>
+              {pokemon.varieties.length ? (
+                pokemon.varieties.map((v) => (
+                  <Chip
+                    key={v.index}
+                    value={v.name}
+                    className={`${light ? "bg-blue-900" : "bg-slate-300"} `}
+                    contrast={!light}
+                    onClick={() => router.push(`/dex/variants/${v.index}`)}
+                  />
+                ))
+              ) : (
+                <Span>No other forms.</Span>
+              )}
+            </Row>
+          </Column>
+        ) : null}
+        {pokemon.forms?.filter((f) => f.name !== pokemon.name).length ? (
+          <Column className={`w-full gap-2 items-start`}>
+            <H5>Forms</H5>
+            <Row className={`gap-5 flex-wrap`}>
+              {pokemon.forms.length ? (
+                pokemon.forms.map((f) => (
+                  <Container key={f.index} className={`flex-1 justify-center`}>
+                    <PokeCard form={f} />
+                  </Container>
+                ))
+              ) : (
+                <Span>No other forms.</Span>
+              )}
+            </Row>
+          </Column>
+        ) : null}
+        {pokemon.moves?.length ? (
+          <Column className={`w-full gap-2`}>
+            <H5>Moves</H5>
+            <Table
+              headers={[
+                {
+                  name: "Name",
+                  keyId: "name",
+                  expandable: false,
+                  minWidth: "170px",
+                },
+                {
+                  name: "Class",
+                  keyId: "damageClass",
+                  expandable: false,
+                  minWidth: "130px",
+                },
+                {
+                  name: "Type",
+                  keyId: "type",
+                  expandable: false,
+                  minWidth: "130px",
+                },
+                {
+                  name: "Power",
+                  keyId: "power",
+                  expandable: false,
+                  minWidth: "100px",
+                },
+                {
+                  name: "Accuracy",
+                  keyId: "accuracy",
+                  expandable: false,
+                  minWidth: "100px",
+                },
+                {
+                  name: "Effect Chance",
+                  keyId: "effectChance",
+                  expandable: false,
+                  minWidth: "150px",
+                },
+                {
+                  name: "Version",
+                  keyId: "versions",
+                  expandable: true,
+                  minWidth: "100px",
+                  subHeaders: [
+                    { name: "Version", keyId: "version", minWidth: "300px" },
+                    { name: "Level Learned", keyId: "levelLearned" },
+                    { name: "Learn Method", keyId: "learnMethod" },
+                  ],
+                },
+              ]}
+              rows={
+                pokemon.moves?.map((m) => {
+                  return {
+                    ...m,
+                    type: <TypeChip value={m.type || ""} />,
+                    damageClass: <ClassChip value={m.damageClass || ""} />,
+                    versions: { subLayer: m.versions },
+                  };
+                }) || []
+              }
+            />
+          </Column>
+        ) : null}
         <Drawer show={showStats} onClose={() => setShowStats(false)}>
           <StatCompareTool pokemon={pokemon} />
         </Drawer>

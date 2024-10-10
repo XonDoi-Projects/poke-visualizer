@@ -7,3 +7,4 @@ export * from "./Dex";
 export * from "./IndexCard";
 export * from "./Builder";
 export * from "./PageAutocomplete";
+export * from "./DexEntry";

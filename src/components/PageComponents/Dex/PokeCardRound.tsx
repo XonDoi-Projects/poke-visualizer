@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 
 export interface PokeCardRoundProps {
   data: PokeDetails;
+  form: string;
 }
 
 export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
@@ -80,7 +81,13 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
           setIsTouching(false);
           setHover(false);
         }}
-        onClick={() => router.push(`/dex/${props.data.index}`)}
+        onClick={() =>
+          router.push(
+            `/dex/${props.form === "variant" ? "variants/" : "bases/"}${
+              props.data.index
+            }`
+          )
+        }
       >
         <Container
           className={`relative flex-1 w-full items-center justify-center`}

@@ -66,7 +66,10 @@ export const SpriteFusionTool: FunctionComponent<SpriteFusionToolProps> = ({
 
   const getImageUrl = useCallback(async () => {
     if (pokemonTwo) {
-      const data = await getMergedPokemon(pokemon.index, pokemonTwo.index);
+      const data = await getMergedPokemon(
+        pokemon.index.toString(),
+        pokemonTwo.index.toString()
+      );
 
       setImageUrl(data);
     }

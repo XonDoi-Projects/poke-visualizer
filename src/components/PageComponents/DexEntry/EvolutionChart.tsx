@@ -37,7 +37,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
               className={
                 "relative flex-1 w-full items-center justify-center gap-2 cursor-pointer"
               }
-              onClick={() => router.push(`/dex/${evolvesFrom.index}`)}
+              onClick={() => router.push(`/dex/bases/${evolvesFrom.index}`)}
             >
               <picture>
                 <Image
@@ -76,7 +76,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
                 className={
                   "relative flex-1 w-full items-center justify-center gap-2 cursor-pointer"
                 }
-                onClick={() => router.push(`/dex/${evolve.index}`)}
+                onClick={() => router.push(`/dex/bases/${evolve.index}`)}
               >
                 <picture>
                   <Image
