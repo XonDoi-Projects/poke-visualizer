@@ -3,7 +3,7 @@ import { Dex, Page } from "../../components/PageComponents";
 
 const DexPage = () => {
   useEffect(() => {
-    document.title = "PokePlan - Pokedex";
+    document.title = "PokePlan - PokeDex";
   }, []);
 
   return (

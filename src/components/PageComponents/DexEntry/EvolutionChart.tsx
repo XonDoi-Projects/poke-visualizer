@@ -42,7 +42,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
               <picture>
                 <Image
                   src={evolvesFrom.imageLinkHighRes || evolvesFrom.imageLink}
-                  alt="Previous evolution"
+                  alt={`${evolvesFrom.name} | ${evolvesFrom.index}`}
                   sizes="100vw"
                   width="0"
                   height="0"
@@ -81,7 +81,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
                 <picture>
                   <Image
                     src={evolve.imageLinkHighRes || evolve.imageLink}
-                    alt={`Next evolution ${index} `}
+                    alt={`${evolve.name} | ${evolve.index}`}
                     sizes="100vw"
                     width="0"
                     height="0"

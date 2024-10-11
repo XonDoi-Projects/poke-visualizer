@@ -127,7 +127,7 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
           >
             <Image
               src={pokemon?.imageLinkHighRes || ""}
-              alt="Pokemon Image"
+              alt={`${pokemon?.name} | ${pokemon?.index}`}
               sizes="100vw"
               width="0"
               height="0"

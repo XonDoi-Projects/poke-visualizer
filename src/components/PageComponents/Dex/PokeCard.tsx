@@ -80,7 +80,7 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
                     ? props.form.imageLinkShiny
                     : props.form.imageLink
                 }
-                alt="Pokemon Image"
+                alt={`${props.form.name} | ${props.form.index}`}
                 sizes="100vw"
                 width="0"
                 height="0"

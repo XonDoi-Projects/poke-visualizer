@@ -3,7 +3,7 @@ import { Builder, Page } from "../../components/PageComponents";
 
 const TeamBuilderPage = () => {
   useEffect(() => {
-    document.title = "PokePlan - Team Builder";
+    document.title = "PokePlan - Team Planner";
   }, []);
 
   return (
