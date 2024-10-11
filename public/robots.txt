@@ -1,0 +1,12 @@
+# *
+User-agent: *
+Allow: /
+Allow: /dex/bases
+Allow: /dex/variants
+Allow: /team-planner
+
+# Host
+Host: https://www.poke-plan.vercel.app
+
+# Sitemaps
+Sitemap: https://www.poke-plan.vercel.app/sitemap.xml

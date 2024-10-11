@@ -91,7 +91,7 @@ export const DexEntry = () => {
   });
 
   useEffect(() => {
-    document.title = `PokePlan - ${pokemon?.name}`;
+    document.title = `PokePlan | ${pokemon?.name} | #${pokemon?.index}`;
   }, [pokemon]);
 
   const dropShadow = clsx({
@@ -284,7 +284,7 @@ export const DexEntry = () => {
                 <picture>
                   <Image
                     src={pokemon.imageLinkHighRes || pokemon.imageLink}
-                    alt="Pokemon Image"
+                    alt={`${pokemon.name} | ${pokemon.index}`}
                     sizes="100vw"
                     width="0"
                     height="0"

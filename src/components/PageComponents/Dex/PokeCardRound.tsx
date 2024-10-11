@@ -123,7 +123,7 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
                   ? props.data.imageLinkShiny
                   : props.data.imageLink
               }
-              alt="Pokemon Image"
+              alt={`${props.data.name} | ${props.data.index}`}
               sizes="100vw"
               width="0"
               height="0"
