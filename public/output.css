@@ -873,6 +873,10 @@ video {
   min-width: 100px;
 }
 
+.min-w-\[130px\] {
+  min-width: 130px;
+}
+
 .min-w-\[150px\] {
   min-width: 150px;
 }
@@ -891,6 +895,10 @@ video {
 
 .min-w-\[90px\] {
   min-width: 90px;
+}
+
+.min-w-\[120px\] {
+  min-width: 120px;
 }
 
 .max-w-\[100px\] {

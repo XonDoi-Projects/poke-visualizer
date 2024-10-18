@@ -1,10 +1,8 @@
 import {
-  ForwardRefExoticComponent,
   ForwardedRef,
   FunctionComponent,
   HTMLAttributes,
   HTMLProps,
-  PropsWithoutRef,
   ReactNode,
   RefAttributes,
   forwardRef,

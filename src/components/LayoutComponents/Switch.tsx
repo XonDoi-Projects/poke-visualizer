@@ -1,4 +1,4 @@
-import { FunctionComponent, HTMLProps, ReactNode, useState } from "react";
+import { FunctionComponent, HTMLProps, useState } from "react";
 import { Row } from "./Row";
 import { Small } from "./Typography";
 import { Container } from "./Container";

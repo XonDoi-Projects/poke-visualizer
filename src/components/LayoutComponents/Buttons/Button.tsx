@@ -39,7 +39,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
       onTouchStart={() => setShowTooltip(true)}
       onTouchEnd={() => setShowTooltip(false)}
       onPointerEnter={() => setShowTooltip(true)}
-      onPointerLeave={(e) => {
+      onPointerLeave={() => {
         if (!hoveringTooltip) {
           setShowTooltip(false);
         }
@@ -90,7 +90,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
         ) : (
           children
         )}
-      </button>{" "}
+      </button>
       {tooltip && (showTooltip || hoveringTooltip) ? (
         <InfoTooltip
           details={tooltipDetails}

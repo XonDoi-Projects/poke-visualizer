@@ -1,7 +1,7 @@
 import { Column, Row } from "@/components/LayoutComponents";
 import { useDarkTheme } from "@/components/Providers";
-import { PokeDetails, PokeStat, statShortHand } from "@/utils";
-import { FunctionComponent, useMemo, useState } from "react";
+import { PokeStat, statShortHand } from "@/utils";
+import { FunctionComponent, useMemo } from "react";
 import {
   Bar,
   BarChart,

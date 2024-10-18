@@ -14,18 +14,13 @@ import {
   Table,
 } from "@/components/LayoutComponents";
 import { total, useDarkTheme, useData, useSize } from "@/components/Providers";
-import { EvolutionType, getPokemon, PokeDetails } from "@/utils";
+import { EvolutionType, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { TypeChip } from "../Dex/TypeChip";
-import {
-  BiChevronLeft,
-  BiChevronRight,
-  BiGridAlt,
-  BiVolumeFull,
-} from "react-icons/bi";
+import { BiVolumeFull } from "react-icons/bi";
 import {
   FaAngleDoubleDown,
   FaAngleDoubleUp,
@@ -75,11 +70,7 @@ export const DexEntry = () => {
     return await data.json();
   };
 
-  const {
-    data: pokemon,
-    error,
-    isLoading,
-  } = useQuery<
+  const { data: pokemon, isLoading } = useQuery<
     (PokeDetails & { prevValue: number; nextValue: number }) | undefined
   >({
     queryKey: ["getOnePokemon", currentIndex, isLocallyLoaded, isVariant],
@@ -127,18 +118,15 @@ export const DexEntry = () => {
     return await data.json();
   };
 
-  const {
-    data: evolvesFrom,
-    error: evolvesFromError,
-    isLoading: evolvesFromIsLoading,
-  } = useQuery<PokeDetails>({
-    queryKey: ["loadEvolveFrom", pokemon?.evolvesFrom],
-    queryFn: loadEvolveFrom,
-    enabled: pokemon?.evolvesFrom ? true : false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: true,
-  });
+  const { data: evolvesFrom, isLoading: evolvesFromIsLoading } =
+    useQuery<PokeDetails>({
+      queryKey: ["loadEvolveFrom", pokemon?.evolvesFrom],
+      queryFn: loadEvolveFrom,
+      enabled: pokemon?.evolvesFrom ? true : false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: true,
+    });
 
   const loadEvolveTo = async () => {
     let toResult:
@@ -172,11 +160,7 @@ export const DexEntry = () => {
     return toResult;
   };
 
-  const {
-    data: evolvesTo,
-    error: evolvesToError,
-    isLoading: evolvesToIsLoading,
-  } = useQuery<
+  const { data: evolvesTo, isLoading: evolvesToIsLoading } = useQuery<
     (PokeDetails & { evolutionDetails: Omit<EvolutionType, "name"> })[]
   >({
     queryKey: ["loadEvolveTo", pokemon?.evolvesTo],

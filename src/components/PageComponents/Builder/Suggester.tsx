@@ -1,17 +1,13 @@
 import {
-  Button,
   Column,
-  H5,
   Row,
-  Small,
   Span,
   Switch,
   Table,
 } from "@/components/LayoutComponents";
-import { PokeDetails, PokeStat, pokeTypes } from "@/utils";
+import { PokeStat, pokeTypes } from "@/utils";
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { BuilderStatistics } from "./BuilderStatistics";
-import { useDarkTheme } from "@/components/Providers";
 import { complexionData, TypeWeakness } from "@/pokemonTypes";
 import { TypeChip } from "../Dex/TypeChip";
 import { PokeDetailsWithSelectedMoves } from "./Builder";
@@ -39,10 +35,8 @@ export interface SuggesterProps {
 
 export const Suggester: FunctionComponent<SuggesterProps> = ({
   pokemons,
-  setShowTypes,
   showTypes,
 }) => {
-  const { light } = useDarkTheme();
   const [stats, setStats] = useState<SuggestedStats>();
 
   const [showAverage, setShowAverage] = useState(false);
@@ -198,8 +192,6 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
       stab: types.map((t) => ({ ...t })),
       moves: types.map((t) => ({ ...t })),
     };
-
-    const typesList = pokemons.flatMap((p) => p.types?.map((t) => t));
 
     pokemons.forEach((list) => {
       if (list) {

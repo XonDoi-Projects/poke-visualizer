@@ -2,7 +2,6 @@ import { Button, Column, Row, Span } from "@/components/LayoutComponents";
 import { MoveDetailsType } from "@/utils";
 import { FunctionComponent } from "react";
 import { TypeChip } from "../Dex/TypeChip";
-import { Chip } from "@/components/LayoutComponents/Chip";
 import { BiX } from "react-icons/bi";
 import { useDarkTheme } from "@/components/Providers";
 import { ClassChip } from "../Dex";

@@ -1,11 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { JSDOM } from "jsdom";
 import { TypeComplexion, TypeDetails } from "@/pokemonTypes";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(res: NextApiResponse) {
   const url = "https://pokemondb.net/type/dual";
 
   try {
@@ -45,7 +42,7 @@ export default async function handler(
     if (table) {
       const rows = table.querySelectorAll("tr");
 
-      rows.forEach((row, rowIndex) => {
+      rows.forEach((row) => {
         const cells = row.querySelectorAll("td, th");
 
         const primary = cells[0].textContent

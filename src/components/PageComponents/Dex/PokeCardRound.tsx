@@ -1,8 +1,7 @@
 import { Row, Column, H5, Container } from "@/components/LayoutComponents";
 import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
-import { PokeDetails, PokeRegion } from "@/utils";
-import { data } from "autoprefixer";
+import { PokeDetails } from "@/utils";
 import Image from "next/image";
 import { FunctionComponent, useState } from "react";
 import { HiOutlineSparkles, HiSparkles } from "react-icons/hi";

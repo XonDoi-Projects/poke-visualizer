@@ -1,9 +1,4 @@
-import {
-  FunctionComponent,
-  HTMLProps,
-  PropsWithChildren,
-  ReactNode,
-} from "react";
+import { FunctionComponent, HTMLProps, PropsWithChildren } from "react";
 import { Cover } from "./Cover";
 import { Card } from "./Card";
 import { Row } from "./Row";

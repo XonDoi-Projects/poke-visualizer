@@ -1,7 +1,7 @@
 import { Column, H5, Row, Span } from "@/components/LayoutComponents";
 import { useDarkTheme } from "@/components/Providers";
 import { PokeDetails } from "@/utils";
-import { FunctionComponent, useMemo, useRef, useState } from "react";
+import { FunctionComponent, useMemo, useState } from "react";
 import {
   Bar,
   BarChart,

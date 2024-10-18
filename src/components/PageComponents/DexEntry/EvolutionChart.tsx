@@ -70,7 +70,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
             }
           >
             <H5>Evolves Into</H5>
-            {evolvesTo.map((evolve, index) => (
+            {evolvesTo.map((evolve) => (
               <Column
                 key={evolve.index}
                 className={

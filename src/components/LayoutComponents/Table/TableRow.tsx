@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { TableHeader, TableHeaderType } from "./TableHeader";
 import { Row } from "../Row";
 import { Container } from "../Container";

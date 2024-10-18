@@ -1,10 +1,4 @@
-import {
-  ComponentProps,
-  FunctionComponent,
-  HTMLAttributes,
-  HTMLProps,
-  ReactNode,
-} from "react";
+import { FunctionComponent, HTMLAttributes, HTMLProps, ReactNode } from "react";
 import { Column } from "./Column";
 import { useDarkTheme } from "../Providers";
 

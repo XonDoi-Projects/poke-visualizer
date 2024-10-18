@@ -1,8 +1,6 @@
-import { Row, Small } from "@/components/LayoutComponents";
 import { Chip } from "@/components/LayoutComponents/Chip";
-import { PokeType } from "@/utils";
 import clsx from "clsx";
-import { FunctionComponent, HTMLProps, ReactNode, useMemo } from "react";
+import { FunctionComponent, HTMLProps, useMemo } from "react";
 import {
   FaAngleDoubleDown,
   FaAngleDoubleUp,

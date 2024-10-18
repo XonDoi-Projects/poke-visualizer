@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { Container } from "../Container";
 import { Span } from "../Typography";
 import { useDarkTheme } from "@/components/Providers";

@@ -1,15 +1,7 @@
-import {
-  Row,
-  Column,
-  H5,
-  Button,
-  Container,
-  Span,
-  Small,
-} from "@/components/LayoutComponents";
+import { Row, Container, Span, Small } from "@/components/LayoutComponents";
 import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
-import { PokeDetails, PokeForm, PokeRegion } from "@/utils";
+import { PokeForm } from "@/utils";
 import Image from "next/image";
 import { FunctionComponent, useState } from "react";
 import { HiOutlineSparkles, HiSparkles } from "react-icons/hi";

@@ -1,7 +1,6 @@
 import { FieldProps } from "@/components/LayoutComponents";
 import { Autocomplete } from "@/components/LayoutComponents/Autocomplete/Autocomplete";
 import { MoveDetailsType, PokeDetails } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
 import { FunctionComponent, useMemo, useState } from "react";
 
 export interface MoveAutocompleteProps extends FieldProps {

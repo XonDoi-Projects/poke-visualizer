@@ -20,7 +20,7 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
       filter = {
         ...filter,
 
-        $or: types.map((t: string) => ({
+        $and: types.map((t: string) => ({
           types: t.toString().toLowerCase(),
         })),
       };
@@ -29,6 +29,8 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
     if (search) {
       filter = { ...filter, name: { $regex: search, $options: "i" } };
     }
+
+    console.log(filter);
 
     let result: PokeDetails[] = [];
     let count: number = 0;

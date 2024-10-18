@@ -1,11 +1,9 @@
 import router from "next/router";
-import { FunctionComponent } from "react";
 import {
   Row,
   Column,
   H2,
   H3,
-  H5,
   Button,
   Container,
   Span,
@@ -13,9 +11,7 @@ import {
 import { Card } from "../LayoutComponents/Card";
 import { useSize } from "../Providers";
 
-export interface IndexCardProps {}
-
-export const IndexCard: FunctionComponent<IndexCardProps> = (props) => {
+export const IndexCard = () => {
   const { mobile } = useSize();
 
   return (

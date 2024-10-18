@@ -1,7 +1,6 @@
 import { Row, Button, Span } from "@/components/LayoutComponents";
 import { useDarkTheme } from "@/components/Providers";
-import clsx from "clsx";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import { BiChevronLeft, BiGridAlt, BiChevronRight } from "react-icons/bi";
 

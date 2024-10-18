@@ -1,11 +1,9 @@
 import {
   Button,
-  Column,
   Container,
   Menu,
   Row,
   Small,
-  Span,
 } from "@/components/LayoutComponents";
 import { useDarkTheme, useData } from "..";
 import {
@@ -177,7 +175,7 @@ export const Header = () => {
           className="relative h-[60px] items-center justify-center"
         >
           <Button
-            onClick={() => setShow(true)}
+            onClick={() => setShow(!show)}
             className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
             type="text"
           >

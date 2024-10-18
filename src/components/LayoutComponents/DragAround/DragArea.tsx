@@ -12,7 +12,7 @@ import {
 } from "@/components/PageComponents";
 import { Popup } from "../Popup";
 import { MoveDetailsType } from "@/utils";
-import { H5, Span } from "../Typography";
+import { Span } from "../Typography";
 
 export interface DragAreaProps {
   list: PokeDetailsWithSelectedMoves[];
@@ -61,7 +61,7 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
     if (dragIndex !== undefined && dragOver !== undefined) {
       setList(items.map((i) => i.item));
       setItems(items.map((i, index) => ({ index, item: i.item })));
-      setItemPositions(items.map((i, index) => ({ index, top: undefined })));
+      setItemPositions(items.map((_, index) => ({ index, top: undefined })));
     }
     setItem(undefined);
   };

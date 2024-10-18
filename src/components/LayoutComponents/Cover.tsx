@@ -1,9 +1,4 @@
-import {
-  FunctionComponent,
-  HTMLProps,
-  PropsWithChildren,
-  ReactNode,
-} from "react";
+import { FunctionComponent, HTMLProps, PropsWithChildren } from "react";
 import { Container } from "./Container";
 import { useDarkTheme } from "../Providers";
 

@@ -1,18 +1,8 @@
 import { FunctionComponent, ReactNode } from "react";
-import {
-  Button,
-  Column,
-  Container,
-  H3,
-  H2,
-  H5,
-  Row,
-} from "../LayoutComponents";
+import { Button, Column, Container } from "../LayoutComponents";
 import { PokeBallBackground } from ".";
-import { useDarkTheme, useSize } from "..";
+import { useDarkTheme } from "..";
 import { BiAdjust } from "react-icons/bi";
-import { Card } from "../LayoutComponents/Card";
-import { useRouter } from "next/router";
 
 export interface LandingProps {
   children: ReactNode;
