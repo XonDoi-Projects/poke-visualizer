@@ -60,8 +60,8 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
               style={{
                 maskImage: `url(${
                   showShiny && props.form.imageLinkShiny
-                    ? props.form.imageLinkShiny
-                    : props.form.imageLink
+                    ? props.form.imageLinkShiny || "/placeholder.png"
+                    : props.form.imageLink || "/placeholder.png"
                 })`,
                 maskSize: "contain",
               }}
@@ -69,8 +69,8 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
               <Image
                 src={
                   showShiny && props.form.imageLinkShiny
-                    ? props.form.imageLinkShiny
-                    : props.form.imageLink
+                    ? props.form.imageLinkShiny || "/placeholder.png"
+                    : props.form.imageLink || "/placeholder.png"
                 }
                 alt={`${props.form.name} | ${props.form.index}`}
                 sizes="100vw"

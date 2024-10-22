@@ -35,9 +35,12 @@ import { useQuery } from "@tanstack/react-query";
 import { ClassChip } from "../Dex/ClassChip";
 import { PokeCard } from "../Dex/PokeCard";
 import { DexEntryPagination } from "./DexEntryPagination";
+import { HiSparkles, HiOutlineSparkles } from "react-icons/hi";
 
 export const DexEntry = () => {
   const router = useRouter();
+
+  const [showShinies, setShowShinies] = useState(false);
 
   const { light } = useDarkTheme();
   const { mobile } = useSize();
@@ -235,6 +238,35 @@ export const DexEntry = () => {
                 <Row
                   className={`gap-2 absolute top-0 right-0 cursor-pointer z-10`}
                 >
+                  {pokemon?.imageLinkHighResShiny ? (
+                    showShinies ? (
+                      <Container>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowShinies(!showShinies);
+                          }}
+                          className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+                          style={{ padding: "5px" }}
+                        >
+                          <HiSparkles style={{ fontSize: "20px" }} />
+                        </Button>
+                      </Container>
+                    ) : (
+                      <Container>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowShinies(!showShinies);
+                          }}
+                          className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+                          style={{ padding: "5px" }}
+                        >
+                          <HiOutlineSparkles style={{ fontSize: "20px" }} />
+                        </Button>
+                      </Container>
+                    )
+                  ) : null}
                   <Container>
                     <Button
                       onClick={() => setShowStats(true)}
@@ -267,7 +299,13 @@ export const DexEntry = () => {
 
                 <picture>
                   <Image
-                    src={pokemon.imageLinkHighRes || pokemon.imageLink}
+                    src={
+                      showShinies && pokemon?.imageLinkHighResShiny
+                        ? pokemon?.imageLinkHighResShiny
+                        : pokemon.imageLinkHighRes ||
+                          pokemon.imageLink ||
+                          "/placeholder.png"
+                    }
                     alt={`${pokemon.name} | ${pokemon.index}`}
                     sizes="100vw"
                     width="0"
@@ -284,6 +322,7 @@ export const DexEntry = () => {
                 <EvolutionChart
                   evolvesFrom={evolvesFrom}
                   evolvesTo={evolvesTo}
+                  showShinies={showShinies}
                 />
               </Column>
             ) : (

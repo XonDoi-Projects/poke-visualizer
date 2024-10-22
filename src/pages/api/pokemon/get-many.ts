@@ -30,8 +30,6 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
       filter = { ...filter, name: { $regex: search, $options: "i" } };
     }
 
-    console.log(filter);
-
     let result: PokeDetails[] = [];
     let count: number = 0;
 

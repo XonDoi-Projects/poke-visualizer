@@ -1,7 +1,7 @@
 import clientPromise from "@/lib/mongodb";
-import { NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const getUpdatedOn = async (res: NextApiResponse) => {
+const getUpdatedOn = async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
     const client = await clientPromise;
     const dbRefresh = client.db("pokemons").collection("refresh");

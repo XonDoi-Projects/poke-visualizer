@@ -11,11 +11,13 @@ export interface EvolutionChartProps {
   evolvesTo?: (PokeDetails & {
     evolutionDetails: Omit<EvolutionType, "name">;
   })[];
+  showShinies?: boolean;
 }
 
 export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
   evolvesTo,
   evolvesFrom,
+  showShinies,
 }) => {
   const { light } = useDarkTheme();
   const router = useRouter();
@@ -41,7 +43,13 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
             >
               <picture>
                 <Image
-                  src={evolvesFrom.imageLinkHighRes || evolvesFrom.imageLink}
+                  src={
+                    showShinies && evolvesFrom?.imageLinkHighResShiny
+                      ? evolvesFrom?.imageLinkHighResShiny
+                      : evolvesFrom.imageLinkHighRes ||
+                        evolvesFrom.imageLink ||
+                        "/placeholder.png"
+                  }
                   alt={`${evolvesFrom.name} | ${evolvesFrom.index}`}
                   sizes="100vw"
                   width="0"
@@ -80,7 +88,13 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
               >
                 <picture>
                   <Image
-                    src={evolve.imageLinkHighRes || evolve.imageLink}
+                    src={
+                      showShinies && evolve?.imageLinkHighResShiny
+                        ? evolve?.imageLinkHighResShiny
+                        : evolve.imageLinkHighRes ||
+                          evolve.imageLink ||
+                          "/placeholder.png"
+                    }
                     alt={`${evolve.name} | ${evolve.index}`}
                     sizes="100vw"
                     width="0"

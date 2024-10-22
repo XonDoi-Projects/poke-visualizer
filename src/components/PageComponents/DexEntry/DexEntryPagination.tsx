@@ -25,7 +25,9 @@ export const DexEntryPagination: FunctionComponent<DexEntryPaginationProps> = ({
       >
         <Button
           onClick={() =>
-            router.push(`/dex/${isVariant ? "variants/" : "bases"}${prevValue}`)
+            router.push(
+              `/dex/${isVariant ? "variants/" : "bases/"}${prevValue}`
+            )
           }
           className={`items-center justify-center rounded-full w-[35px] h-[35px] ${
             prevValue !== undefined ? "cursor-pointer" : "cursor-auto"

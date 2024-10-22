@@ -167,10 +167,18 @@ export const Dex = () => {
                   list={pokeTypes.map((p) => p[0].toUpperCase() + p.slice(1))}
                   options={types.map((t) => t[0].toUpperCase() + t.slice(1))}
                   setOptions={(value: PokeType[]) => {
-                    setTypes((prev) => [
-                      ...prev,
-                      ...value.map((v) => v.toLowerCase() as PokeType),
-                    ]);
+                    if (value[0].toLowerCase() === "all") {
+                      setTypes((prev) => [
+                        ...prev.filter((p) => p === "all"),
+                        ...value.map((v) => v.toLowerCase() as PokeType),
+                      ]);
+                    } else {
+                      setTypes((prev) => [
+                        ...prev.filter((p) => p !== "all"),
+                        ...value.map((v) => v.toLowerCase() as PokeType),
+                      ]);
+                    }
+
                     setCurrentOffset(0);
                     setLimit(20);
                   }}

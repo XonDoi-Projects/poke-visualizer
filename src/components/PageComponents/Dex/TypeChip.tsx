@@ -17,7 +17,7 @@ export interface TypeChipProps {
 export const TypeChip: FunctionComponent<TypeChipProps> = (props) => {
   const color = clsx({
     "bg-green-500": props.value === "bug",
-    "bg-gray-900": props.value === "dark",
+    "bg-gray-950": props.value === "dark",
     "bg-indigo-700": props.value === "dragon",
     "bg-yellow-500": props.value === "electric",
     "bg-pink-300": props.value === "fairy",

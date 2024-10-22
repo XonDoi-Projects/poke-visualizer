@@ -38,9 +38,10 @@ export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
   const { light } = useDarkTheme();
 
   const [showOptions, setShowOptions] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const clickOutsideRef = useRef<HTMLDivElement>(null);
+  const locationRef = useRef<HTMLDivElement>(null);
 
-  const updatedRef = ref.current;
+  const updatedRef = locationRef.current;
   const bottom = useMemo(() => {
     if (updatedRef) {
       return (
@@ -51,7 +52,7 @@ export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
     return;
   }, [updatedRef]);
 
-  useClickOutside(ref, () => {
+  useClickOutside(clickOutsideRef, () => {
     setShowOptions(false);
   });
 
@@ -67,10 +68,10 @@ export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
   };
 
   return (
-    <Column className={`relative w-full gap-1`} ref={ref}>
-      <Field {...props}>
+    <Column className={`relative w-full gap-1`} ref={clickOutsideRef}>
+      <Field ref={locationRef} {...props}>
         <Container
-          className={`flex direction-row flex-1 items-center w-full cursor-pointer bg-transparent`}
+          className={`flex direction-row flex-1 items-center w-full cursor-pointer bg-transparent h-[30px]`}
           onClick={() => !props.disable && setShowOptions(!showOptions)}
         >
           <Span className={`flex-1`}>
