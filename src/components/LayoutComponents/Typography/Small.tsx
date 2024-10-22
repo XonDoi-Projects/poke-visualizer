@@ -1,4 +1,3 @@
-import { useDarkTheme } from "@/components";
 import { FunctionComponent, HTMLAttributes, HTMLProps, ReactNode } from "react";
 
 export interface SmallProps extends HTMLAttributes<HTMLSpanElement> {
@@ -11,8 +10,6 @@ export const Small: FunctionComponent<SmallProps> = ({
   className,
   ...props
 }) => {
-  const { light } = useDarkTheme();
-
   return (
     <span
       {...props}

@@ -10,13 +10,7 @@ import {} from "@/components/LayoutComponents/Inputs";
 import { useDarkTheme } from "@/components/Providers";
 import { PokeDetails, getMergedPokemon } from "@/utils";
 import {} from "autoprefixer";
-import {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { useQuery } from "@tanstack/react-query";
@@ -47,7 +41,7 @@ export const SpriteFusionTool: FunctionComponent<SpriteFusionToolProps> = ({
     return await data.json();
   };
 
-  const { data, error, isLoading } = useQuery<{
+  const { data } = useQuery<{
     data: PokeDetails[] | undefined;
     count: number | undefined;
   }>({

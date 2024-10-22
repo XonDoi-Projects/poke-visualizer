@@ -4,7 +4,6 @@ import {
   FunctionComponent,
   HTMLAttributes,
   HTMLProps,
-  ReactNode,
 } from "react";
 import { Field, FieldProps } from "../Field";
 
@@ -17,6 +16,7 @@ export interface InputFieldProps
 }
 
 export const InputField: FunctionComponent<InputFieldProps> = ({
+  ref,
   label,
   errorText,
   helperText,
@@ -52,7 +52,7 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeHolder}
-        className={`w-full h-[20px] justify-center outline-0 items-center px-[10px] ${
+        className={`w-full h-[30px] justify-center outline-0 items-center px-[10px] ${
           !disable ? "cursor-text" : "cursor-auto"
         } transition-all bg-transparent
          ${

@@ -1,6 +1,6 @@
 import { Chip } from "@/components/LayoutComponents/Chip";
 import clsx from "clsx";
-import { FunctionComponent, HTMLProps, ReactNode, useMemo } from "react";
+import { FunctionComponent, HTMLProps, useMemo } from "react";
 
 export interface ClassChipProps {
   value: string;

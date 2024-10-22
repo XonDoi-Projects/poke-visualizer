@@ -1,8 +1,7 @@
 import { Row, Column, H5, Container } from "@/components/LayoutComponents";
 import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
-import { PokeDetails, PokeRegion } from "@/utils";
-import { data } from "autoprefixer";
+import { PokeDetails } from "@/utils";
 import Image from "next/image";
 import { FunctionComponent, useState } from "react";
 import { HiOutlineSparkles, HiSparkles } from "react-icons/hi";
@@ -37,33 +36,35 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
       </Row>
 
       <Container className={`absolute top-[10%] right-0 cursor-pointer z-[1]`}>
-        {showShiny && props.data.imageLinkShiny ? (
-          <HiSparkles
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowShiny(!showShiny);
-            }}
-            className={
-              light
-                ? "text-blue-900 group-hover:text-blue-800"
-                : "text-slate-300 group-hover:text-slate-200"
-            }
-            style={{ fontSize: "20px" }}
-          />
-        ) : (
-          <HiOutlineSparkles
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowShiny(!showShiny);
-            }}
-            className={
-              light
-                ? "text-blue-900 group-hover:text-blue-800"
-                : "text-slate-300 group-hover:text-slate-200"
-            }
-            style={{ fontSize: "20px" }}
-          />
-        )}
+        {props.data.imageLinkShiny ? (
+          showShiny ? (
+            <HiSparkles
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowShiny(!showShiny);
+              }}
+              className={
+                light
+                  ? "text-blue-900 group-hover:text-blue-800"
+                  : "text-slate-300 group-hover:text-slate-200"
+              }
+              style={{ fontSize: "20px" }}
+            />
+          ) : (
+            <HiOutlineSparkles
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowShiny(!showShiny);
+              }}
+              className={
+                light
+                  ? "text-blue-900 group-hover:text-blue-800"
+                  : "text-slate-300 group-hover:text-slate-200"
+              }
+              style={{ fontSize: "20px" }}
+            />
+          )
+        ) : null}
       </Container>
       <Card
         className={`w-[200px] h-[200px] hover:scale-105 rounded-full transition-all cursor-pointer overflow-hidden`}
@@ -97,15 +98,15 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
             style={{
               maskImage: `url(${
                 showShiny &&
-                props.data.imageLinkShiny &&
+                props.data?.imageLinkShiny &&
                 hover &&
-                props.data.animatedShiny
-                  ? props.data.animatedShiny
-                  : hover && props.data.animated
-                  ? props.data.animated
-                  : showShiny && props.data.imageLinkShiny
-                  ? props.data.imageLinkShiny
-                  : props.data.imageLink
+                props.data?.animatedShiny
+                  ? props.data?.animatedShiny || "/placeholder.png"
+                  : hover && props.data?.animated
+                  ? props.data?.animated || "/placeholder.png"
+                  : showShiny && props.data?.imageLinkShiny
+                  ? props.data?.imageLinkShiny || "/placeholder.png"
+                  : props.data?.imageLink || "/placeholder.png"
               })`,
               maskSize: "contain",
             }}
@@ -113,15 +114,15 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
             <Image
               src={
                 showShiny &&
-                props.data.imageLinkShiny &&
+                props.data?.imageLinkShiny &&
                 hover &&
-                props.data.animatedShiny
-                  ? props.data.animatedShiny
-                  : hover && props.data.animated
-                  ? props.data.animated
-                  : showShiny && props.data.imageLinkShiny
-                  ? props.data.imageLinkShiny
-                  : props.data.imageLink
+                props.data?.animatedShiny
+                  ? props.data?.animatedShiny || "/placeholder.png"
+                  : hover && props.data?.animated
+                  ? props.data?.animated || "/placeholder.png"
+                  : showShiny && props.data?.imageLinkShiny
+                  ? props.data?.imageLinkShiny || "/placeholder.png"
+                  : props.data?.imageLink || "/placeholder.png"
               }
               alt={`${props.data.name} | ${props.data.index}`}
               sizes="100vw"

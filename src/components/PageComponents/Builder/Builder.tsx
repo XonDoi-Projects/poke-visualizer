@@ -25,6 +25,7 @@ import { Suggester } from "./Suggester";
 import { Selector } from "@/components/LayoutComponents/Selector";
 import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
+import { BiSlider } from "react-icons/bi";
 
 export interface PokeDetailsWithSelectedMoves extends PokeDetails {
   selectedMoves?: MoveDetailsType[];
@@ -35,6 +36,8 @@ export const Builder = () => {
   const [pokemons, setPokemons] = useState<PokeDetailsWithSelectedMoves[]>([]);
 
   const [showTypes, setShowTypes] = useState(true);
+
+  const [expandFilter, setExpandFilter] = useState(false);
 
   const [region, setRegion] = useState<PokeRegion>("all");
   const [trait, setTrait] = useState<PokeTrait>("all");
@@ -62,8 +65,8 @@ export const Builder = () => {
   return (
     <Column className={`relative gap-5`}>
       <H2>Team Planner</H2>
-      <Row className={`w-full flex-wrap gap-5`}>
-        <Container className={`flex-1 min-w-[200px]`}>
+      <Row className={`justify-start items-center gap-3`}>
+        <Container className={`min-w-[150px]`}>
           <PokemonAutocomplete
             label={`Select your Pokemon ${pokemons.length}/6`}
             pokemon={undefined}
@@ -81,46 +84,97 @@ export const Builder = () => {
             }}
           />
         </Container>
-
-        <Container className={`flex-1 min-w-[150px]`}>
-          <Selector
-            label="Region"
-            list={pokeRegions.map((p) => p[0].toUpperCase() + p.slice(1))}
-            option={region[0].toUpperCase() + region.slice(1)}
-            setOption={(value: PokeRegion) => {
-              setRegion(value.toLowerCase() as PokeRegion);
-            }}
-          />
-        </Container>
-
-        <Container className={`flex-1 min-w-[150px]`}>
-          <Selector
-            label="Type"
-            list={pokeTypes.map((p) => p[0].toUpperCase() + p.slice(1))}
-            option={types.map((t) => t[0].toUpperCase() + t.slice(1))}
-            setOption={(value: PokeType) => {
-              setTypes([value.toLowerCase() as PokeType]);
-            }}
-          />
-        </Container>
-
-        <Container className={`flex-1 min-w-[150px]`}>
-          <Selector
-            label="Special Trait"
-            list={pokeTraits.map((p) => p[0].toUpperCase() + p.slice(1))}
-            option={trait[0].toUpperCase() + trait.slice(1)}
-            setOption={(value: PokeTrait) => {
-              setTrait(value.toLowerCase() as PokeTrait);
-            }}
-          />
-        </Container>
+        {!expandFilter ? (
+          <Container className={`mt-[25px]`}>
+            <Button
+              onClick={() => setExpandFilter(!expandFilter)}
+              className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
+              type="text"
+            >
+              <BiSlider
+                className={
+                  light
+                    ? "text-blue-900 group-hover:text-blue-800"
+                    : "text-slate-300 group-hover:text-slate-200"
+                }
+                style={{ fontSize: "24px" }}
+              />
+            </Button>
+          </Container>
+        ) : null}
       </Row>
-      <Container className={`h-full items-end`}>
-        <Button className={`h-[30px] rounded-full`} onClick={handleReset}>
-          Reset
-        </Button>
-      </Container>
 
+      {expandFilter ? (
+        <Column className={`gap-2`}>
+          <Row className={`flex-wrap gap-5`}>
+            <Container className={`flex-1 min-w-[150px]`}>
+              <Selector
+                label="Region"
+                list={pokeRegions.map((p) => p[0].toUpperCase() + p.slice(1))}
+                options={[region[0].toUpperCase() + region.slice(1)]}
+                setOptions={(value: PokeRegion[]) => {
+                  setRegion(value[0].toLowerCase() as PokeRegion);
+                }}
+              />
+            </Container>
+
+            <Container className={`flex-1 min-w-[150px]`}>
+              <Selector
+                label="Type"
+                list={pokeTypes.map((p) => p[0].toUpperCase() + p.slice(1))}
+                options={types.map((t) => t[0].toUpperCase() + t.slice(1))}
+                setOptions={(value: PokeType[]) => {
+                  if (value[0].toLowerCase() === "all") {
+                    setTypes((prev) => [
+                      ...prev.filter((p) => p === "all"),
+                      ...value.map((v) => v.toLowerCase() as PokeType),
+                    ]);
+                  } else {
+                    setTypes((prev) => [
+                      ...prev.filter((p) => p !== "all"),
+                      ...value.map((v) => v.toLowerCase() as PokeType),
+                    ]);
+                  }
+                }}
+                deleteOptions={(value: PokeType[]) => {
+                  if (!value.length) {
+                    setTypes(["all"]);
+                  } else {
+                    setTypes(value.map((v) => v.toLowerCase() as PokeType));
+                  }
+                }}
+                isMultipleOption
+                ignoreOptionsWhenMultiple={["all"].map(
+                  (p) => p[0].toUpperCase() + p.slice(1)
+                )}
+                disable={types?.length >= 2}
+              />
+            </Container>
+
+            <Container className={`flex-1 min-w-[150px]`}>
+              <Selector
+                label="Special Trait"
+                list={pokeTraits.map((p) => p[0].toUpperCase() + p.slice(1))}
+                options={[trait[0].toUpperCase() + trait.slice(1)]}
+                setOptions={(value: PokeTrait[]) => {
+                  setTrait(value[0].toLowerCase() as PokeTrait);
+                }}
+              />
+            </Container>
+          </Row>
+          <Row className={`gap-2`}>
+            <Button className={`h-[30px] rounded-full`} onClick={handleReset}>
+              Reset
+            </Button>
+            <Button
+              className={`h-[30px] rounded-full`}
+              onClick={() => setExpandFilter(!expandFilter)}
+            >
+              Hide
+            </Button>
+          </Row>
+        </Column>
+      ) : null}
       <Row className={`relative flex-wrap gap-5`}>
         <Column className={`relative flex-1 rounded gap-2 p-3`}>
           <H3>Team</H3>

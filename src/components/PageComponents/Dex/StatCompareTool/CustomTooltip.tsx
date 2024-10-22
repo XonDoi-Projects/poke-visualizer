@@ -1,6 +1,5 @@
 import { Row, Span } from "@/components/LayoutComponents";
 import { Card } from "@/components/LayoutComponents/Card";
-import { useDarkTheme } from "@/components/Providers";
 import { FunctionComponent } from "react";
 
 export interface CustomTooltipProps {
@@ -14,8 +13,6 @@ export const CustomTooltip: FunctionComponent<CustomTooltipProps> = ({
   payload,
   label,
 }) => {
-  const { light } = useDarkTheme();
-
   return (
     active &&
     payload &&

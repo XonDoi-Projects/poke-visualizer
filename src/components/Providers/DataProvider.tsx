@@ -2,13 +2,11 @@ import React, {
   createContext,
   FunctionComponent,
   ReactNode,
-  useCallback,
   useContext,
   useState,
 } from "react";
 import { getPokemon, PokeDetails } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
-import { json } from "stream/consumers";
 
 export const total = 1025;
 

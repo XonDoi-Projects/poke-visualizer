@@ -1,7 +1,5 @@
 import { FunctionComponent } from "react";
-import { Container } from "../Container";
 import { Span } from "../Typography";
-import clsx from "clsx";
 import { TableCell } from "./TableCell";
 
 export type TableHeaderType = {

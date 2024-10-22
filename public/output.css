@@ -642,6 +642,10 @@ video {
   margin-right: 2.5rem;
 }
 
+.mt-\[25px\] {
+  margin-top: 25px;
+}
+
 .box-content {
   box-sizing: content-box;
 }
@@ -1353,6 +1357,11 @@ video {
 .bg-gray-900 {
   --tw-bg-opacity: 1;
   background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+}
+
+.bg-gray-950 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(3 7 18 / var(--tw-bg-opacity));
 }
 
 .bg-green-400 {

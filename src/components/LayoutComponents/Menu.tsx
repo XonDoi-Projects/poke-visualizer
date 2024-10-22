@@ -1,5 +1,4 @@
 import { FunctionComponent, ReactNode } from "react";
-import { Container } from "./Container";
 import { useDarkTheme, useSize } from "../Providers";
 import clsx from "clsx";
 import { Row } from "./Row";

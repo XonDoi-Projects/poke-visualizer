@@ -14,18 +14,13 @@ import {
   Table,
 } from "@/components/LayoutComponents";
 import { total, useDarkTheme, useData, useSize } from "@/components/Providers";
-import { EvolutionType, getPokemon, PokeDetails } from "@/utils";
+import { EvolutionType, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { TypeChip } from "../Dex/TypeChip";
-import {
-  BiChevronLeft,
-  BiChevronRight,
-  BiGridAlt,
-  BiVolumeFull,
-} from "react-icons/bi";
+import { BiVolumeFull } from "react-icons/bi";
 import {
   FaAngleDoubleDown,
   FaAngleDoubleUp,
@@ -40,9 +35,12 @@ import { useQuery } from "@tanstack/react-query";
 import { ClassChip } from "../Dex/ClassChip";
 import { PokeCard } from "../Dex/PokeCard";
 import { DexEntryPagination } from "./DexEntryPagination";
+import { HiSparkles, HiOutlineSparkles } from "react-icons/hi";
 
 export const DexEntry = () => {
   const router = useRouter();
+
+  const [showShinies, setShowShinies] = useState(false);
 
   const { light } = useDarkTheme();
   const { mobile } = useSize();
@@ -75,11 +73,7 @@ export const DexEntry = () => {
     return await data.json();
   };
 
-  const {
-    data: pokemon,
-    error,
-    isLoading,
-  } = useQuery<
+  const { data: pokemon, isLoading } = useQuery<
     (PokeDetails & { prevValue: number; nextValue: number }) | undefined
   >({
     queryKey: ["getOnePokemon", currentIndex, isLocallyLoaded, isVariant],
@@ -127,18 +121,15 @@ export const DexEntry = () => {
     return await data.json();
   };
 
-  const {
-    data: evolvesFrom,
-    error: evolvesFromError,
-    isLoading: evolvesFromIsLoading,
-  } = useQuery<PokeDetails>({
-    queryKey: ["loadEvolveFrom", pokemon?.evolvesFrom],
-    queryFn: loadEvolveFrom,
-    enabled: pokemon?.evolvesFrom ? true : false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: true,
-  });
+  const { data: evolvesFrom, isLoading: evolvesFromIsLoading } =
+    useQuery<PokeDetails>({
+      queryKey: ["loadEvolveFrom", pokemon?.evolvesFrom],
+      queryFn: loadEvolveFrom,
+      enabled: pokemon?.evolvesFrom ? true : false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: true,
+    });
 
   const loadEvolveTo = async () => {
     let toResult:
@@ -172,11 +163,7 @@ export const DexEntry = () => {
     return toResult;
   };
 
-  const {
-    data: evolvesTo,
-    error: evolvesToError,
-    isLoading: evolvesToIsLoading,
-  } = useQuery<
+  const { data: evolvesTo, isLoading: evolvesToIsLoading } = useQuery<
     (PokeDetails & { evolutionDetails: Omit<EvolutionType, "name"> })[]
   >({
     queryKey: ["loadEvolveTo", pokemon?.evolvesTo],
@@ -251,6 +238,35 @@ export const DexEntry = () => {
                 <Row
                   className={`gap-2 absolute top-0 right-0 cursor-pointer z-10`}
                 >
+                  {pokemon?.imageLinkHighResShiny ? (
+                    showShinies ? (
+                      <Container>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowShinies(!showShinies);
+                          }}
+                          className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+                          style={{ padding: "5px" }}
+                        >
+                          <HiSparkles style={{ fontSize: "20px" }} />
+                        </Button>
+                      </Container>
+                    ) : (
+                      <Container>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowShinies(!showShinies);
+                          }}
+                          className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
+                          style={{ padding: "5px" }}
+                        >
+                          <HiOutlineSparkles style={{ fontSize: "20px" }} />
+                        </Button>
+                      </Container>
+                    )
+                  ) : null}
                   <Container>
                     <Button
                       onClick={() => setShowStats(true)}
@@ -283,7 +299,13 @@ export const DexEntry = () => {
 
                 <picture>
                   <Image
-                    src={pokemon.imageLinkHighRes || pokemon.imageLink}
+                    src={
+                      showShinies && pokemon?.imageLinkHighResShiny
+                        ? pokemon?.imageLinkHighResShiny
+                        : pokemon.imageLinkHighRes ||
+                          pokemon.imageLink ||
+                          "/placeholder.png"
+                    }
                     alt={`${pokemon.name} | ${pokemon.index}`}
                     sizes="100vw"
                     width="0"
@@ -300,6 +322,7 @@ export const DexEntry = () => {
                 <EvolutionChart
                   evolvesFrom={evolvesFrom}
                   evolvesTo={evolvesTo}
+                  showShinies={showShinies}
                 />
               </Column>
             ) : (

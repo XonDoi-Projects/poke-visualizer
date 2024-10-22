@@ -1,8 +1,6 @@
 import {
   ForwardedRef,
   FunctionComponent,
-  HTMLProps,
-  ReactNode,
   RefAttributes,
   forwardRef,
 } from "react";

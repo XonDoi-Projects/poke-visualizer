@@ -17,7 +17,7 @@ import {
   pokeRegions,
   pokeTypes,
 } from "@/utils";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { BiChevronLeft, BiChevronRight, BiSlider, BiX } from "react-icons/bi";
 import { Selector } from "@/components/LayoutComponents/Selector";
 import { PokeCardRound } from "./PokeCardRound";
 import { useQuery } from "@tanstack/react-query";
@@ -27,6 +27,7 @@ export const Dex = () => {
   const { light } = useDarkTheme();
   const { isLocallyLoaded } = useData();
 
+  const [showFilter, setShowFilter] = useState(false);
   const [region, setRegion] = useState<PokeRegion>("all");
   const [types, setTypes] = useState<PokeType[]>(["all"]);
   const [form, setForm] = useState<string>("base");
@@ -77,7 +78,7 @@ export const Dex = () => {
     return await data.json();
   }, [currentOffset, form, limit, region, types]);
 
-  const { data, error, isLoading } = useQuery<{
+  const { data, isLoading } = useQuery<{
     data: PokeDetails[] | undefined;
     count: number | undefined;
   }>({
@@ -111,46 +112,105 @@ export const Dex = () => {
           .padStart(4, "0")} to #${data.data[data.data?.length - 1].index
           .toString()
           .padStart(4, "0")}`}</H5>
-        <Container className={`w-full justify-end gap-5`}>
-          <Container className={`w-[150px]`}>
-            <Selector
-              label="Base"
-              list={["base", "variant"].map(
-                (p) => p[0].toUpperCase() + p.slice(1)
-              )}
-              option={form[0].toUpperCase() + form.slice(1)}
-              setOption={(value: string) => {
-                setForm(value.toLowerCase() as string);
-                setCurrentOffset(0);
-                setLimit(20);
-              }}
-            />
-          </Container>
-          <Container className={`w-[150px]`}>
-            <Selector
-              label="Type"
-              list={pokeTypes.map((p) => p[0].toUpperCase() + p.slice(1))}
-              option={types.map((t) => t[0].toUpperCase() + t.slice(1))}
-              setOption={(value: PokeType) => {
-                setTypes([value.toLowerCase() as PokeType]);
-                setCurrentOffset(0);
-                setLimit(20);
-              }}
-            />
-          </Container>
-          <Container className={`w-[150px]`}>
-            <Selector
-              label="Region"
-              list={pokeRegions.map((p) => p[0].toUpperCase() + p.slice(1))}
-              option={region[0].toUpperCase() + region.slice(1)}
-              setOption={(value: PokeRegion) => {
-                setRegion(value.toLowerCase() as PokeRegion);
-                setCurrentOffset(0);
-                setLimit(20);
-              }}
-            />
-          </Container>
-        </Container>
+
+        <Column className={`items-end gap-5`}>
+          {!showFilter ? (
+            <Button
+              onClick={() => setShowFilter(!showFilter)}
+              className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
+              type="text"
+            >
+              <BiSlider
+                className={
+                  light
+                    ? "text-blue-900 group-hover:text-blue-800"
+                    : "text-slate-300 group-hover:text-slate-200"
+                }
+                style={{ fontSize: "24px" }}
+              />
+            </Button>
+          ) : (
+            <Button
+              onClick={() => setShowFilter(!showFilter)}
+              className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
+              type="contained"
+            >
+              <BiX
+                className={
+                  !light
+                    ? "text-blue-900 group-hover:text-blue-800"
+                    : "text-slate-300 group-hover:text-slate-200"
+                }
+                style={{ fontSize: "24px" }}
+              />
+            </Button>
+          )}
+          {showFilter ? (
+            <Row className={`gap-5 flex-wrap`}>
+              <Container className={`flex-1 min-w-[150px]`}>
+                <Selector
+                  label="Base"
+                  list={["base", "variant"].map(
+                    (p) => p[0].toUpperCase() + p.slice(1)
+                  )}
+                  options={[form[0].toUpperCase() + form.slice(1)]}
+                  setOptions={(value: string[]) => {
+                    setForm(value[0].toLowerCase() as string);
+                    setCurrentOffset(0);
+                    setLimit(20);
+                  }}
+                />
+              </Container>
+              <Container className={`flex-1 min-w-[150px]`}>
+                <Selector
+                  label="Type"
+                  list={pokeTypes.map((p) => p[0].toUpperCase() + p.slice(1))}
+                  options={types.map((t) => t[0].toUpperCase() + t.slice(1))}
+                  setOptions={(value: PokeType[]) => {
+                    if (value[0].toLowerCase() === "all") {
+                      setTypes((prev) => [
+                        ...prev.filter((p) => p === "all"),
+                        ...value.map((v) => v.toLowerCase() as PokeType),
+                      ]);
+                    } else {
+                      setTypes((prev) => [
+                        ...prev.filter((p) => p !== "all"),
+                        ...value.map((v) => v.toLowerCase() as PokeType),
+                      ]);
+                    }
+
+                    setCurrentOffset(0);
+                    setLimit(20);
+                  }}
+                  deleteOptions={(value: PokeType[]) => {
+                    if (!value.length) {
+                      setTypes(["all"]);
+                    } else {
+                      setTypes(value.map((v) => v.toLowerCase() as PokeType));
+                    }
+                  }}
+                  isMultipleOption
+                  ignoreOptionsWhenMultiple={["all"].map(
+                    (p) => p[0].toUpperCase() + p.slice(1)
+                  )}
+                  disable={types?.length >= 2}
+                />
+              </Container>
+              <Container className={`flex-1 min-w-[150px]`}>
+                <Selector
+                  label="Region"
+                  list={pokeRegions.map((p) => p[0].toUpperCase() + p.slice(1))}
+                  options={[region[0].toUpperCase() + region.slice(1)]}
+                  setOptions={(value: PokeRegion[]) => {
+                    setRegion(value[0].toLowerCase() as PokeRegion);
+                    setCurrentOffset(0);
+                    setLimit(20);
+                  }}
+                />
+              </Container>
+            </Row>
+          ) : null}
+        </Column>
 
         <Container className={`grid ${gridCols} gap-10 p-5 justify-center`}>
           {data?.data.map((poke) => (

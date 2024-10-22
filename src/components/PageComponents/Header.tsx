@@ -1,11 +1,9 @@
 import {
   Button,
-  Column,
   Container,
   Menu,
   Row,
   Small,
-  Span,
 } from "@/components/LayoutComponents";
 import { useDarkTheme, useData } from "..";
 import {
@@ -76,7 +74,7 @@ export const Header = () => {
 
   return (
     <Row
-      className={`h-[60px] z-10 sticky justify-between items-center transition-all ${
+      className={`h-[60px] z-20 sticky justify-between items-center transition-all ${
         light
           ? "bg-slate-200 shadow-bottom shadow-slate-300"
           : "bg-gray-900 shadow-bottom shadow-gray-800"
@@ -103,7 +101,7 @@ export const Header = () => {
             </picture>
           </Link>
         </Container>
-        <Container className={`min-w-[100px] h-[30px]`}>
+        <Container className={`min-w-[100px] h-[30px] items-center`}>
           <PokemonAutocomplete
             setPokemon={(value) => router.push(`/dex/bases/${value?.index}`)}
             noDropDownOnClick
@@ -177,7 +175,7 @@ export const Header = () => {
           className="relative h-[60px] items-center justify-center"
         >
           <Button
-            onClick={() => setShow(true)}
+            onClick={() => setShow(!show)}
             className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
             type="text"
           >

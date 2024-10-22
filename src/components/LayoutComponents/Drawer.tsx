@@ -1,9 +1,4 @@
-import {
-  FunctionComponent,
-  PropsWithChildren,
-  ReactNode,
-  useState,
-} from "react";
+import { FunctionComponent, PropsWithChildren } from "react";
 import { Column } from "./Column";
 import { useDarkTheme, useSize } from "../Providers";
 import { Cover } from "./Cover";

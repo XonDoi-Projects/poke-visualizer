@@ -20,7 +20,7 @@ const getPokemon = async (req: NextApiRequest, res: NextApiResponse) => {
       filter = {
         ...filter,
 
-        $or: types.map((t: string) => ({
+        $and: types.map((t: string) => ({
           types: t.toString().toLowerCase(),
         })),
       };

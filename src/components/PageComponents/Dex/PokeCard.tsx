@@ -1,15 +1,7 @@
-import {
-  Row,
-  Column,
-  H5,
-  Button,
-  Container,
-  Span,
-  Small,
-} from "@/components/LayoutComponents";
+import { Row, Container, Span, Small } from "@/components/LayoutComponents";
 import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
-import { PokeDetails, PokeForm, PokeRegion } from "@/utils";
+import { PokeForm } from "@/utils";
 import Image from "next/image";
 import { FunctionComponent, useState } from "react";
 import { HiOutlineSparkles, HiSparkles } from "react-icons/hi";
@@ -68,8 +60,8 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
               style={{
                 maskImage: `url(${
                   showShiny && props.form.imageLinkShiny
-                    ? props.form.imageLinkShiny
-                    : props.form.imageLink
+                    ? props.form.imageLinkShiny || "/placeholder.png"
+                    : props.form.imageLink || "/placeholder.png"
                 })`,
                 maskSize: "contain",
               }}
@@ -77,8 +69,8 @@ export const PokeCard: FunctionComponent<PokeCardProps> = (props) => {
               <Image
                 src={
                   showShiny && props.form.imageLinkShiny
-                    ? props.form.imageLinkShiny
-                    : props.form.imageLink
+                    ? props.form.imageLinkShiny || "/placeholder.png"
+                    : props.form.imageLink || "/placeholder.png"
                 }
                 alt={`${props.form.name} | ${props.form.index}`}
                 sizes="100vw"

@@ -1,8 +1,6 @@
-import { Row, Small } from "@/components/LayoutComponents";
 import { Chip } from "@/components/LayoutComponents/Chip";
-import { PokeType } from "@/utils";
 import clsx from "clsx";
-import { FunctionComponent, HTMLProps, ReactNode, useMemo } from "react";
+import { FunctionComponent, HTMLProps, useMemo } from "react";
 import {
   FaAngleDoubleDown,
   FaAngleDoubleUp,
@@ -19,7 +17,7 @@ export interface TypeChipProps {
 export const TypeChip: FunctionComponent<TypeChipProps> = (props) => {
   const color = clsx({
     "bg-green-500": props.value === "bug",
-    "bg-gray-900": props.value === "dark",
+    "bg-gray-950": props.value === "dark",
     "bg-indigo-700": props.value === "dragon",
     "bg-yellow-500": props.value === "electric",
     "bg-pink-300": props.value === "fairy",

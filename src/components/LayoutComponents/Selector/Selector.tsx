@@ -7,31 +7,41 @@ import {
 } from "react";
 import { Container } from "../Container";
 import { Span } from "../Typography";
-import { BiChevronDown } from "react-icons/bi";
+import { BiChevronDown, BiX } from "react-icons/bi";
 import { Column } from "../Column";
 import { useDarkTheme } from "@/components/Providers";
 import { SelectorOption } from "./SelectorOption";
 import { Field, FieldProps } from "../Field";
 import { useClickOutside } from "@/components/Hooks";
+import { Row } from "../Row";
+import { Chip } from "../Chip";
 
 export interface SelectorProps<T> extends FieldProps {
   list: T[];
-  option?: T;
-  setOption: (value: T) => void;
+  options?: T[];
+  setOptions: (value: T[]) => void;
+  deleteOptions?: (value: T[]) => void;
+  isMultipleOption?: boolean;
+  ignoreOptionsWhenMultiple?: T[];
+  maxOptions?: number;
 }
 
 export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
   list,
-  option,
-  setOption,
+  options,
+  setOptions,
+  deleteOptions,
+  isMultipleOption,
+  ignoreOptionsWhenMultiple,
   ...props
 }: SelectorProps<T>) => {
   const { light } = useDarkTheme();
 
   const [showOptions, setShowOptions] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const clickOutsideRef = useRef<HTMLDivElement>(null);
+  const locationRef = useRef<HTMLDivElement>(null);
 
-  const updatedRef = ref.current;
+  const updatedRef = locationRef.current;
   const bottom = useMemo(() => {
     if (updatedRef) {
       return (
@@ -42,20 +52,36 @@ export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
     return;
   }, [updatedRef]);
 
-  useClickOutside(ref, () => {
+  useClickOutside(clickOutsideRef, () => {
     setShowOptions(false);
   });
 
+  const handleDelete = (value: T) => {
+    if (options?.length) {
+      const index = options?.findIndex((o) => o === value);
+
+      if (index !== undefined && index >= 0) {
+        options.splice(index, 1);
+        deleteOptions && deleteOptions(options);
+      }
+    }
+  };
+
   return (
-    <Column className={`relative w-full`} ref={ref}>
-      <Field {...props}>
+    <Column className={`relative w-full gap-1`} ref={clickOutsideRef}>
+      <Field ref={locationRef} {...props}>
         <Container
-          className={`flex direction-row flex-1 items-center w-full cursor-pointer bg-transparent`}
-          onClick={() => setShowOptions(!showOptions)}
+          className={`flex direction-row flex-1 items-center w-full cursor-pointer bg-transparent h-[30px]`}
+          onClick={() => !props.disable && setShowOptions(!showOptions)}
         >
           <Span className={`flex-1`}>
-            {option !== undefined ? option?.toString() : "Select Region"}
+            {options === undefined ||
+            (isMultipleOption &&
+              !options.every((o) => ignoreOptionsWhenMultiple?.includes(o)))
+              ? "Select Option"
+              : options?.toString()}
           </Span>
+
           <BiChevronDown
             className={`w-[20px] ${
               !light
@@ -68,6 +94,28 @@ export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
           />
         </Container>
       </Field>
+      {isMultipleOption &&
+      !options?.every((o) => ignoreOptionsWhenMultiple?.includes(o)) ? (
+        <Row className={`flex-wrap gap-1`}>
+          {options?.map((o, index) => (
+            <Chip
+              key={index}
+              small
+              value={o?.toString() || ""}
+              className={`${light ? "bg-blue-900" : "bg-slate-300"}`}
+              contrast={!light}
+              suffix={
+                <BiX
+                  className={`${
+                    !light ? "text-blue-900" : "text-slate-300"
+                  } text-[14px] cursor-pointer`}
+                  onClick={() => handleDelete(o)}
+                />
+              }
+            />
+          ))}
+        </Row>
+      ) : null}
 
       {showOptions && list.length ? (
         <Column
@@ -83,7 +131,7 @@ export const Selector: FunctionComponent<SelectorProps<any>> = <T,>({
               key={index}
               value={item}
               setOption={(value) => {
-                setOption(value);
+                setOptions([value]);
                 setShowOptions(false);
               }}
             />
