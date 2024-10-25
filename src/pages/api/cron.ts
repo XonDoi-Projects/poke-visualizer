@@ -1,10 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
-export default function GET(_req: Request) {
+export default function GET(_req: NextApiRequest, res: NextApiResponse) {
   // your db logic
-  return NextResponse.json({
-    result: "Cron ran successfully",
-  });
+  return res.status(200).send({ message: "Cron run successfully!" });
 }
