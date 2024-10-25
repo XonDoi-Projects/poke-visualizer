@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "builds": [{ "src": "app/**/*.ts", "use": "@vercel/node" }],
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "0 14 * * *"
+    }
+  ]
+}
