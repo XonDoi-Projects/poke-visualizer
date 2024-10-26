@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
-    console.log("cron running");
+    console.log("Cron ran successfully");
     return res.status(200).json({ message: `Cron ran successfully` });
   } catch (e: any) {
     return res
