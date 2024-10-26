@@ -1,10 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-export const revalidate = 0;
-export const dynamic = "force-dynamic";
 const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
-  // your db logic
-  return res.status(200).json({ message: "Cron run successfully!" });
+  try {
+    console.log("cron running");
+    return res.status(200).json({ message: `Cron ran successfully` });
+  } catch (e: any) {
+    return res
+      .status(404)
+      .json({ message: `Failed to get last update: ${e.message}` });
+  }
 };
 
 export default cronTest;
