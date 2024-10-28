@@ -1,14 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
+// To stream responses you must use Route Handlers in the App Router, even if the rest of your app uses the Pages Router.
 
-const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    console.log("Cron ran successfully");
-    return res.status(200).json({ message: `Cron ran successfully` });
-  } catch (e: any) {
-    return res
-      .status(404)
-      .json({ message: `Failed to run Cron: ${e.message}` });
-  }
-};
+export const dynamic = "force-dynamic"; // static by default, unless reading the request
 
-export default cronTest;
+export function GET(_request: Request) {
+  return new Response(`Cron has ran successfully`);
+}
