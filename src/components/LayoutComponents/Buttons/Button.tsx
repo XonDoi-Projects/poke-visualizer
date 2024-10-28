@@ -22,7 +22,7 @@ export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
 export const Button: FunctionComponent<ButtonProps> = ({
   children,
   className,
-  type,
+  type = "contained",
   onClick,
   disable,
   tooltip,
@@ -103,5 +103,3 @@ export const Button: FunctionComponent<ButtonProps> = ({
     </Container>
   );
 };
-
-Button.defaultProps = { type: "contained" };
