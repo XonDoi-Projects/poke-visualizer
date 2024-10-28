@@ -7,7 +7,7 @@ const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
   } catch (e: any) {
     return res
       .status(404)
-      .json({ message: `Failed to get last update: ${e.message}` });
+      .json({ message: `Failed to run Cron: ${e.message}` });
   }
 };
 
