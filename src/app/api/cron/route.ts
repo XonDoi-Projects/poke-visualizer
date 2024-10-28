@@ -2,6 +2,12 @@
 
 export const dynamic = "force-dynamic"; // static by default, unless reading the request
 
-export function GET(_request: Request) {
-  return new Response(`Cron has ran successfully`);
+export async function GET() {
+  try {
+    console.log("CRON has ran successfully");
+    return new Response(`Cron has ran successfully`, { status: 200 });
+  } catch (e: any) {
+    console.error(e.message);
+    return new Response(`CRON has failed to run:${e.message}`, { status: 500 });
+  }
 }
