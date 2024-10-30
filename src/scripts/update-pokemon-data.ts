@@ -1,5 +1,5 @@
 if (!process.env.NEXT_POKEMON_API_URL) {
-  throw new Error('Invalid environment variable: "POKEMON_API_URL"');
+  throw new Error('Invalid environment variable: "NEXT_POKEMON_API_URL"');
 }
 
 const url = process.env.NEXT_POKEMON_API_URL;
