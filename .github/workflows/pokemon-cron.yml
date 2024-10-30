@@ -27,4 +27,4 @@ jobs:
         env:
           API_URL: ${{ secrets.POKEMON_API_URL }} # URL of your endpoint
         run: |
-          node scripts/update-pokemon-data.js
+          node scripts/update-pokemon-data.ts
