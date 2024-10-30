@@ -27,6 +27,7 @@
     "mongodb": "6.10.0",
     "next": "15.0.1",
     "next-sitemap": "^4.2.3",
+    "node-fetch": "^3.3.2",
     "npm-check": "^6.0.1",
     "postcss": "8.4.47",
     "react": "18.3.1",

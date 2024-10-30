@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 async function fetchData() {
   try {
     const response = await fetch("https://poke-plan.vercel.app/api/cron", {
