@@ -7,6 +7,8 @@ if (!process.env.NEXT_PUBLIC_MONGO_URI) {
 const uri = process.env.NEXT_PUBLIC_MONGO_URI;
 const options = {};
 
+console.log(uri);
+
 let client;
 let clientPromise: Promise<MongoClient>;
 
