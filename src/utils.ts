@@ -225,7 +225,8 @@ interface EvolveChainPokeAPI {
   evolves_to: EvolveChainPokeAPI[];
 }
 
-let movesCache: { url: string; data: any }[] = [];
+const movesCache: Record<string, any> = {};
+const evolutionCache: Record<string, any> = {};
 
 const getNextEvolution = (
   currentPokemon: string,
@@ -320,6 +321,26 @@ const getNextEvolution = (
   }
 };
 
+const getMoveDetails = async (url: string) => {
+  if (movesCache[url]) {
+    return movesCache[url];
+  }
+  const moveData = await fetch(url);
+  const moveJson = await moveData.json();
+  movesCache[url] = moveJson;
+  return moveJson;
+};
+
+const getEvolutionDetails = async (url: string) => {
+  if (evolutionCache[url]) {
+    return evolutionCache[url];
+  }
+  const evolutionData = await fetch(url);
+  const evolutionJson = await evolutionData.json();
+  evolutionCache[url] = evolutionJson;
+  return evolutionJson;
+};
+
 export const getPokemon = async (
   index: number,
   variety?: boolean,
@@ -339,24 +360,25 @@ export const getPokemon = async (
   const firstData = await basicData.json();
   const secondData = await extraData?.json();
 
-  let forms: PokeForm[] = [];
-
   const validForms = firstData.forms.filter(
     (f: any) => f.url.split("/").slice(-2, -1)[0] !== index.toString()
   );
 
-  for (let i = 0; i < validForms.length; i++) {
-    const formsData = await fetch(validForms[i].url);
+  let forms: PokeForm[] = [];
 
-    const fourthData = await formsData.json();
-
-    forms.push({
-      index: parseInt(validForms[i].url.split("/").slice(-2, -1)[0]),
-      name: (fourthData.name as string).toUpperCase(),
-      types: fourthData.types.map((type: any) => type.type.name),
-      imageLink: fourthData.sprites.front_default,
-      imageLinkShiny: fourthData.sprites.front_shiny,
-    });
+  if (validForms.length) {
+    forms = await Promise.all(
+      validForms.map(async (form: any) => {
+        const formData = await fetch(form.url).then((res) => res.json());
+        return {
+          index: parseInt(form.url.split("/").slice(-2, -1)[0]),
+          name: formData.name.toUpperCase(),
+          types: formData.types.map((type: any) => type.type.name),
+          imageLink: formData.sprites.front_default,
+          imageLinkShiny: formData.sprites.front_shiny,
+        };
+      })
+    );
   }
 
   const pokemonRegion = region
@@ -421,13 +443,16 @@ export const getPokemon = async (
         name: v.pokemon.name.toUpperCase(),
       }));
 
-    for (let i = 0; i < varieties.length; i++) {
-      const variety = await getPokemon(varieties[i].index, true, pokemonRegion);
-
-      varietyData.push({
-        ...variety.pokeDetails,
-        base: { index: pokeDetails.index, name: pokeDetails.name },
-      });
+    if (varieties.length) {
+      varietyData = await Promise.all(
+        varieties.map(async (v: any) => {
+          const variety = await getPokemon(v.index, true, pokemonRegion);
+          return {
+            ...variety.pokeDetails,
+            base: { index: pokeDetails?.index, name: pokeDetails?.name },
+          };
+        })
+      );
     }
 
     const flavorText = secondData.flavor_text_entries.filter(
@@ -461,9 +486,7 @@ export const getPokemon = async (
     if (secondData.evolution_chain.url) {
       const evolutionChainUrl = secondData.evolution_chain.url;
 
-      const evolutionChainData = await fetch(evolutionChainUrl);
-
-      const thirdData = await evolutionChainData.json();
+      const thirdData = await getEvolutionDetails(evolutionChainUrl);
 
       const evolvesTo = getNextEvolution(
         pokeDetails.name.toLowerCase(),
@@ -478,61 +501,83 @@ export const getPokemon = async (
   }
 
   if (firstData.moves.length) {
-    for (let i = 0; i < firstData.moves.length; i++) {
-      const thisMove = firstData.moves[i];
-      const moveUrl = thisMove.move.url;
+    // for (let i = 0; i < firstData.moves.length; i++) {
+    //   const thisMove = firstData.moves[i];
+    //   const moveUrl = thisMove.move.url;
 
-      const moveExists = movesCache.find((move) => move.url === moveUrl);
+    //   const moveExists = movesCache.find((move) => move.url === moveUrl);
 
-      let fourthData;
-      if (!moveExists) {
-        const moveData = await fetch(moveUrl);
+    //   let fourthData;
+    //   if (!moveExists) {
+    //     const moveData = await fetch(moveUrl);
 
-        fourthData = await moveData.json();
-        movesCache.push({ url: moveUrl, data: fourthData });
-      } else {
-        fourthData = moveExists.data;
-      }
-      pokeDetails = {
-        ...pokeDetails,
-        moves: pokeDetails?.moves
-          ? [
-              ...pokeDetails.moves,
-              {
-                name: thisMove.move.name,
-                versions: thisMove.version_group_details.map((v: any) => {
-                  return {
-                    version: v.version_group.name,
-                    levelLearned: v.level_learned_at,
-                    learnMethod: v.move_learn_method.name,
-                  };
-                }),
-                accuracy: fourthData.accuracy,
-                damageClass: fourthData.damage_class.name,
-                effectChance: fourthData.effect_chance,
-                power: fourthData.power,
-                type: fourthData.type.name,
-              },
-            ]
-          : [
-              {
-                name: thisMove.move.name,
-                versions: thisMove.version_group_details.map((v: any) => {
-                  return {
-                    version: v.version_group.name,
-                    levelLearned: v.level_learned_at,
-                    learnMethod: v.move_learn_method.name,
-                  };
-                }),
-                accuracy: fourthData.accuracy,
-                damageClass: fourthData.damage_class.name,
-                effectChance: fourthData.effect_chance,
-                power: fourthData.power,
-                type: fourthData.type.name,
-              },
-            ],
-      };
-    }
+    //     fourthData = await moveData.json();
+    //     movesCache.push({ url: moveUrl, data: fourthData });
+    //   } else {
+    //     fourthData = moveExists.data;
+    //   }
+    //   pokeDetails = {
+    //     ...pokeDetails,
+    //     moves: pokeDetails?.moves
+    //       ? [
+    //           ...pokeDetails.moves,
+    //           {
+    //             name: thisMove.move.name,
+    //             versions: thisMove.version_group_details.map((v: any) => {
+    //               return {
+    //                 version: v.version_group.name,
+    //                 levelLearned: v.level_learned_at,
+    //                 learnMethod: v.move_learn_method.name,
+    //               };
+    //             }),
+    //             accuracy: fourthData.accuracy,
+    //             damageClass: fourthData.damage_class.name,
+    //             effectChance: fourthData.effect_chance,
+    //             power: fourthData.power,
+    //             type: fourthData.type.name,
+    //           },
+    //         ]
+    //       : [
+    //           {
+    //             name: thisMove.move.name,
+    //             versions: thisMove.version_group_details.map((v: any) => {
+    //               return {
+    //                 version: v.version_group.name,
+    //                 levelLearned: v.level_learned_at,
+    //                 learnMethod: v.move_learn_method.name,
+    //               };
+    //             }),
+    //             accuracy: fourthData.accuracy,
+    //             damageClass: fourthData.damage_class.name,
+    //             effectChance: fourthData.effect_chance,
+    //             power: fourthData.power,
+    //             type: fourthData.type.name,
+    //           },
+    //         ],
+    //   };
+    // }
+
+    const moves = await Promise.all(
+      firstData.moves.map(async (move: any) => {
+        const moveData = await getMoveDetails(move.move.url);
+        return {
+          name: move.move.name,
+          versions: move.version_group_details.map((v: any) => {
+            return {
+              version: v.version_group.name,
+              levelLearned: v.level_learned_at,
+              learnMethod: v.move_learn_method.name,
+            };
+          }),
+          accuracy: moveData.accuracy,
+          damageClass: moveData.damage_class.name,
+          effectChance: moveData.effect_chance,
+          power: moveData.power,
+          type: moveData.type.name,
+        };
+      })
+    );
+    pokeDetails = { ...pokeDetails, moves };
   }
 
   return { pokeDetails, varietyData };
