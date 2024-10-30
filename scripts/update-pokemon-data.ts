@@ -1,6 +1,12 @@
+if (!process.env.POKEMON_API_URL) {
+  throw new Error('Invalid environment variable: "POKEMON_API_URL"');
+}
+
+const url = process.env.POKEMON_API_URL;
+
 async function fetchData() {
   try {
-    const response = await fetch("/api/cron", {
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
