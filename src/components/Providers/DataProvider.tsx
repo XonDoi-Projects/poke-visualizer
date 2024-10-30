@@ -89,17 +89,17 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
   const getAllPokemon = async () => {
     let pokemonList: PokeDetails[] = [];
 
-    try {
-      await fetch(`/api/update-last-update`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ isBeingUpdated: true }),
-      });
-    } catch (e: any) {
-      console.log(e.message);
-    }
+    // try {
+    //   await fetch(`/api/update-last-update`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ isBeingUpdated: true }),
+    //   });
+    // } catch (e: any) {
+    //   console.log(e.message);
+    // }
 
     for (let i = 0; i < total; i++) {
       const pokemonDetails = await getPokemon(i + 1);
@@ -108,51 +108,52 @@ export const DataProvider: FunctionComponent<IDataProviderProps> = (props) => {
         pokemonList.push(pokemonDetails.pokeDetails);
       }
 
-      try {
-        const result = await fetch(
-          `/api/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              pokemon: {
-                pokeDetails: pokemonDetails.pokeDetails,
-                varietyData: pokemonDetails.varietyData,
-              },
-            }),
-          }
-        );
+      // try {
+      //   const result = await fetch(
+      //     `/api/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
+      //     {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify({
+      //         pokemon: {
+      //           pokeDetails: pokemonDetails.pokeDetails,
+      //           varietyData: pokemonDetails.varietyData,
+      //         },
+      //       }),
+      //     }
+      //   );
 
-        const jsonResult = await result.json();
+      //   const jsonResult = await result.json();
 
-        if (jsonResult) {
-          setLoadingState(i + 1);
-        }
-      } catch (e: any) {
-        console.log(e.message);
-      }
+      //   if (jsonResult) {
+      console.log(i, pokemonDetails);
+      setLoadingState(i + 1);
+      // }
+      // } catch (e: any) {
+      //   console.log(e.message);
+      // }
     }
     setSyncInBackground(false);
 
-    try {
-      const result = await fetch(`/api/update-last-update`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ updatedOn: true, isBeingUpdated: false }),
-      });
+    // try {
+    //   const result = await fetch(`/api/update-last-update`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ updatedOn: true, isBeingUpdated: false }),
+    //   });
 
-      const jsonResult = await result.json();
+    //   const jsonResult = await result.json();
 
-      if (jsonResult) {
-        setIsRecentlyUpdated(true);
-      }
-    } catch (e: any) {
-      console.log(e.message);
-    }
+    //   if (jsonResult) {
+    //     setIsRecentlyUpdated(true);
+    //   }
+    // } catch (e: any) {
+    //   console.log(e.message);
+    // }
 
     return pokemonList;
   };

@@ -1,0 +1,30 @@
+name: Daily Pokémon Data Update
+
+# Set this to run on a CRON schedule
+on:
+  schedule:
+    - cron: "* * * * *" # This runs at 00:00 UTC every day
+
+jobs:
+  update-pokemon-data:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository to access code
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Install dependencies if necessary (for example, if using Node.js)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Install Dependencies
+        run: npm install
+
+      # Run the function or script that fetches Pokémon data
+      - name: Update Pokémon Data
+        env:
+          API_URL: ${{ secrets.POKEMON_API_URL }} # URL of your endpoint
+        run: |
+          node scripts/update-pokemon-data.js
