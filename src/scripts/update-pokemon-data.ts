@@ -1,14 +1,6 @@
-if (!process.env.NEXT_POKEMON_API_URL) {
-  throw new Error('Invalid environment variable: "NEXT_POKEMON_API_URL"');
-}
-
-const url = process.env.NEXT_POKEMON_API_URL;
-
-console.log(url);
-
 async function fetchData() {
   try {
-    const response = await fetch(url, {
+    const response = await fetch("https://poke-plan.vercel.app/api/cron", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

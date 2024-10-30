@@ -24,7 +24,5 @@ jobs:
 
       # Run the function or script that fetches Pokémon data
       - name: Update Pokémon Data
-        env:
-          NEXT_POKEMON_API_URL: ${{ secrets.NEXT_POKEMON_API_URL }} # URL of your endpoint
         run: |
           node src/scripts/update-pokemon-data.ts
