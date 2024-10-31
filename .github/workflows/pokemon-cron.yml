@@ -3,7 +3,7 @@ name: Daily Pokémon Data Update
 # Set this to run on a CRON schedule
 on:
   schedule:
-    - cron: "0 19 * * *" # This runs at 00:00 UTC every day
+    - cron: "5 * * * *" # This runs at 00:00 UTC every day
 
 jobs:
   update-pokemon-data:
