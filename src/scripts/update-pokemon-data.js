@@ -3,7 +3,7 @@
   async function fetchData() {
     try {
       console.log(1);
-      const response = await fetch("http://localhost:3000/api/cron", {
+      const response = await fetch("https://poke-plan.vercel.app/api/cron", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
