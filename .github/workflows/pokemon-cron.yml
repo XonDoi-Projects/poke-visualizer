@@ -11,13 +11,13 @@ jobs:
     steps:
       # Checkout the repository to access code
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Install dependencies if necessary (for example, if using Node.js)
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
 
       - name: Install Dependencies
         run: npm install
