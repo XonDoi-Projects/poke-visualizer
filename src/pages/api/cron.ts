@@ -15,7 +15,6 @@ const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
 
     const total = result.count;
 
-    console.log(total);
     try {
       await fetch(`/api/total`, {
         method: "POST",
