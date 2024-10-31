@@ -13,7 +13,7 @@ import {
   Loading,
   Table,
 } from "@/components/LayoutComponents";
-import { total, useDarkTheme, useData, useSize } from "@/components/Providers";
+import { useDarkTheme, useData, useSize } from "@/components/Providers";
 import { EvolutionType, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
@@ -39,12 +39,12 @@ import { HiSparkles, HiOutlineSparkles } from "react-icons/hi";
 
 export const DexEntry = () => {
   const router = useRouter();
+  const { total } = useData();
 
   const [showShinies, setShowShinies] = useState(false);
 
   const { light } = useDarkTheme();
   const { mobile } = useSize();
-  const { isLocallyLoaded } = useData();
 
   const [showStats, setShowStats] = useState(false);
 
@@ -76,7 +76,7 @@ export const DexEntry = () => {
   const { data: pokemon, isLoading } = useQuery<
     (PokeDetails & { prevValue: number; nextValue: number }) | undefined
   >({
-    queryKey: ["getOnePokemon", currentIndex, isLocallyLoaded, isVariant],
+    queryKey: ["getOnePokemon", currentIndex, isVariant],
     queryFn: getOnePokemon,
     enabled: currentIndex ? true : false,
     refetchOnWindowFocus: false,
