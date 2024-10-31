@@ -2,10 +2,12 @@
   const fetch = (await import("node-fetch")).default;
   async function fetchData() {
     try {
-      const response = await fetch("https://poke-plan.vercel.app/api/cron", {
+      console.log(1);
+      const response = await fetch("http://localhost:3000/api/cron", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer",
         },
       });
 
