@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+const fetch = required("node-fetch");
 
 async function fetchData() {
   try {
