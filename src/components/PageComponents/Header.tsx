@@ -1,37 +1,15 @@
-import {
-  Button,
-  Container,
-  Menu,
-  Row,
-  Small,
-} from "@/components/LayoutComponents";
-import { useDarkTheme, useData } from "..";
-import {
-  BiAdjust,
-  BiGridAlt,
-  BiGroup,
-  BiMenu,
-  BiRefresh,
-  BiSearch,
-} from "react-icons/bi";
+import { Button, Container, Menu, Row } from "@/components/LayoutComponents";
+import { useDarkTheme } from "..";
+import { BiAdjust, BiGridAlt, BiGroup, BiMenu, BiSearch } from "react-icons/bi";
 import Image from "next/image";
 import { PokemonAutocomplete } from "./PageAutocomplete/PokemonAutocomplete";
 import { useRouter } from "next/router";
-import { Chip } from "../LayoutComponents/Chip";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useClickOutside } from "../Hooks";
 
 export const Header = () => {
   const { light, setLight } = useDarkTheme();
-  const {
-    loadingState,
-    syncInBackground,
-    setSyncInBackground,
-    isRecentlyUpdated,
-    isCheckingData,
-    isBeingUpdated,
-  } = useData();
 
   const [show, setShow] = useState(false);
 
@@ -117,55 +95,6 @@ export const Header = () => {
             }
             label=""
           />
-        </Container>
-        <Container className="relative flex flex-row h-[60px] items-center justify-center">
-          <Button
-            className={`!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all`}
-            type="text"
-            tooltip
-            tooltipDetails={
-              <Container className={`items-center gap-1`}>
-                <Small
-                  className={` ${
-                    light ? "text-blue-900" : "text-slate-300"
-                  } text-wrap pointer-events-none`}
-                >{`${
-                  isRecentlyUpdated
-                    ? "Database is up to date!"
-                    : isBeingUpdated
-                    ? "Database is currently being updated!"
-                    : syncInBackground
-                    ? `Syncing in Progress ${loadingState}%`
-                    : "You can sync data once a day"
-                }`}</Small>
-                {!isRecentlyUpdated && !syncInBackground && !isBeingUpdated ? (
-                  <Chip
-                    value="Update"
-                    onClick={() => setSyncInBackground(true)}
-                    className={`cursor-pointer ${
-                      light ? "bg-blue-900" : "bg-slate-300"
-                    } `}
-                    contrast={!light}
-                  />
-                ) : null}
-              </Container>
-            }
-            disable={
-              isRecentlyUpdated ||
-              isBeingUpdated ||
-              isCheckingData ||
-              syncInBackground
-            }
-          >
-            <BiRefresh
-              className={`${syncInBackground ? "animate-spin-icon" : ""} ${
-                light
-                  ? "text-blue-900 group-hover:text-blue-800"
-                  : "text-slate-300 group-hover:text-slate-200"
-              }`}
-              style={{ fontSize: "24px" }}
-            />
-          </Button>
         </Container>
       </Row>
 
