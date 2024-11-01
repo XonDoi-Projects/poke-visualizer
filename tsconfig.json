@@ -30,7 +30,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/scripts/update-pokemon-data.mjs"
+    "src/scripts/update-pokemon-data.ts"
   ],
   "exclude": ["node_modules"]
 }
