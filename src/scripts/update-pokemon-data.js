@@ -1,6 +1,6 @@
 (async () => {
-  const { getPokemon } = await import("../src/utils.ts");
-  const { pokeBaseUrl, appUrl } = await import("../src/components/index.ts");
+  const { getPokemon } = await import("../utils.ts");
+  const { pokeBaseUrl, appUrl } = await import("../components/index.ts");
 
   const fetch = (await import("node-fetch")).default;
   async function fetchData() {
