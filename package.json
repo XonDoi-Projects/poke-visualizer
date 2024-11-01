@@ -5,6 +5,7 @@
   "scripts": {
     "build-tailwind": "npx tailwindcss -i ./src/input.css -o ./public/output.css --watch",
     "dev": "next dev",
+    "build:scripts": "tsc --outDir dist",
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
