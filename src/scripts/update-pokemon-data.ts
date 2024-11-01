@@ -1,3 +1,6 @@
+import { pokeBaseUrl, appUrl } from "@/components";
+import { getPokemon } from "@/utils";
+
 (async () => {
   const fetch = (await import("node-fetch")).default;
   async function fetchData() {
@@ -13,7 +16,7 @@
         }
       );
 
-      const result = await allPokemon.json();
+      const result: any = await allPokemon.json();
 
       const total = result.count;
 

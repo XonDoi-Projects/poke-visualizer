@@ -25,4 +25,4 @@ jobs:
       # Run the function or script that fetches Pokémon data
       - name: Update Pokémon Data
         run: |
-          node src/scripts/update-pokemon-data.js
+          node src/scripts/update-pokemon-data.ts
