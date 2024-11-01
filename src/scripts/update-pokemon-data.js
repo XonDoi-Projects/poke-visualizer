@@ -1,13 +1,13 @@
-import * as index from "../components/index";
-import * as util from "../utils";
-
 (async () => {
+  const { getPokemon } = await import("../dist/utils/getPokemon.js");
+  const { pokeBaseUrl, appUrl } = await import("../dist/components/index.js");
+
   const fetch = (await import("node-fetch")).default;
   async function fetchData() {
     try {
       console.log("workflow started");
       const allPokemon = await fetch(
-        `${index.pokeBaseUrl}/pokemon-species/?limit=0`,
+        `${pokeBaseUrl}/pokemon-species/?limit=0`,
         {
           method: "GET",
           headers: {
@@ -16,11 +16,11 @@ import * as util from "../utils";
         }
       );
 
-      const result: any = await allPokemon.json();
+      const result = await allPokemon.json();
 
       const total = result.count;
 
-      await fetch(`${index.appUrl}/total`, {
+      await fetch(`${appUrl}/total`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,14 +33,14 @@ import * as util from "../utils";
       let pokemonList = [];
 
       for (let i = 0; i < total; i++) {
-        const pokemonDetails = await util.getPokemon(i + 1);
+        const pokemonDetails = await getPokemon(i + 1);
 
         if (pokemonDetails) {
           pokemonList.push(pokemonDetails.pokeDetails);
         }
 
         const result = await fetch(
-          `${index.appUrl}/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
+          `${appUrl}/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
           {
             method: "POST",
             headers: {
