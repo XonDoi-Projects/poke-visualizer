@@ -16,7 +16,7 @@ import { getPokemon } from "@/utils";
         }
       );
 
-      const result: any = await allPokemon.json();
+      const result = await allPokemon.json();
 
       const total = result.count;
 
