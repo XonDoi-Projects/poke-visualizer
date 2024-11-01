@@ -24,5 +24,7 @@ jobs:
 
       # Run the function or script that fetches Pokémon data
       - name: Update Pokémon Data
+        env:
+          NODE_PATH: src
         run: |
-          node src/scripts/update-pokemon-data.mjs
+          npx ts-node src/scripts/update-pokemon-data.mjs
