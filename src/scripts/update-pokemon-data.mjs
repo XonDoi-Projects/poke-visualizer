@@ -1,5 +1,5 @@
-import { pokeBaseUrl, appUrl } from "../components";
-import { getPokemon } from "../utils";
+import { pokeBaseUrl, appUrl } from "../components/index.ts";
+import { getPokemon } from "../utils.ts";
 
 (async () => {
   const fetch = (await import("node-fetch")).default;
