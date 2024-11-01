@@ -22,10 +22,15 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Compile TypeScript
-        run: npm run build
+      # - name: Compile TypeScript
+      #   run: npm run build
 
-      # Run the function or script that fetches Pokémon data
-      - name: Update Pokémon Data
-        run: |
-          node src/scripts/update-pokemon-data.js
+      # # Run the function or script that fetches Pokémon data
+      # - name: Update Pokémon Data
+      #   run: |
+      #     node src/scripts/update-pokemon-data.js
+      - name: Build Scripts
+        run: npm run build:scripts
+
+      - name: Run JavaScript Script
+        run: node dist/scripts/update-pokemon-data.js
