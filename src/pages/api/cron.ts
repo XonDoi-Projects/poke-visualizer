@@ -19,11 +19,7 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
 
     console.log("total pokemon:", total);
 
-    try {
-      await saveTotal({ ...req, body: { total } } as NextApiRequest, res);
-    } catch (e: any) {
-      console.log(e.message);
-    }
+    await saveTotal({ ...req, body: { total } } as NextApiRequest, res);
 
     console.log("total has been updated");
     let pokemonList: PokeDetails[] = [];
@@ -35,30 +31,26 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
         pokemonList.push(pokemonDetails.pokeDetails);
       }
 
-      try {
-        await updatePokemon(
-          {
-            ...req,
-            query: { index: pokemonDetails.pokeDetails.index.toString() },
-            body: {
-              pokemon: {
-                pokeDetails: pokemonDetails.pokeDetails,
-                varietyData: pokemonDetails.varietyData,
-              },
+      await updatePokemon(
+        {
+          ...req,
+          query: { index: pokemonDetails.pokeDetails.index.toString() },
+          body: {
+            pokemon: {
+              pokeDetails: pokemonDetails.pokeDetails,
+              varietyData: pokemonDetails.varietyData,
             },
-          } as unknown as NextApiRequest,
-          res
-        );
+          },
+        } as unknown as NextApiRequest,
+        res
+      );
 
-        if (((i / total) * 100) % 2 === 0) {
-          console.log((i / total) * 100);
-        }
-      } catch (e: any) {
-        console.log(e.message);
+      if (((i / total) * 100) % 5 === 0) {
+        console.log((i / total) * 100);
       }
     }
 
-    return res.status(200).json({ message: "Cron ran successfully" });
+    return res.status(200).json({ message: "Workflow ran successfully" });
   } catch (e: any) {
     console.error(e.message);
     return new Response(`CRON has failed to run:${e.message}`, { status: 500 });
