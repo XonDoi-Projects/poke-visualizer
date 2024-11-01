@@ -15,6 +15,8 @@ const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
 
     const total = result.count;
 
+    console.log("total pokemon:", total);
+
     try {
       await fetch(`/api/total`, {
         method: "POST",
@@ -29,6 +31,7 @@ const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
       console.log(e.message);
     }
 
+    console.log("total has been updated");
     let pokemonList: PokeDetails[] = [];
 
     for (let i = 0; i < total; i++) {
