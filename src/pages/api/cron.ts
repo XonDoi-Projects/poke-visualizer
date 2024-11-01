@@ -1,5 +1,4 @@
-import { pokeBaseUrl } from "@/components";
-import { getPokemon, PokeDetails } from "@/utils";
+import { getPokemon, pokeBaseUrl, PokeDetails } from "@/utils";
 import { NextApiRequest, NextApiResponse } from "next";
 import updatePokemon from "./pokemon/refresh";
 import saveTotal from "./save-total";

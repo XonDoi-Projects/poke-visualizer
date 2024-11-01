@@ -1,73 +1,77 @@
 (async () => {
-  const { getPokemon } = await import("../utils");
-  const { pokeBaseUrl, appUrl } = await import("../components/index");
+  const { getPokemon } = await import("../utils.js");
+
+  const pokeBaseUrl = " https://pokeapi.co/api/v2";
+  const appUrl = "https://poke-plan.vercel.app/api";
 
   const fetch = (await import("node-fetch")).default;
-  async function fetchData() {
-    try {
-      console.log("workflow started");
-      const allPokemon = await fetch(
-        `${pokeBaseUrl}/pokemon-species/?limit=0`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
 
-      const result = await allPokemon.json();
+  console.log(1);
+  // async function fetchData() {
+  //   try {
+  //     console.log("workflow started");
+  //     const allPokemon = await fetch(
+  //       `${pokeBaseUrl}/pokemon-species/?limit=0`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      const total = result.count;
+  //     const result = await allPokemon.json();
 
-      await fetch(`${appUrl}/total`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          total,
-        }),
-      });
+  //     const total = result.count;
 
-      let pokemonList = [];
+  //     await fetch(`${appUrl}/total`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         total,
+  //       }),
+  //     });
 
-      for (let i = 0; i < total; i++) {
-        const pokemonDetails = await getPokemon(i + 1);
+  //     let pokemonList = [];
 
-        if (pokemonDetails) {
-          pokemonList.push(pokemonDetails.pokeDetails);
-        }
+  //     for (let i = 0; i < total; i++) {
+  //       const pokemonDetails = await getPokemon(i + 1);
 
-        const result = await fetch(
-          `${appUrl}/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              pokemon: {
-                pokeDetails: pokemonDetails.pokeDetails,
-                varietyData: pokemonDetails.varietyData,
-              },
-            }),
-          }
-        );
+  //       if (pokemonDetails) {
+  //         pokemonList.push(pokemonDetails.pokeDetails);
+  //       }
 
-        await result.json();
+  //       const result = await fetch(
+  //         `${appUrl}/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({
+  //             pokemon: {
+  //               pokeDetails: pokemonDetails.pokeDetails,
+  //               varietyData: pokemonDetails.varietyData,
+  //             },
+  //           }),
+  //         }
+  //       );
 
-        if ((total / i) % 5 === 0) {
-          console.log((total / i) * 100);
-        }
-      }
+  //       await result.json();
 
-      console.log("workflow complete");
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      process.exit(1);
-    }
-  }
+  //       if ((total / i) % 5 === 0) {
+  //         console.log((total / i) * 100);
+  //       }
+  //     }
 
-  fetchData();
+  //     console.log("workflow complete");
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     process.exit(1);
+  //   }
+  // }
+
+  // fetchData();
 })();
