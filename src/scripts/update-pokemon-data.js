@@ -2,7 +2,7 @@
   const fetch = (await import("node-fetch")).default;
   async function fetchData() {
     try {
-      console.log(1);
+      console.log("workflow started");
       const response = await fetch("https://poke-plan.vercel.app/cron", {
         method: "GET",
         headers: {
