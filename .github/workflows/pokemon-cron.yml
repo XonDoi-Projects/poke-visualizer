@@ -33,4 +33,4 @@ jobs:
         run: npm run build:scripts
 
       - name: Run JavaScript Script
-        run: node dist/scripts/update-pokemon-data.js
+        run: node src/scripts/update-pokemon-data.js
