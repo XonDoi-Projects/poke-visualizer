@@ -3,15 +3,62 @@
   async function fetchData() {
     try {
       console.log("workflow started");
-      const response = await fetch("https://poke-plan.vercel.app/api/cron", {
-        method: "GET",
+      const allPokemon = await fetch(
+        `${pokeBaseUrl}/pokemon-species/?limit=0`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const result = await allPokemon.json();
+
+      const total = result.count;
+
+      await fetch(`${appUrl}/total`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: "Bearer",
         },
+        body: JSON.stringify({
+          total,
+        }),
       });
 
-      if (!response.ok) throw new Error(`Failed: ${response.statusText}`);
+      let pokemonList = [];
+
+      for (let i = 0; i < total; i++) {
+        const pokemonDetails = await getPokemon(i + 1);
+
+        if (pokemonDetails) {
+          pokemonList.push(pokemonDetails.pokeDetails);
+        }
+
+        const result = await fetch(
+          `${appUrl}/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              pokemon: {
+                pokeDetails: pokemonDetails.pokeDetails,
+                varietyData: pokemonDetails.varietyData,
+              },
+            }),
+          }
+        );
+
+        await result.json();
+
+        if ((total / i) % 5 === 0) {
+          console.log((total / i) * 100);
+        }
+      }
+
       console.log("workflow complete");
     } catch (error) {
       console.error("Error fetching data:", error);
