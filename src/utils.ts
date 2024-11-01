@@ -1,5 +1,8 @@
-import { mergedBasesUrl, pokeBaseUrl } from "./components";
 import { complexionData } from "./pokemonTypes";
+
+export const pokeBaseUrl = " https://pokeapi.co/api/v2";
+export const appUrl = "https://poke-plan.vercel.app/api";
+export const mergedBasesUrl = " https://gitlab.com/api/v4";
 
 export const statShortHand: { [key in string]: string } = {
   attack: "atk",
