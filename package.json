@@ -2,6 +2,7 @@
   "name": "poke-visualizer",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build-tailwind": "npx tailwindcss -i ./src/input.css -o ./public/output.css --watch",
     "dev": "next dev",
