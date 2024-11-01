@@ -27,4 +27,4 @@ jobs:
         env:
           NODE_PATH: src
         run: |
-          npx ts-node src/scripts/update-pokemon-data.mjs
+          npx ts-node src/scripts/update-pokemon-data.ts
