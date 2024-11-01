@@ -3,7 +3,7 @@
   async function fetchData() {
     try {
       console.log("workflow started");
-      const response = await fetch("https://poke-plan.vercel.app/cron", {
+      const response = await fetch("https://poke-plan.vercel.app/api/cron", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -12,9 +12,7 @@
       });
 
       if (!response.ok) throw new Error(`Failed: ${response.statusText}`);
-
-      const data = await response.json();
-      console.log("Data fetched successfully:", data);
+      console.log("workflow complete");
     } catch (error) {
       console.error("Error fetching data:", error);
       process.exit(1);

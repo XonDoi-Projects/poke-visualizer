@@ -1,7 +1,7 @@
 import clientPromise from "@/lib/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const updatePokemon = async (req: NextApiRequest, res: NextApiResponse) => {
+const saveTotal = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const client = await clientPromise;
     const dbTotal = client.db("pokemons").collection("total");
@@ -24,4 +24,4 @@ const updatePokemon = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default updatePokemon;
+export default saveTotal;
