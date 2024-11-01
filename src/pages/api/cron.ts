@@ -1,8 +1,10 @@
 import { pokeBaseUrl } from "@/components";
 import { getPokemon, PokeDetails } from "@/utils";
 import { NextApiRequest, NextApiResponse } from "next";
+import updatePokemon from "./pokemon/refresh";
+import saveTotal from "./save-total";
 
-const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
+const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const allPokemon = await fetch(`${pokeBaseUrl}/pokemon-species/?limit=0`, {
       method: "GET",
@@ -18,15 +20,7 @@ const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
     console.log("total pokemon:", total);
 
     try {
-      await fetch(`/api/total`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          total,
-        }),
-      });
+      await saveTotal({ ...req, body: { total } } as NextApiRequest, res);
     } catch (e: any) {
       console.log(e.message);
     }
@@ -42,26 +36,22 @@ const cronTest = async (_req: NextApiRequest, res: NextApiResponse) => {
       }
 
       try {
-        const result = await fetch(
-          `/api/pokemon/refresh?index=${pokemonDetails.pokeDetails.index}`,
+        await updatePokemon(
           {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+            ...req,
+            query: { index: pokemonDetails.pokeDetails.index.toString() },
+            body: {
               pokemon: {
                 pokeDetails: pokemonDetails.pokeDetails,
                 varietyData: pokemonDetails.varietyData,
               },
-            }),
-          }
+            },
+          } as unknown as NextApiRequest,
+          res
         );
 
-        await result.json();
-
-        if ((total / i) % 5 === 0) {
-          console.log((total / i) * 100);
+        if (((i / total) * 100) % 2 === 0) {
+          console.log((i / total) * 100);
         }
       } catch (e: any) {
         console.log(e.message);
