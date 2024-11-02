@@ -29,7 +29,7 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
       console.error(e);
     }
 
-    console.log("Total has been updated to", resultTotal?.total);
+    console.log("Total has been updated to", resultTotal.total);
     let pokemonList: PokeDetails[] = [];
 
     for (let i = 0; i < total; i++) {
