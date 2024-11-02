@@ -26,6 +26,8 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
     for (let i = 0; i < total; i++) {
       const pokemonDetails = await getPokemon(i + 1);
 
+      console.log(i + 1);
+
       if (pokemonDetails) {
         pokemonList.push(pokemonDetails.pokeDetails);
       }
