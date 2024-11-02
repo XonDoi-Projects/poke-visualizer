@@ -14,9 +14,7 @@ const saveTotal = async (req: NextApiRequest, res: NextApiResponse) => {
       { returnDocument: "after" }
     );
 
-    if (resultTotal) {
-      return res.status(200).json({ ...resultTotal });
-    }
+    return res.status(200).json({ total: resultTotal?.total });
   } catch (e: any) {
     return res
       .status(404)

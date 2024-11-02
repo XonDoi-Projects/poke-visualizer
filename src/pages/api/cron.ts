@@ -16,15 +16,20 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const total = result.count;
 
-    console.log("total pokemon:", total);
+    console.log("Total pokemon:", total);
+
+    let resultTotal: any;
 
     try {
-      await saveTotal({ ...req, body: { total } } as NextApiRequest, res);
+      resultTotal = await saveTotal(
+        { ...req, body: { total } } as NextApiRequest,
+        res
+      );
     } catch (e: any) {
       console.error(e);
     }
 
-    console.log("total has been updated");
+    console.log("Total has been updated to", resultTotal?.total);
     let pokemonList: PokeDetails[] = [];
 
     for (let i = 0; i < total; i++) {
