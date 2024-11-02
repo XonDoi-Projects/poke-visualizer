@@ -18,7 +18,11 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
 
     console.log("total pokemon:", total);
 
-    await saveTotal({ ...req, body: { total } } as NextApiRequest, res);
+    try {
+      await saveTotal({ ...req, body: { total } } as NextApiRequest, res);
+    } catch (e: any) {
+      console.error(e);
+    }
 
     console.log("total has been updated");
     let pokemonList: PokeDetails[] = [];
@@ -26,25 +30,27 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
     for (let i = 0; i < total; i++) {
       const pokemonDetails = await getPokemon(i + 1);
 
-      console.log(i + 1);
-
       if (pokemonDetails) {
         pokemonList.push(pokemonDetails.pokeDetails);
       }
 
-      await updatePokemon(
-        {
-          ...req,
-          query: { index: pokemonDetails.pokeDetails.index.toString() },
-          body: {
-            pokemon: {
-              pokeDetails: pokemonDetails.pokeDetails,
-              varietyData: pokemonDetails.varietyData,
+      try {
+        await updatePokemon(
+          {
+            ...req,
+            query: { index: pokemonDetails.pokeDetails.index.toString() },
+            body: {
+              pokemon: {
+                pokeDetails: pokemonDetails.pokeDetails,
+                varietyData: pokemonDetails.varietyData,
+              },
             },
-          },
-        } as unknown as NextApiRequest,
-        res
-      );
+          } as unknown as NextApiRequest,
+          res
+        );
+      } catch (e: any) {
+        console.error(e);
+      }
 
       if (((i / total) * 100) % 5 === 0) {
         console.log((i / total) * 100);
