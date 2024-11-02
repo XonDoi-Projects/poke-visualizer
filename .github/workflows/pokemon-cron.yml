@@ -29,8 +29,8 @@ jobs:
       # - name: Update Pokémon Data
       #   run: |
       #     node src/scripts/update-pokemon-data.js
-      - name: Build Scripts
-        run: npm run build:scripts
+      - name: Compile TypeScript
+        run: npx tsc
 
       - name: Run JavaScript Script
-        run: node src/scripts/update-pokemon-data.js
+        run: node dist/src/scripts/update-pokemon-data.js
