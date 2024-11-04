@@ -5,6 +5,7 @@ import saveTotal from "./save-total";
 
 const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    console.time("cron");
     const allPokemon = await fetch(`${pokeBaseUrl}/pokemon-species/?limit=0`, {
       method: "GET",
       headers: {
@@ -29,7 +30,7 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
       console.error(e);
     }
 
-    console.log("Total has been updated to", resultTotal.total);
+    console.log("Total has been updated to: ", resultTotal.total);
     let pokemonList: PokeDetails[] = [];
 
     for (let i = 0; i < total; i++) {
@@ -57,10 +58,12 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
         console.error(e);
       }
 
-      if (((i / total) * 100) % 5 === 0) {
+      if (((i / total) * 100) % 1 === 0) {
         console.log((i / total) * 100);
       }
     }
+
+    console.timeEnd("cron");
 
     return res.status(200).json({ message: "Workflow ran successfully" });
   } catch (e: any) {

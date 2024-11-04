@@ -504,62 +504,6 @@ export const getPokemon = async (
   }
 
   if (firstData.moves.length) {
-    // for (let i = 0; i < firstData.moves.length; i++) {
-    //   const thisMove = firstData.moves[i];
-    //   const moveUrl = thisMove.move.url;
-
-    //   const moveExists = movesCache.find((move) => move.url === moveUrl);
-
-    //   let fourthData;
-    //   if (!moveExists) {
-    //     const moveData = await fetch(moveUrl);
-
-    //     fourthData = await moveData.json();
-    //     movesCache.push({ url: moveUrl, data: fourthData });
-    //   } else {
-    //     fourthData = moveExists.data;
-    //   }
-    //   pokeDetails = {
-    //     ...pokeDetails,
-    //     moves: pokeDetails?.moves
-    //       ? [
-    //           ...pokeDetails.moves,
-    //           {
-    //             name: thisMove.move.name,
-    //             versions: thisMove.version_group_details.map((v: any) => {
-    //               return {
-    //                 version: v.version_group.name,
-    //                 levelLearned: v.level_learned_at,
-    //                 learnMethod: v.move_learn_method.name,
-    //               };
-    //             }),
-    //             accuracy: fourthData.accuracy,
-    //             damageClass: fourthData.damage_class.name,
-    //             effectChance: fourthData.effect_chance,
-    //             power: fourthData.power,
-    //             type: fourthData.type.name,
-    //           },
-    //         ]
-    //       : [
-    //           {
-    //             name: thisMove.move.name,
-    //             versions: thisMove.version_group_details.map((v: any) => {
-    //               return {
-    //                 version: v.version_group.name,
-    //                 levelLearned: v.level_learned_at,
-    //                 learnMethod: v.move_learn_method.name,
-    //               };
-    //             }),
-    //             accuracy: fourthData.accuracy,
-    //             damageClass: fourthData.damage_class.name,
-    //             effectChance: fourthData.effect_chance,
-    //             power: fourthData.power,
-    //             type: fourthData.type.name,
-    //           },
-    //         ],
-    //   };
-    // }
-
     const moves = await Promise.all(
       firstData.moves.map(async (move: any) => {
         const moveData = await getMoveDetails(move.move.url);
