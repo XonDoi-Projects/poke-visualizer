@@ -21,4 +21,4 @@ jobs:
         run: npm install
 
       - name: Run JavaScript file
-        run: node src/scripts/update-pokemon-data.js # Replace with your actual script path if different
+        run: node src/scripts/update-pokemon-data.mjs # Replace with your actual script path if different
