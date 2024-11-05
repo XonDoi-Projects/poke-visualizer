@@ -1,14 +1,16 @@
 import clientPromise from "@/lib/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const updateSync = async (_req: NextApiRequest, res: NextApiResponse) => {
+const updateSync = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const client = await clientPromise;
     const dbSync = client.db("pokemons").collection("refresh");
 
+    const { status } = req.body;
+
     let resultSync = await dbSync.findOneAndUpdate(
       {},
-      { status: "COMPLETED", updatedOn: new Date() }
+      { $set: { status, updatedOn: new Date() } }
     );
 
     if (resultSync) {

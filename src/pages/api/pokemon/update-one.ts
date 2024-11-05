@@ -35,12 +35,14 @@ const updatePokemon = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       if (resultPokemon && resultVarieties) {
-        return { message: "Pokemon update complete, includes variants." };
+        return res
+          .status(200)
+          .json({ message: "Pokemon update complete, includes variants." });
       }
     }
 
     if (resultPokemon) {
-      return { message: "Pokemon update complete." };
+      return res.status(200).json({ message: "Pokemon update complete." });
     }
   } catch (e: any) {
     return res
