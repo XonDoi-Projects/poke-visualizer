@@ -1,7 +1,7 @@
-import { getPokemon, pokeBaseUrl, PokeDetails } from "@/utils";
+import { getPokemon, pokeBaseUrl, PokeDetails, PokeVariety } from "@/utils";
 import { NextApiRequest, NextApiResponse } from "next";
-import updatePokemon from "./pokemon/refresh";
 import saveTotal from "./save-total";
+import updatePokemon from "./pokemon/update-one";
 
 const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -31,13 +31,16 @@ const cronTest = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     console.log("Total has been updated to: ", resultTotal.total);
-    let pokemonList: PokeDetails[] = [];
+    let pokemonList: {
+      pokeDetails: PokeDetails;
+      varietyData: PokeVariety[];
+    }[] = [];
 
     for (let i = 0; i < total; i++) {
       const pokemonDetails = await getPokemon(i + 1);
 
       if (pokemonDetails) {
-        pokemonList.push(pokemonDetails.pokeDetails);
+        pokemonList.push(pokemonDetails);
       }
 
       try {
