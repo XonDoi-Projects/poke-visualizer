@@ -15,12 +15,11 @@ const getSync = async (_req: NextApiRequest, res: NextApiResponse) => {
       (currentDate > resultSync.updatedOn ||
         resultSync.status === "IN PROGRESS")
     ) {
-      return false;
+      await dbSync.findOneAndUpdate({}, { $set: { status: "IN PROGRESS" } });
+      return res.status(200).json({ result: true });
     }
 
-    await dbSync.findOneAndUpdate({}, { status: "IN PROGRESS" });
-
-    return false;
+    return res.status(200).json({ result: false });
   } catch (e: any) {
     return res
       .status(404)
