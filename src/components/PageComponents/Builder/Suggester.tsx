@@ -1,23 +1,21 @@
-import {
-  Column,
-  Row,
-  Span,
-  Switch,
-  Table,
-} from "@/components/LayoutComponents";
-import { PokeStat, pokeTypes } from "@/utils";
+import { Column, Span, Switch, Table } from "@/components/LayoutComponents";
+import { PokeStat, pokeTypes, statShortHand } from "@/utils";
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { BuilderStatistics } from "./BuilderStatistics";
 import { complexionData, TypeWeakness } from "@/pokemonTypes";
 import { TypeChip } from "../Dex/TypeChip";
-import { PokeDetailsWithSelectedMoves } from "./Builder";
+import { PokeDetailsWithSelectedMovesStatCalculator } from "./Builder";
 import { ClassChip } from "../Dex";
 
 type SuggestedStats = {
   speedValue?: number;
   speedValueDetails?: string;
   conclusion?: string;
-  teamStats?: { name: string; stats: PokeStat[] }[];
+  teamStats?: {
+    name: string;
+    baseStats: PokeStat[];
+    effectiveStats?: PokeStat[];
+  }[];
   teamStatsAverage?: PokeStat[];
   typeComposition?: {
     resistances?: { name: TypeWeakness; totalCount: number }[];
@@ -28,7 +26,7 @@ type SuggestedStats = {
 };
 
 export interface SuggesterProps {
-  pokemons: PokeDetailsWithSelectedMoves[];
+  pokemons: PokeDetailsWithSelectedMovesStatCalculator[];
   setShowTypes: (value: boolean) => void;
   showTypes: boolean;
 }
@@ -40,6 +38,7 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
   const [stats, setStats] = useState<SuggestedStats>();
 
   const [showAverage, setShowAverage] = useState(false);
+  const [showEffective, setShowEffective] = useState(false);
 
   const getTeamStatsAverage = (
     statsObject: ({ [key in string]: number } | undefined)[]
@@ -294,10 +293,22 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
   const getStats = useCallback(() => {
     const statsObject: ({ [key in string]: number } | undefined)[] =
       pokemons.map((p) =>
-        p.stats?.reduce(
-          (obj, item) => Object.assign(obj, { [item.name]: item.value }),
-          {}
-        )
+        p.statCalculatorDetails?.stats
+          ? p.statCalculatorDetails?.stats.reduce(
+              (obj, item) =>
+                Object.assign(obj, {
+                  [item.name]: item.calculatedBase,
+                }),
+              {}
+            )
+          : p.stats?.reduce(
+              (obj, item) =>
+                Object.assign(obj, {
+                  [item.name]: p.stats?.find((s) => s.name === item.name)
+                    ?.value,
+                }),
+              {}
+            )
       );
 
     const firstPokemonStats = statsObject[0];
@@ -322,7 +333,21 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
 
     details = {
       ...details,
-      teamStats: pokemons.map((p) => ({ name: p.name, stats: p.stats || [] })),
+      teamStats: pokemons.map((p) => ({
+        name: p.name,
+        baseStats:
+          Object.keys(statShortHand).map((s) => ({
+            name: s,
+            value: p.stats?.find((stat) => stat.name === s)?.value || 0,
+          })) || [],
+        effectiveStats:
+          Object.keys(statShortHand).map((s) => ({
+            name: s,
+            value:
+              p.statCalculatorDetails?.stats?.find((stat) => stat.name === s)
+                ?.calculatedBase || 0,
+          })) || [],
+      })),
       teamStatsAverage: getTeamStatsAverage(statsObject),
       typeComposition: getTypes(),
     };
@@ -342,16 +367,29 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
             <Span>{`Your first pokemon has a speed of ${stats?.speedValue}, which is ${stats?.speedValueDetails}. ${stats?.conclusion}.`}</Span>
           </Column>
           <Column className={`gap-2`}>
-            <Row className={`w-full justify-end`}>
+            <Column className={`w-full gap-1 items-end`}>
               <Switch
                 value={showAverage ? "Show All" : "Show Average"}
                 onClick={() => setShowAverage(!showAverage)}
                 switchPosition={"right"}
               />
-            </Row>
+              <Switch
+                value={showEffective ? "Show Base" : "Show Effective"}
+                onClick={() => setShowEffective(!showEffective)}
+                switchPosition={"right"}
+              />
+            </Column>
 
             <BuilderStatistics
-              teamStats={stats?.teamStats || []}
+              teamStats={
+                stats?.teamStats?.map((s) => ({
+                  name: s.name,
+                  stats:
+                    showEffective && s.effectiveStats !== undefined
+                      ? s.effectiveStats
+                      : s.baseStats,
+                })) || []
+              }
               teamStatsAverage={stats?.teamStatsAverage}
               showAverage={showAverage}
             />

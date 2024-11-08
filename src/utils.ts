@@ -106,6 +106,19 @@ export type MoveDetailsType = {
   }[];
 };
 
+export type StatCalculatorType = {
+  name: string;
+  iv?: number;
+  ev?: number;
+  calculatedBase?: number;
+  calculatedValue?: number;
+};
+
+export type StatCalculatorWithLevelType = {
+  level: number;
+  stats?: StatCalculatorType[];
+};
+
 export type EvolutionType = {
   name: { value: string; flavorText: string };
   item: { value: string | null; flavorText: string };
