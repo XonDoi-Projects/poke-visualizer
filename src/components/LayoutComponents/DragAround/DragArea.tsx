@@ -5,18 +5,16 @@ import { Container } from "../Container";
 import { useDarkTheme } from "@/components/Providers";
 import { useResize } from "@/components/Hooks";
 import {
+  AddMoves,
   BuilderCard,
-  MoveAutocomplete,
-  MoveCard,
-  PokeDetailsWithSelectedMoves,
+  ManageStats,
+  PokeDetailsWithSelectedMovesStatCalculator,
 } from "@/components/PageComponents";
 import { Popup } from "../Popup";
-import { MoveDetailsType } from "@/utils";
-import { Span } from "../Typography";
 
 export interface DragAreaProps {
-  list: PokeDetailsWithSelectedMoves[];
-  setList: (value: PokeDetailsWithSelectedMoves[]) => void;
+  list: PokeDetailsWithSelectedMovesStatCalculator[];
+  setList: (value: PokeDetailsWithSelectedMovesStatCalculator[]) => void;
 }
 
 export const DragArea: FunctionComponent<DragAreaProps> = ({
@@ -26,6 +24,7 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
   const { light } = useDarkTheme();
 
   const [showMoves, setShowMoves] = useState(false);
+  const [showStats, setShowStats] = useState(false);
 
   const [dragIndex, setDragIndex] = useState<number>();
   const [dragOver, setDragOver] = useState<number>();
@@ -47,12 +46,12 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
   >(list.map((_, index) => ({ index, top: undefined })));
 
   const [items, setItems] = useState<
-    { index: number; item: PokeDetailsWithSelectedMoves }[]
+    { index: number; item: PokeDetailsWithSelectedMovesStatCalculator }[]
   >(list.map((i, index) => ({ index, item: i })));
 
   const [item, setItem] = useState<{
     index: number;
-    item: PokeDetailsWithSelectedMoves;
+    item: PokeDetailsWithSelectedMovesStatCalculator;
   }>();
 
   const [itemDims, setItemDims] = useState<DOMRect>();
@@ -125,7 +124,7 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
 
   const handleDragIndex = (
     index: number,
-    item: PokeDetailsWithSelectedMoves
+    item: PokeDetailsWithSelectedMovesStatCalculator
   ) => {
     setDragIndex(index);
     setItem({ index, item });
@@ -194,30 +193,6 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
     setItems(tempItems);
   };
 
-  const handleMoveUpdate = (move?: MoveDetailsType) => {
-    const tempItem = cloneDeep(item);
-
-    if (tempItem && move) {
-      if (tempItem?.item.selectedMoves) {
-        tempItem.item.selectedMoves?.push(move);
-      } else {
-        tempItem.item["selectedMoves"] = [move];
-      }
-
-      setItem(tempItem);
-    }
-  };
-
-  const handleRemoveMove = (moveIndex: number) => {
-    const tempItem = cloneDeep(item);
-
-    if (tempItem && moveIndex !== undefined) {
-      tempItem.item.selectedMoves?.splice(moveIndex, 1);
-
-      setItem(tempItem);
-    }
-  };
-
   const handleConfirmMoves = () => {
     const tempItems = cloneDeep(items);
 
@@ -227,6 +202,19 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
       setItems(tempItems);
       setList(tempItems.map((item) => item.item));
       setShowMoves(false);
+      setItem(undefined);
+    }
+  };
+
+  const handleConfirmStats = () => {
+    const tempItems = cloneDeep(items);
+
+    if (tempItems && item) {
+      tempItems[item.index].item = item.item;
+
+      setItems(tempItems);
+      setList(tempItems.map((item) => item.item));
+      setShowStats(false);
       setItem(undefined);
     }
   };
@@ -270,7 +258,11 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
           style={{ opacity: index + 1 > items.length ? "1" : "0" }}
         >
           {index + 1 <= items.length ? (
-            <BuilderCard pokemon={items[index].item} />
+            <BuilderCard
+              pokemon={items[index].item}
+              disableMoveDown={index === items.length - 1}
+              disableMoveUp={index === 0}
+            />
           ) : (
             <BuilderCard placeholder />
           )}
@@ -368,11 +360,15 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
             pokemon={item.item}
             removePokemon={() => handleRemovePokemon(item.index)}
             moveDown={() => handleMoveDown(index)}
-            disableMoveDown={index === items.length - 1}
             moveUp={() => handleMoveUp(index)}
+            disableMoveDown={index === items.length - 1}
             disableMoveUp={index === 0}
-            onClick={() => {
+            onShowMoves={() => {
               setShowMoves(true);
+              setItem(item);
+            }}
+            onShowStats={() => {
+              setShowStats(true);
               setItem(item);
             }}
           />
@@ -391,31 +387,14 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
         onCancel={() => setShowMoves(false)}
         onConfirm={() => handleConfirmMoves()}
       >
-        <Column
-          className={`h-[400px] overflow-y-auto scrollbar ${
-            light ? "light" : "dark"
-          } gap-5`}
-        >
-          <Span>{`Select Moves for ${item?.item.name}`}</Span>
-          <MoveAutocomplete
-            data={item?.item.moves || []}
-            label=""
-            setMove={(move) => handleMoveUpdate(move)}
-            disable={
-              item?.item.selectedMoves && item?.item.selectedMoves.length >= 4
-            }
-          />
-          <Column className={`gap-2`}>
-            {item?.item.selectedMoves?.map((m, index) => (
-              <MoveCard
-                key={m.name}
-                move={m}
-                onRemove={() => handleRemoveMove(index)}
-                index={index + 1}
-              />
-            ))}
-          </Column>
-        </Column>
+        <AddMoves item={item} setItem={setItem} />
+      </Popup>
+      <Popup
+        show={showStats}
+        onCancel={() => setShowStats(false)}
+        onConfirm={() => handleConfirmStats()}
+      >
+        <ManageStats item={item} setItem={setItem} />
       </Popup>
     </Column>
   );

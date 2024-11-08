@@ -7,23 +7,25 @@ import {
   Small,
   Span,
 } from "@/components/LayoutComponents";
-import { PokeDetails, statShortHand } from "@/utils";
+import { statShortHand } from "@/utils";
 import { FunctionComponent } from "react";
 import Image from "next/image";
 import { TypeChip } from "../Dex/TypeChip";
 import { Card } from "@/components/LayoutComponents/Card";
 import { BiChevronDown, BiChevronUp, BiX } from "react-icons/bi";
 import { useDarkTheme, useSize } from "@/components/Providers";
+import { PokeDetailsWithSelectedMovesStatCalculator } from "./Builder";
 
 export interface BuilderCardProps {
-  pokemon?: PokeDetails;
+  pokemon?: PokeDetailsWithSelectedMovesStatCalculator;
   removePokemon?: () => void;
   moveUp?: () => void;
   disableMoveUp?: boolean;
   moveDown?: () => void;
   disableMoveDown?: boolean;
   placeholder?: boolean;
-  onClick?: () => void;
+  onShowMoves?: () => void;
+  onShowStats?: () => void;
 }
 
 export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
@@ -34,10 +36,12 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
   moveUp,
   placeholder,
   disableMoveUp,
-  onClick,
+  onShowMoves,
+  onShowStats,
 }) => {
   const { light } = useDarkTheme();
   const { mobile } = useSize();
+
   return placeholder ? (
     <Card className={`rounded-lg p-3 flex-1 h-[100px] opacity-40`} noShadow>
       <Row
@@ -49,55 +53,58 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
   ) : (
     <Card className={`rounded-lg p-3 flex-1 h-fit`} noShadow>
       <Row className={`gap-2 w-full flex-wrap flex-1 justify-between`}>
-        <Row>
-          <Button className={`rounded-full`} onClick={onClick}>
+        <Row className={`gap-2`}>
+          <Button className={`rounded-full`} onClick={onShowMoves}>
             <Small
               className={` ${!light ? "text-blue-900" : "text-slate-300"}`}
             >
               Add Moves
             </Small>
           </Button>
+          <Button className={`rounded-full`} onClick={onShowStats}>
+            <Small
+              className={` ${!light ? "text-blue-900" : "text-slate-300"}`}
+            >
+              Manage Stats
+            </Small>
+          </Button>
         </Row>
         <Row className={`gap-2 w-full flex-wrap flex-1 justify-end`}>
-          {mobile && (
-            <>
-              {!disableMoveDown && (
-                <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    moveDown && moveDown();
-                  }}
-                  className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
-                >
-                  <BiChevronDown
-                    className={
-                      !light
-                        ? "text-blue-900 group-hover:text-blue-800"
-                        : "text-slate-300 group-hover:text-slate-200"
-                    }
-                    style={{ fontSize: "16px" }}
-                  />
-                </Button>
-              )}
-              {!disableMoveUp && (
-                <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    moveUp && moveUp();
-                  }}
-                  className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
-                >
-                  <BiChevronUp
-                    className={
-                      !light
-                        ? "text-blue-900 group-hover:text-blue-800"
-                        : "text-slate-300 group-hover:text-slate-200"
-                    }
-                    style={{ fontSize: "16px" }}
-                  />
-                </Button>
-              )}
-            </>
+          {mobile && !disableMoveDown && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                moveDown && moveDown();
+              }}
+              className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
+            >
+              <BiChevronDown
+                className={
+                  !light
+                    ? "text-blue-900 group-hover:text-blue-800"
+                    : "text-slate-300 group-hover:text-slate-200"
+                }
+                style={{ fontSize: "16px" }}
+              />
+            </Button>
+          )}
+          {mobile && !disableMoveUp && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                moveUp && moveUp();
+              }}
+              className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
+            >
+              <BiChevronUp
+                className={
+                  !light
+                    ? "text-blue-900 group-hover:text-blue-800"
+                    : "text-slate-300 group-hover:text-slate-200"
+                }
+                style={{ fontSize: "16px" }}
+              />
+            </Button>
           )}
           <Button
             onClick={(e) => {
@@ -146,13 +153,30 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
           </Column>
         </Row>
 
+        <Column className={`flex-wrap w-[100px]`}>
+          <LabelWithValue
+            label="LEVEL"
+            value={(pokemon?.statCalculatorDetails?.level || 1).toString()}
+            small={mobile}
+          />
+        </Column>
+
         <Row className={`gap-5`}>
           <Column className={`flex-wrap w-[100px]`}>
             {pokemon?.stats?.slice(0, 3).map((s) => (
               <LabelWithValue
                 key={s.name}
                 label={statShortHand[s.name]}
-                value={s.value.toString()}
+                value={`${
+                  pokemon.statCalculatorDetails?.stats
+                    ?.find((stat) => stat.name === s.name)
+                    ?.calculatedBase?.toString() || s.value.toString()
+                } / ${(
+                  pokemon.statCalculatorDetails?.stats?.find(
+                    (stat) => stat.name === s.name
+                  )?.calculatedValue || 0
+                )?.toString()}`}
+                small={mobile}
               />
             ))}
           </Column>
@@ -162,7 +186,16 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
               <LabelWithValue
                 key={s.name}
                 label={statShortHand[s.name]}
-                value={s.value.toString()}
+                value={`${
+                  pokemon.statCalculatorDetails?.stats
+                    ?.find((stat) => stat.name === s.name)
+                    ?.calculatedBase?.toString() || s.value.toString()
+                } / ${(
+                  pokemon.statCalculatorDetails?.stats?.find(
+                    (stat) => stat.name === s.name
+                  )?.calculatedValue || 0
+                )?.toString()}`}
+                small={mobile}
               />
             ))}
           </Column>

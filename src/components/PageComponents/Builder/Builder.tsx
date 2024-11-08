@@ -4,6 +4,7 @@ import {
   Container,
   H2,
   H3,
+  InfoButton,
   Row,
   Small,
   Span,
@@ -17,6 +18,7 @@ import {
   pokeTraits,
   PokeType,
   pokeTypes,
+  StatCalculatorWithLevelType,
 } from "@/utils";
 import { useMemo, useState } from "react";
 import { PokemonAutocomplete } from "../PageAutocomplete/PokemonAutocomplete";
@@ -27,13 +29,17 @@ import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
 import { BiSlider } from "react-icons/bi";
 
-export interface PokeDetailsWithSelectedMoves extends PokeDetails {
+export interface PokeDetailsWithSelectedMovesStatCalculator
+  extends PokeDetails {
   selectedMoves?: MoveDetailsType[];
+  statCalculatorDetails?: StatCalculatorWithLevelType;
 }
 
 export const Builder = () => {
   const { light } = useDarkTheme();
-  const [pokemons, setPokemons] = useState<PokeDetailsWithSelectedMoves[]>([]);
+  const [pokemons, setPokemons] = useState<
+    PokeDetailsWithSelectedMovesStatCalculator[]
+  >([]);
 
   const [showTypes, setShowTypes] = useState(true);
 
@@ -177,7 +183,33 @@ export const Builder = () => {
       ) : null}
       <Row className={`relative flex-wrap gap-5`}>
         <Column className={`relative flex-1 rounded gap-2 p-3`}>
-          <H3>Team</H3>
+          <Row className={`justify-between items-center`}>
+            <H3>Team</H3>
+            <InfoButton
+              tooltipDetails={
+                <Column className={`w-[150px] gap-2`}>
+                  {" "}
+                  <Small
+                    className={`${light ? "text-blue-900" : "text-slate-300"} `}
+                  >
+                    STAT Base / Effective.
+                  </Small>
+                  <Small
+                    className={`${light ? "text-blue-900" : "text-slate-300"} `}
+                  >
+                    Effective stats take into consideration the level you
+                    select.
+                  </Small>
+                  <Small
+                    className={`${light ? "text-blue-900" : "text-slate-300"} `}
+                  >
+                    Base stats simply add the IVs and EVs you select.
+                  </Small>
+                </Column>
+              }
+            />
+          </Row>
+
           <DragArea list={pokemons} setList={setPokemons} />
         </Column>
         <Column className={`relative flex-1 rounded gap-2 w-full p-3`}>

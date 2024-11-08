@@ -17,7 +17,7 @@ export const MoveAutocomplete: FunctionComponent<MoveAutocompleteProps> = ({
   className,
   noDropDownOnClick = false,
   placeHolder,
-  type,
+  fieldType,
   label,
   disable,
 }) => {
@@ -50,7 +50,7 @@ export const MoveAutocomplete: FunctionComponent<MoveAutocompleteProps> = ({
       className={`w-full ${className}`}
       noDropDownOnClick={noDropDownOnClick}
       placeHolder={placeHolder}
-      type={type}
+      fieldType={fieldType}
       disable={disable}
     />
   );

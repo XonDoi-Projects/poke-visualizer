@@ -8,15 +8,16 @@ import {
 } from "react";
 import { Field, FieldProps } from "../Field";
 
-export interface InputFieldProps
+export interface NumberFieldProps
   extends InputHTMLAttributes<HTMLInputElement>,
     FieldProps {
   value: string;
-  onValueChange: (value: string) => void;
+  onValueChange: (value?: string) => void;
   className?: HTMLProps<"HTMLElement">["className"];
+  fieldClassName?: HTMLProps<"HTMLInputElement">["className"];
 }
 
-export const InputField: FunctionComponent<InputFieldProps> = ({
+export const NumberField: FunctionComponent<NumberFieldProps> = ({
   ref,
   label,
   errorText,
@@ -29,14 +30,17 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
   placeHolder,
   fieldType,
   className,
+  fieldClassName,
   style,
   ...props
 }) => {
   const { light } = useDarkTheme();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!disable) {
+    if (!disable && e.currentTarget.value.match(/[0-9]+/g)) {
       onValueChange(e.currentTarget.value);
+    } else if (!disable && !e.currentTarget.value) {
+      onValueChange(undefined);
     }
   };
 
@@ -58,11 +62,12 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
     >
       <input
         {...props}
+        type="number"
         style={{ ...style, width: width ? width + "px" : "100%" }}
         value={value}
         onChange={onChange}
         placeholder={placeHolder}
-        className={`h-[30px] justify-center outline-0 items-center px-[5px] ${
+        className={` h-[30px] justify-center outline-0 items-center px-[5px] ${
           !disable ? "cursor-text" : "cursor-auto"
         } transition-all bg-transparent
          ${
@@ -79,7 +84,7 @@ export const InputField: FunctionComponent<InputFieldProps> = ({
                 !disable ? "hover:placeholder-slate-200/50" : ""
               }`
         }
-         ${disable ? "opacity-20" : ""} ${className} `}
+         ${disable ? "opacity-20" : ""} ${fieldClassName} `}
       />
     </Field>
   );

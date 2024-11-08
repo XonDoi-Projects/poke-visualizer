@@ -23,7 +23,7 @@ export const PokemonAutocomplete: FunctionComponent<
   className,
   noDropDownOnClick = false,
   placeHolder,
-  type,
+  fieldType,
   label,
   disable,
   elementPrefix,
@@ -76,7 +76,7 @@ export const PokemonAutocomplete: FunctionComponent<
       className={`w-full ${className}`}
       noDropDownOnClick={noDropDownOnClick}
       placeHolder={placeHolder}
-      type={type}
+      fieldType={fieldType}
       disable={disable}
       loading={isLoading}
       elementPrefix={elementPrefix}
