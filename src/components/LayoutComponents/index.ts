@@ -13,3 +13,5 @@ export * from "./Loading";
 export * from "./Switch";
 export * from "./Popup";
 export * from "./Menu";
+export * from "./Tabular";
+export * from "./Card";

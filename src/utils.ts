@@ -93,6 +93,7 @@ export type PokeType =
 export type PokeTrait = "all" | "baby" | "legendary" | "mythical" | "other";
 
 export type MoveDetailsType = {
+  isEnemy?: boolean;
   name: string;
   accuracy: number | null;
   power: number | null;

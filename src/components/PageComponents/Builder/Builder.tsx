@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   Column,
   Container,
   H2,
@@ -8,6 +9,7 @@ import {
   Row,
   Small,
   Span,
+  Tabular,
 } from "@/components/LayoutComponents";
 import {
   MoveDetailsType,
@@ -23,11 +25,10 @@ import {
 import { useMemo, useState } from "react";
 import { PokemonAutocomplete } from "../PageAutocomplete/PokemonAutocomplete";
 import { DragArea } from "@/components/LayoutComponents/DragAround";
-import { Suggester } from "./Suggester";
 import { Selector } from "@/components/LayoutComponents/Selector";
-import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
 import { BiSlider } from "react-icons/bi";
+import { Suggester } from "./Suggester";
 
 export interface PokeDetailsWithSelectedMovesStatCalculator
   extends PokeDetails {
@@ -35,19 +36,32 @@ export interface PokeDetailsWithSelectedMovesStatCalculator
   statCalculatorDetails?: StatCalculatorWithLevelType;
 }
 
+export interface PlannerDetails {
+  my: PokeDetailsWithSelectedMovesStatCalculator[];
+  enemy: PokeDetailsWithSelectedMovesStatCalculator[];
+}
+
 export const Builder = () => {
   const { light } = useDarkTheme();
-  const [pokemons, setPokemons] = useState<
-    PokeDetailsWithSelectedMovesStatCalculator[]
-  >([]);
+  const [plannerDetails, setPlannerDetails] = useState<PlannerDetails>({
+    my: [],
+    enemy: [],
+  });
 
   const [showTypes, setShowTypes] = useState(true);
+  const [activeTab, setActiveTab] = useState("My Team");
 
   const [expandFilter, setExpandFilter] = useState(false);
 
   const [region, setRegion] = useState<PokeRegion>("all");
   const [trait, setTrait] = useState<PokeTrait>("all");
   const [types, setTypes] = useState<PokeType[]>(["all"]);
+
+  const pokemons = useMemo(
+    () =>
+      activeTab === "My Team" ? plannerDetails?.my : plannerDetails?.enemy,
+    [activeTab, plannerDetails]
+  );
 
   const helperText = useMemo(() => {
     const filter = [region, trait, ...types]
@@ -78,7 +92,17 @@ export const Builder = () => {
             pokemon={undefined}
             setPokemon={(data) => {
               if (data) {
-                setPokemons((prev) => [...prev, data]);
+                if (activeTab === "My Team") {
+                  setPlannerDetails((prev) => ({
+                    ...prev,
+                    my: [...prev.my, data],
+                  }));
+                } else {
+                  setPlannerDetails((prev) => ({
+                    ...prev,
+                    enemy: [...prev.enemy, data],
+                  }));
+                }
               }
             }}
             disable={pokemons.length >= 6}
@@ -210,7 +234,29 @@ export const Builder = () => {
             />
           </Row>
 
-          <DragArea list={pokemons} setList={setPokemons} />
+          <Tabular
+            tabs={["My Team", "Enemy Team"]}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          >
+            <DragArea
+              list={pokemons}
+              setList={(data) => {
+                if (activeTab === "My Team") {
+                  setPlannerDetails((prev) => ({
+                    ...prev,
+                    my: data,
+                  }));
+                } else {
+                  setPlannerDetails((prev) => ({
+                    ...prev,
+                    enemy: data,
+                  }));
+                }
+              }}
+              isEnemy={activeTab === "Enemy Team"}
+            />{" "}
+          </Tabular>
         </Column>
         <Column className={`relative flex-1 rounded gap-2 w-full p-3`}>
           <Row className={`justify-between items-center`}>
@@ -225,15 +271,15 @@ export const Builder = () => {
             </Button>
           </Row>
 
-          {pokemons.length > 0 ? (
+          {Object.values(plannerDetails).flatMap((t) => t).length ? (
             <Suggester
-              pokemons={pokemons}
+              plannerDetails={plannerDetails}
               setShowTypes={setShowTypes}
               showTypes={showTypes}
             />
           ) : (
             <Card
-              className={`flex-1 items-center justify-center rounded-md opacity-40`}
+              className={`flex-1 items-center justify-center rounded-md opacity-40 min-h-[200px]`}
               noShadow
             >
               <Span>Start building your team!</Span>

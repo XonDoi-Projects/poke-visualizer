@@ -1,11 +1,27 @@
-import { Column, Span, Switch, Table } from "@/components/LayoutComponents";
-import { PokeStat, pokeTypes, statShortHand } from "@/utils";
+import {
+  Column,
+  Row,
+  Small,
+  Span,
+  Switch,
+  Table,
+} from "@/components/LayoutComponents";
+import { MoveDetailsType, PokeStat, pokeTypes, statShortHand } from "@/utils";
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { BuilderStatistics } from "./BuilderStatistics";
 import { complexionData, TypeWeakness } from "@/pokemonTypes";
 import { TypeChip } from "../Dex/TypeChip";
-import { PokeDetailsWithSelectedMovesStatCalculator } from "./Builder";
+import {
+  PlannerDetails,
+  PokeDetailsWithSelectedMovesStatCalculator,
+} from "./Builder";
 import { ClassChip } from "../Dex";
+import { useDarkTheme } from "@/components/Providers";
+
+type TableTotals = {
+  my: number;
+  enemy: number;
+};
 
 type SuggestedStats = {
   speedValue?: number;
@@ -17,28 +33,36 @@ type SuggestedStats = {
     effectiveStats?: PokeStat[];
   }[];
   teamStatsAverage?: PokeStat[];
+  enemyTeamStats?: {
+    name: string;
+    baseStats: PokeStat[];
+    effectiveStats?: PokeStat[];
+  }[];
+  enemyTeamStatsAverage?: PokeStat[];
   typeComposition?: {
-    resistances?: { name: TypeWeakness; totalCount: number }[];
-    weaknesses?: { name: TypeWeakness; totalCount: number }[];
-    stab?: { name: TypeWeakness; totalCount: number }[];
-    moves?: { name: TypeWeakness; totalCount: number }[];
+    resistances?: { name: TypeWeakness; totalCount: TableTotals }[];
+    weaknesses?: { name: TypeWeakness; totalCount: TableTotals }[];
+    stab?: { name: TypeWeakness; totalCount: TableTotals }[];
+    moves?: { name: TypeWeakness; totalCount: TableTotals }[];
   };
 };
 
 export interface SuggesterProps {
-  pokemons: PokeDetailsWithSelectedMovesStatCalculator[];
+  plannerDetails: PlannerDetails;
   setShowTypes: (value: boolean) => void;
   showTypes: boolean;
 }
 
 export const Suggester: FunctionComponent<SuggesterProps> = ({
-  pokemons,
+  plannerDetails,
   showTypes,
 }) => {
+  const { light } = useDarkTheme();
   const [stats, setStats] = useState<SuggestedStats>();
 
   const [showAverage, setShowAverage] = useState(false);
   const [showEffective, setShowEffective] = useState(false);
+  const [showEnemy, setShowEnemy] = useState(false);
 
   const getTeamStatsAverage = (
     statsObject: ({ [key in string]: number } | undefined)[]
@@ -110,230 +134,311 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
   };
 
   const getTypes = useCallback(() => {
-    let types: { name: TypeWeakness; totalCount: number }[] = [
+    let types: {
+      name: TypeWeakness;
+      totalCount: TableTotals;
+    }[] = [
       {
         name: "normal",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "grass",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "fire",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "water",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "electric",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "fighting",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "rock",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "ground",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "bug",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "steel",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "dark",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "ghost",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "ice",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "fairy",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "psychic",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "dragon",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "flying",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
       {
         name: "poison",
-        totalCount: 0,
+        totalCount: { my: 0, enemy: 0 },
       },
     ];
 
     let typeComposition = {
-      resistances: types.map((t) => ({ ...t })),
-      weaknesses: types.map((t) => ({ ...t })),
-      stab: types.map((t) => ({ ...t })),
-      moves: types.map((t) => ({ ...t })),
+      resistances: types.map((t) => structuredClone(t)),
+      weaknesses: types.map((t) => structuredClone(t)),
+      stab: types.map((t) => structuredClone(t)),
+      moves: types.map((t) => structuredClone(t)),
     };
 
-    pokemons.forEach((list) => {
-      if (list) {
-        let receivesHalf: TypeWeakness[] = [];
-        let receivesQuarter: TypeWeakness[] = [];
-        let receivesDouble: TypeWeakness[] = [];
-        let receivesQuadruple: TypeWeakness[] = [];
+    const keys = Object.keys(plannerDetails);
 
-        if (list.types && list.types?.length > 1) {
-          receivesHalf =
-            complexionData[list.types[0]].secondary[list.types[1]].complexion
-              .half;
-          receivesQuarter =
-            complexionData[list.types[0]].secondary[list.types[1]].complexion
-              .quarter;
-        } else if (list.types) {
-          receivesHalf = complexionData[list.types[0]].complexion.half;
-          receivesQuarter = complexionData[list.types[0]].complexion.quarter;
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i];
+
+      plannerDetails[k as keyof PlannerDetails].forEach((list) => {
+        if (list) {
+          let receivesHalf: TypeWeakness[] = [];
+          let receivesQuarter: TypeWeakness[] = [];
+          let receivesDouble: TypeWeakness[] = [];
+          let receivesQuadruple: TypeWeakness[] = [];
+
+          if (list.types && list.types?.length > 1) {
+            receivesHalf =
+              complexionData[list.types[0]].secondary[list.types[1]].complexion
+                .half;
+            receivesQuarter =
+              complexionData[list.types[0]].secondary[list.types[1]].complexion
+                .quarter;
+          } else if (list.types) {
+            receivesHalf = complexionData[list.types[0]].complexion.half;
+            receivesQuarter = complexionData[list.types[0]].complexion.quarter;
+          }
+
+          receivesHalf.forEach((h) => {
+            const index = typeComposition.resistances.findIndex(
+              (f) => f.name === h
+            );
+
+            if (index >= 0) {
+              typeComposition.resistances[index].totalCount[
+                k as keyof TableTotals
+              ] += 1;
+            }
+          });
+          receivesQuarter.forEach((h) => {
+            const index = typeComposition.resistances.findIndex(
+              (f) => f.name === h
+            );
+
+            if (index >= 0) {
+              typeComposition.resistances[index].totalCount[
+                k as keyof TableTotals
+              ] += 1;
+            }
+          });
+
+          if (list.types && list.types?.length > 1) {
+            receivesDouble =
+              complexionData[list.types[0]].secondary[list.types[1]].complexion
+                .double;
+            receivesQuadruple =
+              complexionData[list.types[0]].secondary[list.types[1]].complexion
+                .quadruple;
+          } else if (list.types) {
+            receivesDouble = complexionData[list.types[0]].complexion.double;
+            receivesQuadruple =
+              complexionData[list.types[0]].complexion.quadruple;
+          }
+
+          receivesDouble.forEach((h) => {
+            const index = typeComposition.weaknesses.findIndex(
+              (f) => f.name === h
+            );
+
+            if (index >= 0) {
+              typeComposition.weaknesses[index].totalCount[
+                k as keyof TableTotals
+              ] += 1;
+            }
+          });
+          receivesQuadruple.forEach((h) => {
+            const index = typeComposition.weaknesses.findIndex(
+              (f) => f.name === h
+            );
+
+            if (index >= 0) {
+              typeComposition.weaknesses[index].totalCount[
+                k as keyof TableTotals
+              ] += 1;
+            }
+          });
         }
+      });
+    }
 
-        receivesHalf.forEach((h) => {
-          const index = typeComposition.resistances.findIndex(
-            (f) => f.name === h
-          );
+    const moveList = keys.flatMap((k) =>
+      plannerDetails[k as keyof PlannerDetails].flatMap((p) => p.selectedMoves)
+    );
 
-          if (index >= 0) {
-            typeComposition.resistances[index].totalCount += 1;
-          }
-        });
-        receivesQuarter.forEach((h) => {
-          const index = typeComposition.resistances.findIndex(
-            (f) => f.name === h
-          );
-
-          if (index >= 0) {
-            typeComposition.resistances[index].totalCount += 1;
-          }
-        });
-
-        if (list.types && list.types?.length > 1) {
-          receivesDouble =
-            complexionData[list.types[0]].secondary[list.types[1]].complexion
-              .double;
-          receivesQuadruple =
-            complexionData[list.types[0]].secondary[list.types[1]].complexion
-              .quadruple;
-        } else if (list.types) {
-          receivesDouble = complexionData[list.types[0]].complexion.double;
-          receivesQuadruple =
-            complexionData[list.types[0]].complexion.quadruple;
-        }
-
-        receivesDouble.forEach((h) => {
-          const index = typeComposition.weaknesses.findIndex(
-            (f) => f.name === h
-          );
-
-          if (index >= 0) {
-            typeComposition.weaknesses[index].totalCount += 1;
-          }
-        });
-        receivesQuadruple.forEach((h) => {
-          const index = typeComposition.weaknesses.findIndex(
-            (f) => f.name === h
-          );
-
-          if (index >= 0) {
-            typeComposition.weaknesses[index].totalCount += 1;
-          }
-        });
-      }
-    });
-
-    const moveList = pokemons.flatMap((p) => p.selectedMoves);
-
-    moveList.forEach((move) => {
+    moveList.forEach((move: MoveDetailsType | undefined) => {
       const index = typeComposition.moves.findIndex(
         (m) => m.name === move?.type
       );
 
       if (index >= 0) {
-        typeComposition.moves[index].totalCount += 1;
+        if (move?.isEnemy) {
+          typeComposition.moves[index].totalCount["enemy"] += 1;
+        } else {
+          typeComposition.moves[index].totalCount["my"] += 1;
+        }
       }
     });
 
-    pokemons.forEach((pokemon) => {
-      pokemon.selectedMoves?.forEach((move) => {
-        const index = typeComposition.stab.findIndex(
-          (m) => m.name === move.type
-        );
-        if (move.type && pokemon.types?.includes(move.type)) {
-          typeComposition.stab[index].totalCount += 1;
-        }
-      });
-    });
+    keys.forEach((k) =>
+      plannerDetails[k as keyof PlannerDetails].forEach((pokemon) => {
+        pokemon.selectedMoves?.forEach((move) => {
+          const index = typeComposition.stab.findIndex(
+            (m) => m.name === move.type
+          );
+          if (move.type && pokemon.types?.includes(move.type)) {
+            typeComposition.stab[index].totalCount[k as keyof TableTotals] += 1;
+          }
+        });
+      })
+    );
 
     return typeComposition;
-  }, [pokemons]);
+  }, [plannerDetails]);
 
   const getStats = useCallback(() => {
-    const statsObject: ({ [key in string]: number } | undefined)[] =
-      pokemons.map((p) =>
-        p.statCalculatorDetails?.stats
-          ? p.statCalculatorDetails?.stats.reduce(
-              (obj, item) =>
-                Object.assign(obj, {
-                  [item.name]: item.calculatedBase,
-                }),
-              {}
-            )
-          : p.stats?.reduce(
-              (obj, item) =>
-                Object.assign(obj, {
-                  [item.name]: p.stats?.find((s) => s.name === item.name)
-                    ?.value,
-                }),
-              {}
-            )
-      );
+    const myStatsObject: ({ [key in string]: number } | undefined)[] =
+      plannerDetails.my.map((p, index) => {
+        if (index === 0) {
+          return p.statCalculatorDetails?.stats
+            ? p.statCalculatorDetails?.stats.reduce(
+                (obj, item) =>
+                  Object.assign(obj, {
+                    [item.name]: item.calculatedBase,
+                  }),
+                {}
+              )
+            : p.stats?.reduce(
+                (obj, item) =>
+                  Object.assign(obj, {
+                    [item.name]: p.stats?.find((s) => s.name === item.name)
+                      ?.value,
+                  }),
+                {}
+              );
+        }
+      });
 
-    const firstPokemonStats = statsObject[0];
+    const myFirstPokemonStats = myStatsObject[0];
+
+    const enemyStatsObject: ({ [key in string]: number } | undefined)[] =
+      plannerDetails.enemy.map((p, index) => {
+        if (index === 0) {
+          return p.statCalculatorDetails?.stats
+            ? p.statCalculatorDetails?.stats.reduce(
+                (obj, item) =>
+                  Object.assign(obj, {
+                    [item.name]: item.calculatedBase,
+                  }),
+                {}
+              )
+            : p.stats?.reduce(
+                (obj, item) =>
+                  Object.assign(obj, {
+                    [item.name]: p.stats?.find((s) => s.name === item.name)
+                      ?.value,
+                  }),
+                {}
+              );
+        }
+      });
+
+    const enemyFirstPokemonStats = enemyStatsObject[0];
 
     let details: SuggestedStats = {};
 
-    if (firstPokemonStats) {
-      if (firstPokemonStats["speed"] >= 93) {
+    console.log(enemyStatsObject);
+
+    if (myFirstPokemonStats && enemyFirstPokemonStats) {
+      if (myFirstPokemonStats["speed"] > enemyFirstPokemonStats["speed"]) {
         details = {
-          speedValue: firstPokemonStats["speed"],
-          speedValueDetails: `above average (${93})`,
-          conclusion: "You are likely to attack first",
+          speedValue: myFirstPokemonStats["speed"],
+          speedValueDetails: `above enemy's speed ${enemyFirstPokemonStats["speed"]}`,
+          conclusion: "You are likely to attack first.",
+        };
+      } else if (
+        myFirstPokemonStats["speed"] < enemyFirstPokemonStats["speed"]
+      ) {
+        details = {
+          speedValue: myFirstPokemonStats["speed"],
+          speedValueDetails: `below enemy's speed ${enemyFirstPokemonStats["speed"]}`,
+          conclusion: "You are likely to be attacked first.",
         };
       } else {
         details = {
-          speedValue: firstPokemonStats["speed"],
+          speedValue: myFirstPokemonStats["speed"],
+          speedValueDetails: `equal enemy's speed ${enemyFirstPokemonStats["speed"]}`,
+          conclusion: "You are likely to be attacked first.",
+        };
+      }
+    } else if (myFirstPokemonStats) {
+      if (myFirstPokemonStats["speed"] > 93) {
+        details = {
+          speedValue: myFirstPokemonStats["speed"],
+          speedValueDetails: `above average (${93})`,
+          conclusion: "You are likely to attack first.",
+        };
+      } else if (myFirstPokemonStats["speed"] < 93) {
+        details = {
+          speedValue: myFirstPokemonStats["speed"],
           speedValueDetails: `below average (${93})`,
-          conclusion: "You are likely to be attacked first",
+          conclusion: "You are likely to be attacked .",
+        };
+      } else {
+        details = {
+          speedValue: myFirstPokemonStats["speed"],
+          speedValueDetails: `equal to the average (${93})`,
+          conclusion: "",
         };
       }
     }
 
     details = {
       ...details,
-      teamStats: pokemons.map((p) => ({
+      teamStats: plannerDetails.my.map((p) => ({
         name: p.name,
         baseStats:
           Object.keys(statShortHand).map((s) => ({
@@ -348,12 +453,28 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
                 ?.calculatedBase || 0,
           })) || [],
       })),
-      teamStatsAverage: getTeamStatsAverage(statsObject),
+      enemyTeamStats: plannerDetails.enemy.map((p) => ({
+        name: p.name,
+        baseStats:
+          Object.keys(statShortHand).map((s) => ({
+            name: s,
+            value: p.stats?.find((stat) => stat.name === s)?.value || 0,
+          })) || [],
+        effectiveStats:
+          Object.keys(statShortHand).map((s) => ({
+            name: s,
+            value:
+              p.statCalculatorDetails?.stats?.find((stat) => stat.name === s)
+                ?.calculatedBase || 0,
+          })) || [],
+      })),
+      teamStatsAverage: getTeamStatsAverage(myStatsObject),
+      enemyTeamStatsAverage: getTeamStatsAverage(enemyStatsObject),
       typeComposition: getTypes(),
     };
 
     setStats(details);
-  }, [getTypes, pokemons]);
+  }, [getTypes, plannerDetails]);
 
   useEffect(() => {
     getStats();
@@ -364,7 +485,7 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
       {!showTypes ? (
         <>
           <Column className={`gap-2`}>
-            <Span>{`Your first pokemon has a speed of ${stats?.speedValue}, which is ${stats?.speedValueDetails}. ${stats?.conclusion}.`}</Span>
+            <Span>{`Your first pokemon has a speed of ${stats?.speedValue}, which is ${stats?.speedValueDetails}. ${stats?.conclusion}`}</Span>
           </Column>
           <Column className={`gap-2`}>
             <Column className={`w-full gap-1 items-end`}>
@@ -378,19 +499,36 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
                 onClick={() => setShowEffective(!showEffective)}
                 switchPosition={"right"}
               />
+              <Switch
+                value={showEnemy ? "Show My Team" : "Show Enemy Team"}
+                onClick={() => setShowEnemy(!showEnemy)}
+                switchPosition={"right"}
+              />
             </Column>
 
             <BuilderStatistics
               teamStats={
-                stats?.teamStats?.map((s) => ({
-                  name: s.name,
-                  stats:
-                    showEffective && s.effectiveStats !== undefined
-                      ? s.effectiveStats
-                      : s.baseStats,
-                })) || []
+                showEnemy
+                  ? stats?.enemyTeamStats?.map((s) => ({
+                      name: s.name,
+                      stats:
+                        showEffective && s.effectiveStats !== undefined
+                          ? s.effectiveStats
+                          : s.baseStats,
+                    })) || []
+                  : stats?.teamStats?.map((s) => ({
+                      name: s.name,
+                      stats:
+                        showEffective && s.effectiveStats !== undefined
+                          ? s.effectiveStats
+                          : s.baseStats,
+                    })) || []
               }
-              teamStatsAverage={stats?.teamStatsAverage}
+              teamStatsAverage={
+                showEnemy
+                  ? stats?.enemyTeamStatsAverage
+                  : stats?.teamStatsAverage
+              }
               showAverage={showAverage}
             />
           </Column>
@@ -435,6 +573,11 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
                     minWidth: "100px",
                   },
                   {
+                    keyId: "isEnemy",
+                    name: "Enemy",
+                    minWidth: "100px",
+                  },
+                  {
                     keyId: "moveName",
                     name: "Move",
                     minWidth: "170px",
@@ -451,35 +594,132 @@ export const Suggester: FunctionComponent<SuggesterProps> = ({
               .filter((t) => t !== "all")
               .map((t) => ({
                 id: <TypeChip value={t} />,
-                resistances: stats?.typeComposition?.resistances?.find(
-                  (r) => r.name === t
-                )?.totalCount,
-                weaknesses: stats?.typeComposition?.weaknesses?.find(
-                  (r) => r.name === t
-                )?.totalCount,
-                stab: stats?.typeComposition?.stab?.find((r) => r.name === t)
-                  ?.totalCount,
+                resistances: (
+                  <Row className={`gap-1`}>
+                    <Small className={`text-green-500`}>
+                      {
+                        stats?.typeComposition?.resistances?.find(
+                          (r) => r.name === t
+                        )?.totalCount.my
+                      }
+                    </Small>
+                    <Small
+                      className={`${
+                        light ? "text-blue-900" : "text-slate-300"
+                      }`}
+                    >
+                      /
+                    </Small>
+                    <Small className={`text-red-500`}>
+                      {
+                        stats?.typeComposition?.resistances?.find(
+                          (r) => r.name === t
+                        )?.totalCount.enemy
+                      }
+                    </Small>
+                  </Row>
+                ),
+                weaknesses: (
+                  <Row className={`gap-1`}>
+                    <Small className={`text-green-500`}>
+                      {
+                        stats?.typeComposition?.weaknesses?.find(
+                          (r) => r.name === t
+                        )?.totalCount.my
+                      }
+                    </Small>
+
+                    <Small
+                      className={`${
+                        light ? "text-blue-900" : "text-slate-300"
+                      }`}
+                    >
+                      /
+                    </Small>
+                    <Small className={`text-red-500`}>
+                      {
+                        stats?.typeComposition?.weaknesses?.find(
+                          (r) => r.name === t
+                        )?.totalCount.enemy
+                      }
+                    </Small>
+                  </Row>
+                ),
+                stab: (
+                  <Row className={`gap-1`}>
+                    <Small className={`text-green-500`}>
+                      {
+                        stats?.typeComposition?.stab?.find((r) => r.name === t)
+                          ?.totalCount.my
+                      }
+                    </Small>
+
+                    <Small
+                      className={`${
+                        light ? "text-blue-900" : "text-slate-300"
+                      }`}
+                    >
+                      /
+                    </Small>
+                    <Small className={`text-red-500`}>
+                      {
+                        stats?.typeComposition?.stab?.find((r) => r.name === t)
+                          ?.totalCount.enemy
+                      }
+                    </Small>
+                  </Row>
+                ),
                 moves: {
-                  cellData: stats?.typeComposition?.moves?.find(
-                    (r) => r.name === t
-                  )?.totalCount,
-                  subLayer: pokemons.flatMap(
-                    (p) =>
-                      p.selectedMoves?.flatMap((s) =>
-                        t === s.type
-                          ? {
-                              damageClass: (
-                                <ClassChip
-                                  value={s.damageClass || ""}
-                                  key={s.name}
-                                  small
-                                />
-                              ),
-                              moveName: s.name,
-                              pokemonName: p.name,
-                            }
-                          : []
-                      ) || []
+                  cellData: (
+                    <Row className={`gap-1`}>
+                      <Small className={`text-green-500`}>
+                        {
+                          stats?.typeComposition?.moves?.find(
+                            (r) => r.name === t
+                          )?.totalCount.my
+                        }
+                      </Small>
+
+                      <Small
+                        className={`${
+                          light ? "text-blue-900" : "text-slate-300"
+                        }`}
+                      >
+                        /
+                      </Small>
+                      <Small className={`text-red-500`}>
+                        {
+                          stats?.typeComposition?.moves?.find(
+                            (r) => r.name === t
+                          )?.totalCount.enemy
+                        }
+                      </Small>
+                    </Row>
+                  ),
+                  subLayer: (
+                    Object.values(
+                      plannerDetails
+                    ) as PokeDetailsWithSelectedMovesStatCalculator[][]
+                  ).flatMap((p) =>
+                    p.flatMap(
+                      (c) =>
+                        c.selectedMoves?.flatMap((s) =>
+                          t === s.type
+                            ? {
+                                damageClass: (
+                                  <ClassChip
+                                    value={s.damageClass || ""}
+                                    key={s.name}
+                                    small
+                                  />
+                                ),
+                                moveName: s.name,
+                                pokemonName: c.name,
+                                isEnemy: s.isEnemy ? "Yes" : "No",
+                              }
+                            : []
+                        ) || []
+                    )
                   ),
                 },
               }))}
