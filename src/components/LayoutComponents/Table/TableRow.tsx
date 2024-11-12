@@ -47,11 +47,13 @@ export const TableRow: FunctionComponent<TableRowProps> = (props) => {
                 ) : typeof props.value[h.keyId] === "object" && h.expandable ? (
                   <Row className={`gap-2 items-center`}>
                     <Span className={`${props.subLayer ? "text-xs" : ""}`}>
-                      {props.value[h.keyId].cellData
-                        ?.toString()
-                        ?.split("-")
-                        .map((s: string) => s[0].toUpperCase() + s.slice(1))
-                        .join("-")}
+                      {typeof props.value[h.keyId].cellData === "string"
+                        ? props.value[h.keyId].cellData
+                            ?.toString()
+                            ?.split("-")
+                            .map((s: string) => s[0].toUpperCase() + s.slice(1))
+                            .join("-")
+                        : props.value[h.keyId].cellData}
                     </Span>
                     {props.value[h.keyId].subLayer.length ? (
                       <Button

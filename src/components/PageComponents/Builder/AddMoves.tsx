@@ -13,11 +13,13 @@ export interface AddMovesProps {
     index: number;
     item: PokeDetailsWithSelectedMovesStatCalculator;
   }) => void;
+  isEnemy: boolean;
 }
 
 export const AddMoves: FunctionComponent<AddMovesProps> = ({
   item,
   setItem,
+  isEnemy,
 }) => {
   const { light } = useDarkTheme();
 
@@ -26,9 +28,9 @@ export const AddMoves: FunctionComponent<AddMovesProps> = ({
 
     if (tempItem && move) {
       if (tempItem?.item.selectedMoves) {
-        tempItem.item.selectedMoves?.push(move);
+        tempItem.item.selectedMoves?.push({ ...move, isEnemy });
       } else {
-        tempItem.item["selectedMoves"] = [move];
+        tempItem.item["selectedMoves"] = [{ ...move, isEnemy }];
       }
 
       setItem(tempItem);

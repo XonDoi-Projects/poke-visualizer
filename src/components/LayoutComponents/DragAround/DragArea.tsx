@@ -15,11 +15,13 @@ import { Popup } from "../Popup";
 export interface DragAreaProps {
   list: PokeDetailsWithSelectedMovesStatCalculator[];
   setList: (value: PokeDetailsWithSelectedMovesStatCalculator[]) => void;
+  isEnemy: boolean;
 }
 
 export const DragArea: FunctionComponent<DragAreaProps> = ({
   list,
   setList,
+  isEnemy,
 }) => {
   const { light } = useDarkTheme();
 
@@ -387,7 +389,7 @@ export const DragArea: FunctionComponent<DragAreaProps> = ({
         onCancel={() => setShowMoves(false)}
         onConfirm={() => handleConfirmMoves()}
       >
-        <AddMoves item={item} setItem={setItem} />
+        <AddMoves item={item} setItem={setItem} isEnemy={isEnemy} />
       </Popup>
       <Popup
         show={showStats}

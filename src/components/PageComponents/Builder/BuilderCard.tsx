@@ -11,7 +11,6 @@ import { statShortHand } from "@/utils";
 import { FunctionComponent } from "react";
 import Image from "next/image";
 import { TypeChip } from "../Dex/TypeChip";
-import { Card } from "@/components/LayoutComponents/Card";
 import { BiChevronDown, BiChevronUp, BiX } from "react-icons/bi";
 import { useDarkTheme, useSize } from "@/components/Providers";
 import { PokeDetailsWithSelectedMovesStatCalculator } from "./Builder";
@@ -43,25 +42,33 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
   const { mobile } = useSize();
 
   return placeholder ? (
-    <Card className={`rounded-lg p-3 flex-1 h-[100px] opacity-40`} noShadow>
+    <Column
+      className={`rounded-lg p-3 flex-1 h-[100px] opacity-40 ${
+        light ? "bg-slate-200" : " bg-gray-900"
+      }`}
+    >
       <Row
         className={`gap-5 w-full flex-wrap flex-1 justify-center items-center pointer-events-none p-1`}
       >
         <Span>Choose Pokemon!</Span>
       </Row>
-    </Card>
+    </Column>
   ) : (
-    <Card className={`rounded-lg p-3 flex-1 h-fit`} noShadow>
+    <Column
+      className={`rounded-lg p-3 flex-1 h-fit ${
+        light ? "bg-slate-200" : " bg-gray-900"
+      }`}
+    >
       <Row className={`gap-2 w-full flex-wrap flex-1 justify-between`}>
-        <Row className={`gap-2`}>
-          <Button className={`rounded-full`} onClick={onShowMoves}>
+        <Row className={`gap-1`}>
+          <Button className={`rounded-full px-[5px]`} onClick={onShowMoves}>
             <Small
               className={` ${!light ? "text-blue-900" : "text-slate-300"}`}
             >
               Add Moves
             </Small>
           </Button>
-          <Button className={`rounded-full`} onClick={onShowStats}>
+          <Button className={`rounded-full px-[5px]`} onClick={onShowStats}>
             <Small
               className={` ${!light ? "text-blue-900" : "text-slate-300"}`}
             >
@@ -69,7 +76,25 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
             </Small>
           </Button>
         </Row>
-        <Row className={`gap-2 w-full flex-wrap flex-1 justify-end`}>
+        <Column
+          className={`absolute top-[12px] right-[10px] gap-2 flex-wrap items-end`}
+        >
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              removePokemon && removePokemon();
+            }}
+            className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
+          >
+            <BiX
+              className={
+                !light
+                  ? "text-blue-900 group-hover:text-blue-800"
+                  : "text-slate-300 group-hover:text-slate-200"
+              }
+              style={{ fontSize: "16px" }}
+            />
+          </Button>
           {mobile && !disableMoveDown && (
             <Button
               onClick={(e) => {
@@ -106,23 +131,7 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
               />
             </Button>
           )}
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              removePokemon && removePokemon();
-            }}
-            className="!w-[20px] !h-[20px] rounded-[50%] !p-0 !m-0 transition-all"
-          >
-            <BiX
-              className={
-                !light
-                  ? "text-blue-900 group-hover:text-blue-800"
-                  : "text-slate-300 group-hover:text-slate-200"
-              }
-              style={{ fontSize: "16px" }}
-            />
-          </Button>
-        </Row>
+        </Column>
       </Row>
 
       <Row
@@ -161,7 +170,7 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
           />
         </Column>
 
-        <Row className={`gap-5`}>
+        <Row className={`gap-2`}>
           <Column className={`flex-wrap w-[100px]`}>
             {pokemon?.stats?.slice(0, 3).map((s) => (
               <LabelWithValue
@@ -201,6 +210,6 @@ export const BuilderCard: FunctionComponent<BuilderCardProps> = ({
           </Column>
         </Row>
       </Row>
-    </Card>
+    </Column>
   );
 };
