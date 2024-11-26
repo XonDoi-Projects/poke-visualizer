@@ -249,7 +249,12 @@ export const DexEntry = () => {
                           className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
                           style={{ padding: "5px" }}
                         >
-                          <HiSparkles style={{ fontSize: "20px" }} />
+                          <HiSparkles
+                            className={
+                              !light ? "text-blue-900" : "text-slate-300"
+                            }
+                            style={{ fontSize: "20px" }}
+                          />
                         </Button>
                       </Container>
                     ) : (
@@ -262,7 +267,12 @@ export const DexEntry = () => {
                           className={`items-center justify-center rounded-full w-[35px] h-[35px] ${pointer} transition-all`}
                           style={{ padding: "5px" }}
                         >
-                          <HiOutlineSparkles style={{ fontSize: "20px" }} />
+                          <HiOutlineSparkles
+                            className={
+                              !light ? "text-blue-900" : "text-slate-300"
+                            }
+                            style={{ fontSize: "20px" }}
+                          />
                         </Button>
                       </Container>
                     )
