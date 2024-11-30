@@ -13,7 +13,7 @@ export const Page: FunctionComponent<PageProps> = (props) => {
   const { light } = useDarkTheme();
 
   return (
-    <Column className="h-screen w-screen">
+    <Column className="h-[100dvh] w-screen">
       <Header />
 
       <Column

@@ -18,6 +18,17 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
+          name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#000000"
+          media="(prefers-color-scheme: dark)"
+        />
+
+        <meta
           name="description"
           content="A website where you can view the different pokemon and their forms, compare stats and plan you team."
         />
