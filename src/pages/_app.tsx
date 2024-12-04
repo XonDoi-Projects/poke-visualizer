@@ -46,7 +46,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         />
         <meta property="og:site_name" content="PokePlan" />
         <meta property="og:type" content="Website" />
-        <meta property="og:url" content="https://poke-plan.vercel.app" />
+        <meta property="og:url" content="https://www.pokeplan.com" />
         {/* Favicon */}
         <link rel="icon" type="image/x-icon" href="/PokePlan_Icon.png" />
       </Head>
