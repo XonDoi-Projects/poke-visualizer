@@ -21,6 +21,7 @@ import { BiChevronLeft, BiChevronRight, BiSlider, BiX } from "react-icons/bi";
 import { Selector } from "@/components/LayoutComponents/Selector";
 import { PokeCardRound } from "./PokeCardRound";
 import { useQuery } from "@tanstack/react-query";
+import Head from "next/head";
 
 export const Dex = () => {
   const { size } = useSize();
@@ -90,168 +91,189 @@ export const Dex = () => {
     refetchOnReconnect: true,
   });
 
-  return isLoading ? (
-    <Column className={`w-full h-full items-center justify-center`}>
-      <Loading />
-      <H5>Catching Them All!</H5>
-    </Column>
-  ) : (
-    data?.data && (
-      <Column className={`gap-5`}>
-        <H2>Welcome to PokePlan</H2>
-        <H5>{`You are currently viewing Pokemon #${data.data[0].index
-          .toString()
-          .padStart(4, "0")} to #${data.data[data.data?.length - 1].index
-          .toString()
-          .padStart(4, "0")}`}</H5>
-
-        <Column className={`items-end gap-5`}>
-          {!showFilter ? (
-            <Button
-              onClick={() => setShowFilter(!showFilter)}
-              className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
-              type="text"
-            >
-              <BiSlider
-                className={
-                  light
-                    ? "text-blue-900 group-hover:text-blue-800"
-                    : "text-slate-300 group-hover:text-slate-200"
-                }
-                style={{ fontSize: "24px" }}
-              />
-            </Button>
-          ) : (
-            <Button
-              onClick={() => setShowFilter(!showFilter)}
-              className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
-              type="contained"
-            >
-              <BiX
-                className={
-                  !light
-                    ? "text-blue-900 group-hover:text-blue-800"
-                    : "text-slate-300 group-hover:text-slate-200"
-                }
-                style={{ fontSize: "24px" }}
-              />
-            </Button>
-          )}
-          {showFilter ? (
-            <Row className={`gap-5 flex-wrap`}>
-              <Container className={`flex-1 min-w-[150px]`}>
-                <Selector
-                  label="Base"
-                  list={["base", "variant"].map(
-                    (p) => p[0].toUpperCase() + p.slice(1)
-                  )}
-                  options={[form[0].toUpperCase() + form.slice(1)]}
-                  setOptions={(value: string[]) => {
-                    setForm(value[0].toLowerCase() as string);
-                    setCurrentOffset(0);
-                    setLimit(20);
-                  }}
-                />
-              </Container>
-              <Container className={`flex-1 min-w-[150px]`}>
-                <Selector
-                  label="Type"
-                  list={pokeTypes.map((p) => p[0].toUpperCase() + p.slice(1))}
-                  options={types.map((t) => t[0].toUpperCase() + t.slice(1))}
-                  setOptions={(value: PokeType[]) => {
-                    if (value[0].toLowerCase() === "all") {
-                      setTypes((prev) => [
-                        ...prev.filter((p) => p === "all"),
-                        ...value.map((v) => v.toLowerCase() as PokeType),
-                      ]);
-                    } else {
-                      setTypes((prev) => [
-                        ...prev.filter((p) => p !== "all"),
-                        ...value.map((v) => v.toLowerCase() as PokeType),
-                      ]);
-                    }
-
-                    setCurrentOffset(0);
-                    setLimit(20);
-                  }}
-                  deleteOptions={(value: PokeType[]) => {
-                    if (!value.length) {
-                      setTypes(["all"]);
-                    } else {
-                      setTypes(value.map((v) => v.toLowerCase() as PokeType));
-                    }
-                  }}
-                  isMultipleOption
-                  ignoreOptionsWhenMultiple={["all"].map(
-                    (p) => p[0].toUpperCase() + p.slice(1)
-                  )}
-                  disable={types?.length >= 2}
-                />
-              </Container>
-              <Container className={`flex-1 min-w-[150px]`}>
-                <Selector
-                  label="Region"
-                  list={pokeRegions.map((p) => p[0].toUpperCase() + p.slice(1))}
-                  options={[region[0].toUpperCase() + region.slice(1)]}
-                  setOptions={(value: PokeRegion[]) => {
-                    setRegion(value[0].toLowerCase() as PokeRegion);
-                    setCurrentOffset(0);
-                    setLimit(20);
-                  }}
-                />
-              </Container>
-            </Row>
-          ) : null}
+  return (
+    <Column className={`w-full h-full`}>
+      <Head>
+        {/* Page SEO */}
+        <title>{`PokePlan - PokeDex`}</title>
+        <meta
+          name="description"
+          content={`See all the different Pokemon. Filter by Type or Region. Select one for more details!`}
+        />
+        <link href={`https://www.pokeplan.com/dex`} />
+      </Head>
+      {isLoading ? (
+        <Column className={`w-full h-full items-center justify-center`}>
+          <Loading />
+          <H5>Catching Them All!</H5>
         </Column>
+      ) : (
+        data?.data && (
+          <Column className={`gap-5`}>
+            <H2>Welcome to PokePlan</H2>
+            <H5>{`You are currently viewing Pokemon #${data.data[0].index
+              .toString()
+              .padStart(4, "0")} to #${data.data[data.data?.length - 1].index
+              .toString()
+              .padStart(4, "0")}`}</H5>
 
-        <Container className={`grid ${gridCols} gap-10 p-5 justify-center`}>
-          {data?.data.map((poke) => (
-            <Container
-              key={poke.index}
-              className={"flex items-center justify-center"}
-            >
-              <PokeCardRound data={poke} form={form} />
+            <Column className={`items-end gap-5`}>
+              {!showFilter ? (
+                <Button
+                  onClick={() => setShowFilter(!showFilter)}
+                  className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
+                  type="text"
+                >
+                  <BiSlider
+                    className={
+                      light
+                        ? "text-blue-900 group-hover:text-blue-800"
+                        : "text-slate-300 group-hover:text-slate-200"
+                    }
+                    style={{ fontSize: "24px" }}
+                  />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setShowFilter(!showFilter)}
+                  className="!w-[30px] !h-[30px] rounded-[50%] !p-0 !m-0 transition-all"
+                  type="contained"
+                >
+                  <BiX
+                    className={
+                      !light
+                        ? "text-blue-900 group-hover:text-blue-800"
+                        : "text-slate-300 group-hover:text-slate-200"
+                    }
+                    style={{ fontSize: "24px" }}
+                  />
+                </Button>
+              )}
+              {showFilter ? (
+                <Row className={`gap-5 flex-wrap`}>
+                  <Container className={`flex-1 min-w-[150px]`}>
+                    <Selector
+                      label="Base"
+                      list={["base", "variant"].map(
+                        (p) => p[0].toUpperCase() + p.slice(1)
+                      )}
+                      options={[form[0].toUpperCase() + form.slice(1)]}
+                      setOptions={(value: string[]) => {
+                        setForm(value[0].toLowerCase() as string);
+                        setCurrentOffset(0);
+                        setLimit(20);
+                      }}
+                    />
+                  </Container>
+                  <Container className={`flex-1 min-w-[150px]`}>
+                    <Selector
+                      label="Type"
+                      list={pokeTypes.map(
+                        (p) => p[0].toUpperCase() + p.slice(1)
+                      )}
+                      options={types.map(
+                        (t) => t[0].toUpperCase() + t.slice(1)
+                      )}
+                      setOptions={(value: PokeType[]) => {
+                        if (value[0].toLowerCase() === "all") {
+                          setTypes((prev) => [
+                            ...prev.filter((p) => p === "all"),
+                            ...value.map((v) => v.toLowerCase() as PokeType),
+                          ]);
+                        } else {
+                          setTypes((prev) => [
+                            ...prev.filter((p) => p !== "all"),
+                            ...value.map((v) => v.toLowerCase() as PokeType),
+                          ]);
+                        }
+
+                        setCurrentOffset(0);
+                        setLimit(20);
+                      }}
+                      deleteOptions={(value: PokeType[]) => {
+                        if (!value.length) {
+                          setTypes(["all"]);
+                        } else {
+                          setTypes(
+                            value.map((v) => v.toLowerCase() as PokeType)
+                          );
+                        }
+                      }}
+                      isMultipleOption
+                      ignoreOptionsWhenMultiple={["all"].map(
+                        (p) => p[0].toUpperCase() + p.slice(1)
+                      )}
+                      disable={types?.length >= 2}
+                    />
+                  </Container>
+                  <Container className={`flex-1 min-w-[150px]`}>
+                    <Selector
+                      label="Region"
+                      list={pokeRegions.map(
+                        (p) => p[0].toUpperCase() + p.slice(1)
+                      )}
+                      options={[region[0].toUpperCase() + region.slice(1)]}
+                      setOptions={(value: PokeRegion[]) => {
+                        setRegion(value[0].toLowerCase() as PokeRegion);
+                        setCurrentOffset(0);
+                        setLimit(20);
+                      }}
+                    />
+                  </Container>
+                </Row>
+              ) : null}
+            </Column>
+
+            <Container className={`grid ${gridCols} gap-10 p-5 justify-center`}>
+              {data?.data.map((poke) => (
+                <Container
+                  key={poke.index}
+                  className={"flex items-center justify-center"}
+                >
+                  <PokeCardRound data={poke} form={form} />
+                </Container>
+              ))}
             </Container>
-          ))}
-        </Container>
-        <Row className={`w-full justify-end gap-10`}>
-          <Button
-            onClick={() => {
-              setCurrentOffset(currentOffset - 20);
-              setLimit(20);
-              scrollElement?.scrollTo({ top: 0 });
-            }}
-            disable={currentOffset < 20}
-          >
-            <BiChevronLeft
-              className={
-                !light
-                  ? "text-blue-900 group-hover:text-blue-800"
-                  : "text-slate-200 group-hover:text-slate-100"
-              }
-              style={{ fontSize: "20px" }}
-            />
-          </Button>
-          <Button
-            onClick={() => {
-              setCurrentOffset(currentOffset + 20);
-              scrollElement?.scrollTo({ top: 0 });
-            }}
-            disable={currentOffset + 20 >= (data?.count || total)}
-          >
-            <BiChevronRight
-              className={
-                !light
-                  ? "text-blue-900 group-hover:text-blue-800"
-                  : "text-slate-200 group-hover:text-slate-100"
-              }
-              style={{
-                fontSize: "20px",
-              }}
-            />
-          </Button>
-        </Row>
-      </Column>
-    )
+            <Row className={`w-full justify-end gap-10`}>
+              <Button
+                onClick={() => {
+                  setCurrentOffset(currentOffset - 20);
+                  setLimit(20);
+                  scrollElement?.scrollTo({ top: 0 });
+                }}
+                disable={currentOffset < 20}
+              >
+                <BiChevronLeft
+                  className={
+                    !light
+                      ? "text-blue-900 group-hover:text-blue-800"
+                      : "text-slate-200 group-hover:text-slate-100"
+                  }
+                  style={{ fontSize: "20px" }}
+                />
+              </Button>
+              <Button
+                onClick={() => {
+                  setCurrentOffset(currentOffset + 20);
+                  scrollElement?.scrollTo({ top: 0 });
+                }}
+                disable={currentOffset + 20 >= (data?.count || total)}
+              >
+                <BiChevronRight
+                  className={
+                    !light
+                      ? "text-blue-900 group-hover:text-blue-800"
+                      : "text-slate-200 group-hover:text-slate-100"
+                  }
+                  style={{
+                    fontSize: "20px",
+                  }}
+                />
+              </Button>
+            </Row>
+          </Column>
+        )
+      )}
+    </Column>
   );
 };

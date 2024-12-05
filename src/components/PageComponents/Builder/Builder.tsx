@@ -29,6 +29,7 @@ import { Selector } from "@/components/LayoutComponents/Selector";
 import { useDarkTheme } from "@/components/Providers";
 import { BiSlider } from "react-icons/bi";
 import { Suggester } from "./Suggester";
+import Head from "next/head";
 
 export interface PokeDetailsWithSelectedMovesStatCalculator
   extends PokeDetails {
@@ -84,6 +85,15 @@ export const Builder = () => {
 
   return (
     <Column className={`relative gap-5`}>
+      <Head>
+        {/* Page SEO */}
+        <title>{`PokePlan - Team Builder and Planner `}</title>
+        <meta
+          name="description"
+          content={`Plan your Pokemon Team by selecting their moves and position. Compare the stats of your team with enemy team to maximize your chances of winning!`}
+        />
+        <link href={`https://www.pokeplan.com/team-planner`} />
+      </Head>
       <H2>Team Planner</H2>
       <Row className={`justify-start items-center gap-3`}>
         <Container className={`min-w-[150px]`}>
