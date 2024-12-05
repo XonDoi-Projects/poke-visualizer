@@ -226,13 +226,17 @@ export const DexEntry = () => {
           name="description"
           content={`${
             pokemon
-              ? `Discover details about ${pokemon.name}, including stats, abilities, and more!`
+              ? `Discover details about ${pokemon.name}, including stats, abilities, moves, types, different forms, variants, shiny and more!`
               : ""
           }`}
         />
         <link
           rel="canonical"
           href={`https://www.pokeplan.com/dex/bases/${pokemon?.index}`}
+        />
+        <link
+          rel="canonical"
+          href={`https://www.pokeplan.com/dex/variants/${pokemon?.index}`}
         />
       </Head>
       {isLoading || evolvesFromIsLoading || evolvesToIsLoading ? (
