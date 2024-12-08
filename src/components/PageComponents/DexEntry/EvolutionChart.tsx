@@ -50,7 +50,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
                         evolvesFrom.imageLink ||
                         "/placeholder.png"
                   }
-                  alt={`${evolvesFrom.name} | ${evolvesFrom.index}`}
+                  alt={`#${evolvesFrom.index} ${evolvesFrom.name} Image`}
                   sizes="100vw"
                   width="0"
                   height="0"
@@ -95,7 +95,7 @@ export const EvolutionChart: FunctionComponent<EvolutionChartProps> = ({
                           evolve.imageLink ||
                           "/placeholder.png"
                     }
-                    alt={`${evolve.name} | ${evolve.index}`}
+                    alt={`#${evolve.index} ${evolve.name} Image`}
                     sizes="100vw"
                     width="0"
                     height="0"

@@ -224,9 +224,19 @@ export const DexEntry = () => {
         } `}</title>
         <meta
           name="description"
+          property="og:description"
           content={`${
             pokemon
               ? `Discover details about ${pokemon.name}, including stats, abilities, moves, types, different forms, variants, shiny and more!`
+              : ""
+          }`}
+        />
+        <meta
+          name="keywords"
+          property="og:keywords"
+          content={`${
+            pokemon
+              ? `${pokemon.name} Stats, ${pokemon.name} Shiny, ${pokemon.name} Abilities, ${pokemon.name} Image, ${pokemon.name} Weight, ${pokemon.name} Height, ${pokemon.name} Moves, ${pokemon.name} Evolution`
               : ""
           }`}
         />
@@ -347,7 +357,7 @@ export const DexEntry = () => {
                               pokemon.imageLink ||
                               "/placeholder.png"
                         }
-                        alt={`${pokemon.name} | ${pokemon.index}`}
+                        alt={`#${pokemon.index} ${pokemon.name} Image`}
                         sizes="100vw"
                         width="0"
                         height="0"
