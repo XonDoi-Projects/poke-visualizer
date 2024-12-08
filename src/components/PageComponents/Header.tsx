@@ -68,7 +68,7 @@ export const Header = () => {
                 src={
                   light ? "/PokePlan_Logo_Light.png" : "/PokePlan_Logo_Dark.png"
                 }
-                alt="Logo"
+                alt="PokePlan Logo"
                 sizes="100vw"
                 width="0"
                 height="0"
