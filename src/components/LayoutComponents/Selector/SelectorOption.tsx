@@ -18,7 +18,7 @@ export const SelectorOption: FunctionComponent<SelectorOptionProps<any>> = <
 
   return (
     <Container
-      className={`flex direction-row flex-1 items-center w-full h-[30px] ${
+      className={`flex direction-row flex-1 items-center w-full max-h-[30px] ${
         light
           ? "bg-slate-300 hover:bg-slate-400"
           : "bg-gray-800 hover:bg-gray-700"
