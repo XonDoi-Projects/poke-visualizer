@@ -4,3 +4,4 @@ export * from "./H5";
 export * from "./Small";
 export * from "./Span";
 export * from "./H3";
+export * from "./H6";

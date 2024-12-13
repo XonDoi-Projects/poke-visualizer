@@ -1,4 +1,4 @@
-import { Row, Column, H5, Container } from "@/components/LayoutComponents";
+import { Row, Column, Container, H6 } from "@/components/LayoutComponents";
 import { Card } from "@/components/LayoutComponents/Card";
 import { useDarkTheme } from "@/components/Providers";
 import { PokeDetails } from "@/utils";
@@ -27,7 +27,7 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
   return (
     <Column className={`relative w-[250px] h-[300px] items-center gap-2`}>
       <Row className={`w-full justify-between`}>
-        <H5>#{props.data.index.toString().padStart(4, "0")}</H5>
+        <H6>#{props.data.index.toString().padStart(4, "0")}</H6>
         <Row className={`gap-1 items-center`}>
           {props.data.types?.map((t, index) => (
             <TypeChip key={index} value={t} />
@@ -138,7 +138,7 @@ export const PokeCardRound: FunctionComponent<PokeCardRoundProps> = (props) => {
           </div>
         </Container>
       </Card>
-      <H5>{props.data.name}</H5>
+      <H6>{props.data.name}</H6>
     </Column>
   );
 };
