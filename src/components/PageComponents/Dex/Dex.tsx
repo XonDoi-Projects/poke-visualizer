@@ -109,13 +109,17 @@ export const Dex = () => {
         </Column>
       ) : (
         data?.data && (
-          <Column className={`gap-5`}>
+          <Column className={`flex-1 gap-5`}>
             <H2>Welcome to PokePlan</H2>
-            <H5>{`You are currently viewing Pokemon #${data.data[0].index
-              .toString()
-              .padStart(4, "0")} to #${data.data[data.data?.length - 1].index
-              .toString()
-              .padStart(4, "0")}`}</H5>
+            {data.data.length ? (
+              <H5>{`You are currently viewing Pokemon #${data.data[0].index
+                .toString()
+                .padStart(4, "0")} to #${data.data[data.data?.length - 1].index
+                .toString()
+                .padStart(4, "0")}`}</H5>
+            ) : (
+              <H5>{`There are no Pokemon for your current filter`}</H5>
+            )}
 
             <Column className={`items-end gap-5`}>
               {!showFilter ? (
@@ -224,16 +228,24 @@ export const Dex = () => {
               ) : null}
             </Column>
 
-            <Container className={`grid ${gridCols} gap-10 p-5 justify-center`}>
-              {data?.data.map((poke) => (
-                <Container
-                  key={poke.index}
-                  className={"flex items-center justify-center"}
-                >
-                  <PokeCardRound data={poke} form={form} />
-                </Container>
-              ))}
-            </Container>
+            {data.data.length ? (
+              <Container
+                className={`grid ${gridCols} gap-10 p-5 justify-center`}
+              >
+                {data.data.map((poke) => (
+                  <Container
+                    key={poke.index}
+                    className={"flex items-center justify-center"}
+                  >
+                    <PokeCardRound data={poke} form={form} />
+                  </Container>
+                ))}
+              </Container>
+            ) : (
+              <Row className={"flex-1 items-center justify-center"}>
+                <H5>{`No Pokemon found`}</H5>
+              </Row>
+            )}
             <Row className={`w-full justify-end gap-10`}>
               <Button
                 onClick={() => {
