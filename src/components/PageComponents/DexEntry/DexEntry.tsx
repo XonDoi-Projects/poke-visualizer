@@ -18,7 +18,7 @@ import { EvolutionType, PokeDetails } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { TypeChip } from "../Dex/TypeChip";
 import { BiVolumeFull } from "react-icons/bi";
 import {
@@ -38,7 +38,11 @@ import { DexEntryPagination } from "./DexEntryPagination";
 import { HiSparkles, HiOutlineSparkles } from "react-icons/hi";
 import Head from "next/head";
 
-export const DexEntry = () => {
+export interface DexEntryProps {
+  variantPage?: boolean;
+}
+
+export const DexEntry: FunctionComponent<DexEntryProps> = ({ variantPage }) => {
   const router = useRouter();
   const { total } = useData();
 
@@ -227,7 +231,9 @@ export const DexEntry = () => {
           property="og:description"
           content={`${
             pokemon
-              ? `Discover details about ${pokemon.name}, including stats, abilities, moves, types, different forms, variants, shiny and more!`
+              ? !variantPage
+                ? `Discover details about ${pokemon.name}, including stats, abilities, moves, types, different forms, variants, shiny and more!`
+                : `Discover the variant form of ${pokemon?.name}, including stats, abilities, moves, types, different forms, variants, shiny and more.`
               : ""
           }`}
         />
@@ -240,14 +246,18 @@ export const DexEntry = () => {
               : ""
           }`}
         />
-        <link
-          rel="canonical"
-          href={`https://www.pokeplan.com/dex/bases/${pokemon?.index}`}
-        />
-        <link
-          rel="canonical"
-          href={`https://www.pokeplan.com/dex/variants/${pokemon?.index}`}
-        />
+        {!variantPage && (
+          <link
+            rel="canonical"
+            href={`https://www.pokeplan.com/dex/bases/${pokemon?.index}`}
+          />
+        )}
+        {variantPage && (
+          <link
+            rel="canonical"
+            href={`https://www.pokeplan.com/dex/variants/${pokemon?.index}`}
+          />
+        )}
       </Head>
       {isLoading || evolvesFromIsLoading || evolvesToIsLoading ? (
         <Column className={`w-full h-full items-center justify-center`}>

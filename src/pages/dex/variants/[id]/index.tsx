@@ -3,7 +3,7 @@ import { DexEntry, Page } from "../../../../components/PageComponents";
 const DexPageId = () => {
   return (
     <Page>
-      <DexEntry />
+      <DexEntry variantPage />
     </Page>
   );
 };
